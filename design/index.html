@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DataFaker JobPosting Provider – Design</title>
+<style>
+  :root {
+    --blue:    #2563eb; --blue-lt: #eff6ff; --blue-md: #93c5fd;
+    --purple:  #7c3aed; --purple-lt: #fdf4ff;
+    --green:   #059669; --green-lt: #f0fdf4;
+    --amber:   #d97706; --amber-lt: #fffbeb;
+    --red:     #dc2626; --red-lt:   #fef2f2;
+    --slate:   #1e293b; --slate-md: #475569; --slate-lt: #f8fafc;
+    --card:    #ffffff;
+    --border:  #e2e8f0;
+    --radius:  10px;
+    --shadow:  0 2px 12px rgba(0,0,0,.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Inter", system-ui, sans-serif; background: var(--slate-lt); color: var(--slate); line-height: 1.6; }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #1e3a5f 100%);
+    color: #fff; padding: 48px 40px 40px;
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; gap: 24px; }
+  .header-text h1 { font-size: 2rem; font-weight: 700; letter-spacing: -.5px; }
+  .header-text p  { color: #94a3b8; margin-top: 6px; font-size: .95rem; }
+  .badges { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .badges img { height: 26px; }
+
+  /* ── Main layout ── */
+  main { max-width: 960px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* ── Section card ── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    margin-bottom: 32px; overflow: hidden;
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px; border-bottom: 1px solid var(--border);
+    background: var(--slate-lt);
+  }
+  .card-header img { width: 32px; height: 32px; }
+  .card-header h2 { font-size: 1.1rem; font-weight: 600; color: var(--slate); }
+  .card-body { padding: 28px 24px; }
+
+  /* ── Diagrams ── */
+  .diagram-wrap { overflow-x: auto; }
+  svg text { font-family: "Inter", system-ui, sans-serif; }
+
+  /* ── Industry grid ── */
+  .industry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .ind-card {
+    border-radius: 8px; padding: 18px;
+    border: 1px solid var(--border);
+  }
+  .ind-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: 10px; }
+  .ind-card .stat { font-size: .8rem; color: var(--slate-md); margin: 3px 0; }
+  .ind-card .salary { font-size: .85rem; font-weight: 600; margin-top: 8px; }
+  .tech  { background: var(--blue-lt);   border-color: var(--blue-md); }
+  .hcare { background: var(--green-lt);  border-color: #6ee7b7; }
+  .fin   { background: var(--amber-lt);  border-color: #fcd34d; }
+  .ret   { background: var(--red-lt);    border-color: #fca5a5; }
+  .mfg   { background: #f8fafc;          border-color: #94a3b8; }
+  .log   { background: #ecfeff;          border-color: #67e8f9; }
+  .edu   { background: #f5f3ff;          border-color: #c4b5fd; }
+  .sta   { background: #fdf2f8;          border-color: #f9a8d4; }
+  .con   { background: #eff6ff;          border-color: #93c5fd; }
+  .med   { background: #fff7ed;          border-color: #fdba74; }
+
+  /* ── Code block ── */
+  pre {
+    background: #0f172a; color: #e2e8f0; font-size: .82rem;
+    border-radius: 8px; padding: 18px 20px; overflow-x: auto;
+    font-family: "Fira Code", "Cascadia Code", monospace;
+    line-height: 1.7;
+  }
+  .kw { color: #93c5fd; } .ty { color: #6ee7b7; }
+  .cm { color: #475569; } .st { color: #fca5a5; }
+
+  /* ── Footer ── */
+  footer { text-align: center; color: var(--slate-md); font-size: .8rem; padding: 24px; }
+  footer a { color: var(--blue); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="header-inner">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MCA4MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIzOCIgZmlsbD0iIzFlMjkzYiIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSI0MCIgeT0iMzIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMyNTYzZWIiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtd2VpZ2h0PSJib2xkIj5KRjwvdGV4dD48dGV4dCB4PSI0MCIgeT0iNTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5NGEzYjgiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIj5Kb2JGYWtlcjwvdGV4dD48L3N2Zz4=" alt="JobFaker logo" width="80" height="80"/>
+    <div class="header-text">
+      <h1>DataFaker JobPosting Provider</h1>
+      <p>Custom DataFaker 2.x provider generating realistic, industry-aware job postings<br/>modelled after <em>schema.org/JobPosting</em> &nbsp;·&nbsp; <strong style="color:#93c5fd">10 industries</strong> &nbsp;·&nbsp; <strong style="color:#93c5fd">26 tests</strong></p>
+      <div class="badges">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSIyNiI+PHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjI2IiByeD0iNSIgZmlsbD0iIzUzODJhMSIvPjx0ZXh0IHg9IjQwIiB5PSIxNy41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj5KYXZhIDIxPC90ZXh0Pjwvc3ZnPg==" alt="Java 21"/>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzYiIGhlaWdodD0iMjYiPjxyZWN0IHdpZHRoPSIxMzYiIGhlaWdodD0iMjYiIHJ4PSI1IiBmaWxsPSIjN2MzYWVkIi8+PHRleHQgeD0iNjgiIHk9IjE3LjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjEyIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPkRhdGFGYWtlciAyLjQuMTwvdGV4dD48L3N2Zz4=" alt="DataFaker 2.4.1"/>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYiIGhlaWdodD0iMjYiPjxyZWN0IHdpZHRoPSIxMDYiIGhlaWdodD0iMjYiIHJ4PSI1IiBmaWxsPSIjZDk3NzA2Ii8+PHRleHQgeD0iNTMiIHk9IjE3LjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjEyIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPkFwYWNoZSAyLjA8L3RleHQ+PC9zdmc+" alt="Apache 2.0"/>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MiIgaGVpZ2h0PSIyNiI+PHJlY3Qgd2lkdGg9IjcyIiBoZWlnaHQ9IjI2IiByeD0iNSIgZmlsbD0iI2RjMjYyNiIvPjx0ZXh0IHg9IjM2IiB5PSIxNy41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj5NYXZlbjwvdGV4dD48L3N2Zz4=" alt="Maven"/>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════════════ ARCHITECTURE ═══════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2VmZjZmZiIvPjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyMCIgaGVpZ2h0PSI1IiByeD0iMiIgZmlsbD0iIzI1NjNlYiIvPjxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iMjAiIGhlaWdodD0iNSIgcng9IjIiIGZpbGw9IiMzYjgyZjYiLz48cmVjdCB4PSI2IiB5PSIyMiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjUiIHJ4PSIyIiBmaWxsPSIjOTNjNWZkIi8+PC9zdmc+" alt="arch"/>
+    <h2>System Architecture</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 460" width="820" style="max-width:100%">
+        <defs>
+          <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0,10 3.5,0 7" fill="#64748b"/>
+          </marker>
+          <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000018"/>
+          </filter>
+        </defs>
+
+        <!-- User App -->
+        <rect x="285" y="10" width="250" height="48" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="410" y="30" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">USER APPLICATION</text>
+        <text x="410" y="48" text-anchor="middle" font-size="10" fill="#94a3b8">new JobFaker()  ·  .jobPosting().build()</text>
+
+        <!-- Arrow down -->
+        <line x1="410" y1="58" x2="410" y2="98" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+
+        <!-- JobFaker box -->
+        <rect x="235" y="98" width="350" height="66" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+        <text x="410" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">JobFaker</text>
+        <text x="410" y="140" text-anchor="middle" font-size="10.5" fill="#3b82f6">extends Faker  ·  faker/JobFaker.java</text>
+        <text x="410" y="155" text-anchor="middle" font-size="10" fill="#64748b">+ jobPosting() : JobPostingProvider</text>
+
+        <!-- Arrow down -->
+        <line x1="410" y1="164" x2="410" y2="205" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+        <text x="420" y="192" font-size="9" fill="#94a3b8">getProvider(…)</text>
+
+        <!-- JobPostingProvider box -->
+        <rect x="185" y="205" width="450" height="80" rx="8" fill="#fdf4ff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+        <text x="410" y="232" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9">JobPostingProvider</text>
+        <text x="410" y="250" text-anchor="middle" font-size="10.5" fill="#7c3aed">extends AbstractProvider&lt;Faker&gt;  ·  provider/JobPostingProvider.java</text>
+        <text x="280" y="270" font-size="10" fill="#64748b">+ build() : JobPosting</text>
+        <text x="450" y="270" font-size="10" fill="#64748b">+ buildForIndustry(key) : JobPosting</text>
+
+        <!-- Arrow left (to YAML) -->
+        <line x1="185" y1="250" x2="125" y2="250" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="150" y="244" text-anchor="middle" font-size="9" fill="#94a3b8">reads</text>
+
+        <!-- Arrow right (to Faker built-ins) -->
+        <line x1="635" y1="250" x2="700" y2="250" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="660" y="244" text-anchor="middle" font-size="9" fill="#94a3b8">uses</text>
+
+        <!-- YAML box -->
+        <rect x="10" y="196" width="115" height="108" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="67" y="216" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">YAML</text>
+        <text x="67" y="231" text-anchor="middle" font-size="8.5" fill="#78350f">job-posting-</text>
+        <text x="67" y="243" text-anchor="middle" font-size="8.5" fill="#78350f">mappings.yml</text>
+        <text x="67" y="258" text-anchor="middle" font-size="8" fill="#b45309">10 industries</text>
+        <text x="67" y="271" text-anchor="middle" font-size="8" fill="#b45309">7 employment types</text>
+        <text x="67" y="284" text-anchor="middle" font-size="8" fill="#b45309">7 currencies · 5 units</text>
+
+        <!-- Faker built-ins box -->
+        <rect x="700" y="210" width="110" height="80" rx="8" fill="#f0fdf4" stroke="#059669" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="755" y="233" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">Faker</text>
+        <text x="755" y="248" text-anchor="middle" font-size="9" fill="#065f46">Built-ins</text>
+        <text x="755" y="264" text-anchor="middle" font-size="8.5" fill="#047857">company()</text>
+        <text x="755" y="277" text-anchor="middle" font-size="8.5" fill="#047857">address()</text>
+
+        <!-- Arrow down -->
+        <line x1="410" y1="285" x2="410" y2="340" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+
+        <!-- JobPosting record box -->
+        <rect x="140" y="340" width="540" height="110" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.5" filter="url(#shadow)"/>
+        <text x="410" y="364" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">JobPosting  (Java 21 record)</text>
+        <text x="220" y="385" font-size="10" fill="#64748b">· industry     · title</text>
+        <text x="220" y="400" font-size="10" fill="#64748b">· description  · skills</text>
+        <text x="220" y="415" font-size="10" fill="#64748b">· datePosted   · validThrough</text>
+        <text x="430" y="385" font-size="10" fill="#64748b">· employmentType</text>
+        <text x="430" y="400" font-size="10" fill="#64748b">· hiringOrganization</text>
+        <text x="430" y="415" font-size="10" fill="#64748b">· jobLocation  · baseSalary</text>
+        <text x="410" y="438" text-anchor="middle" font-size="9" fill="#94a3b8">model/JobPosting.java  ·  model/BaseSalary.java</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PACKAGE STRUCTURE ═══════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2YwZmRmNCIvPjx0ZXh0IHg9IjE2IiB5PSIyMSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzE2YTM0YSIgZm9udC1zaXplPSIxNiIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiPiZsdDsvJmd0OzwvdGV4dD48L3N2Zz4=" alt="code"/>
+    <h2>Package &amp; Class Structure</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 340" width="820" style="max-width:100%">
+        <defs>
+          <filter id="sh2" x="-5%" y="-5%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000015"/>
+          </filter>
+        </defs>
+
+        <!-- Root package -->
+        <rect x="10" y="10" width="800" height="320" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="26" y="34" font-size="11" font-weight="700" fill="#475569" font-family="monospace">in.sureshcoder.datafaker.jobposting</text>
+
+        <!-- faker sub-package -->
+        <rect x="30" y="50" width="220" height="100" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="140" y="72" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8" font-family="monospace">faker/</text>
+        <rect x="50" y="82" width="180" height="54" rx="6" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="140" y="101" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">JobFaker</text>
+        <text x="140" y="117" text-anchor="middle" font-size="9.5" fill="#3b82f6">extends Faker</text>
+        <text x="140" y="130" text-anchor="middle" font-size="9" fill="#64748b">+ jobPosting()</text>
+
+        <!-- model sub-package -->
+        <rect x="300" y="50" width="220" height="180" rx="8" fill="#f0fdf4" stroke="#059669" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="410" y="72" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46" font-family="monospace">model/</text>
+        <rect x="320" y="82" width="180" height="60" rx="6" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="410" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">JobPosting</text>
+        <text x="410" y="117" text-anchor="middle" font-size="9" fill="#64748b">record — 10 fields</text>
+        <text x="410" y="130" text-anchor="middle" font-size="9" fill="#059669">schema.org/JobPosting</text>
+        <rect x="320" y="155" width="180" height="60" rx="6" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="410" y="175" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">BaseSalary</text>
+        <text x="410" y="190" text-anchor="middle" font-size="9" fill="#64748b">record — 4 fields</text>
+        <text x="410" y="203" text-anchor="middle" font-size="9" fill="#059669">schema.org/MonetaryAmount</text>
+
+        <!-- provider sub-package -->
+        <rect x="570" y="50" width="220" height="270" rx="8" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="680" y="72" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9" font-family="monospace">provider/</text>
+        <rect x="590" y="82" width="180" height="76" rx="6" fill="white" stroke="#c4b5fd" stroke-width="1"/>
+        <text x="680" y="103" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">JobPostingProvider</text>
+        <text x="680" y="119" text-anchor="middle" font-size="9" fill="#64748b">extends AbstractProvider</text>
+        <text x="680" y="133" text-anchor="middle" font-size="9" fill="#7c3aed">+ build()</text>
+        <text x="680" y="146" text-anchor="middle" font-size="9" fill="#7c3aed">+ buildForIndustry()</text>
+        <rect x="590" y="172" width="180" height="60" rx="6" fill="#fdf4ff" stroke="#ddd6fe" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="680" y="192" text-anchor="middle" font-size="11" font-weight="700" fill="#8b5cf6">IndustryData</text>
+        <text x="680" y="207" text-anchor="middle" font-size="9" fill="#64748b">record — pkg-private</text>
+        <text x="680" y="220" text-anchor="middle" font-size="9" fill="#a78bfa">YAML data holder</text>
+        <rect x="590" y="246" width="180" height="60" rx="6" fill="#fdf4ff" stroke="#ddd6fe" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="680" y="266" text-anchor="middle" font-size="11" font-weight="700" fill="#8b5cf6">SalaryRange</text>
+        <text x="680" y="281" text-anchor="middle" font-size="9" fill="#64748b">record — pkg-private</text>
+        <text x="680" y="294" text-anchor="middle" font-size="9" fill="#a78bfa">salary bounds</text>
+
+        <!-- resource label -->
+        <rect x="30" y="270" width="220" height="48" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="140" y="290" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">resources/</text>
+        <text x="140" y="308" text-anchor="middle" font-size="9" fill="#b45309" font-family="monospace">job-posting-mappings.yml</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ DATA FLOW ═══════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZlZjNjNyIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTAiIHI9IjUiIGZpbGw9IiNkOTc3MDYiLz48cmVjdCB4PSIxNCIgeT0iMTUiIHdpZHRoPSI0IiBoZWlnaHQ9IjciIGZpbGw9IiNkOTc3MDYiLz48cG9seWdvbiBwb2ludHM9IjEwLDIyIDIyLDIyIDE2LDMwIiBmaWxsPSIjZDk3NzA2Ii8+PC9zdmc+" alt="flow"/>
+    <h2>build() Data Flow</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 540" width="820" style="max-width:100%">
+        <defs>
+          <marker id="a2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#2563eb"/>
+          </marker>
+          <marker id="a3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#059669"/>
+          </marker>
+        </defs>
+
+        <!-- Step boxes -->
+        <!-- 1 -->
+        <rect x="20" y="20" width="200" height="46" rx="7" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="120" y="40" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1d4ed8">① faker.jobPosting().build()</text>
+        <text x="120" y="56" text-anchor="middle" font-size="9.5" fill="#3b82f6">Entry point — JobFaker</text>
+
+        <!-- 2 -->
+        <rect x="20" y="106" width="200" height="46" rx="7" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="120" y="126" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1d4ed8">② randomIndustryKey()</text>
+        <text x="120" y="142" text-anchor="middle" font-size="9.5" fill="#3b82f6">e.g. "technology"</text>
+
+        <!-- 3 -->
+        <rect x="20" y="192" width="200" height="46" rx="7" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="120" y="211" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6d28d9">③ lookupIndustryData(key)</text>
+        <text x="120" y="227" text-anchor="middle" font-size="9.5" fill="#7c3aed">INDUSTRY_MAP → IndustryData</text>
+
+        <!-- 4 -->
+        <rect x="20" y="278" width="200" height="46" rx="7" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="120" y="297" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6d28d9">④ pickRandom(titles)</text>
+        <text x="120" y="313" text-anchor="middle" font-size="9.5" fill="#7c3aed">→ "Senior Software Engineer"</text>
+
+        <!-- 5 -->
+        <rect x="20" y="364" width="200" height="46" rx="7" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="120" y="383" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6d28d9">⑤ pickUniqueN(skills, 3-5)</text>
+        <text x="120" y="399" text-anchor="middle" font-size="9.5" fill="#7c3aed">Fisher-Yates via faker.random()</text>
+
+        <!-- 6 -->
+        <rect x="20" y="450" width="200" height="46" rx="7" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="120" y="469" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6d28d9">⑥ interpolate(template)</text>
+        <text x="120" y="485" text-anchor="middle" font-size="9.5" fill="#7c3aed">{title}, {skills}, {company}</text>
+
+        <!-- Right column -->
+        <!-- 7 -->
+        <rect x="600" y="106" width="200" height="46" rx="7" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+        <text x="700" y="126" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">⑦ faker.company().name()</text>
+        <text x="700" y="142" text-anchor="middle" font-size="9.5" fill="#059669">hiringOrganization</text>
+
+        <!-- 8 -->
+        <rect x="600" y="192" width="200" height="46" rx="7" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+        <text x="700" y="211" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">⑧ buildLocation()</text>
+        <text x="700" y="227" text-anchor="middle" font-size="9.5" fill="#059669">city+state or "Remote"</text>
+
+        <!-- 9 -->
+        <rect x="600" y="278" width="200" height="46" rx="7" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+        <text x="700" y="297" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">⑨ generateDates()</text>
+        <text x="700" y="313" text-anchor="middle" font-size="9.5" fill="#059669">datePosted · validThrough</text>
+
+        <!-- 10 -->
+        <rect x="600" y="364" width="200" height="46" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+        <text x="700" y="380" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">⑩ buildSalary(range)</text>
+        <text x="700" y="395" text-anchor="middle" font-size="8.5" fill="#b45309">currency ← YAML global list</text>
+        <text x="700" y="407" text-anchor="middle" font-size="8.5" fill="#b45309">unit ← YAML global list</text>
+
+        <!-- Final -->
+        <rect x="270" y="450" width="280" height="54" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+        <text x="410" y="473" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">⑪  new JobPosting(…)</text>
+        <text x="410" y="491" text-anchor="middle" font-size="9.5" fill="#94a3b8">immutable 10-field record returned</text>
+
+        <!-- Left column arrows (down) -->
+        <line x1="120" y1="66" x2="120" y2="106" stroke="#2563eb" stroke-width="1.5" marker-end="url(#a2)"/>
+        <line x1="120" y1="152" x2="120" y2="192" stroke="#2563eb" stroke-width="1.5" marker-end="url(#a2)"/>
+        <line x1="120" y1="238" x2="120" y2="278" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a2)"/>
+        <line x1="120" y1="324" x2="120" y2="364" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a2)"/>
+        <line x1="120" y1="410" x2="120" y2="450" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a2)"/>
+
+        <!-- Right column arrows (down) -->
+        <line x1="700" y1="152" x2="700" y2="192" stroke="#059669" stroke-width="1.5" marker-end="url(#a3)"/>
+        <line x1="700" y1="238" x2="700" y2="278" stroke="#059669" stroke-width="1.5" marker-end="url(#a3)"/>
+        <line x1="700" y1="324" x2="700" y2="364" stroke="#059669" stroke-width="1.5" marker-end="url(#a3)"/>
+
+        <!-- Connect left col step 2 → right col step 7 (branch) -->
+        <path d="M 220 129 Q 410 75 600 129" fill="none" stroke="#64748b" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#a3)"/>
+        <text x="410" y="82" text-anchor="middle" font-size="8.5" fill="#94a3b8">parallel generation</text>
+
+        <!-- Connect right side step 10 → final -->
+        <line x1="700" y1="410" x2="700" y2="470" stroke="#d97706" stroke-width="1.5"/>
+        <line x1="700" y1="470" x2="550" y2="470" stroke="#d97706" stroke-width="1.5" marker-end="url(#a2)"/>
+
+        <!-- Connect left side step 6 → final -->
+        <line x1="220" y1="473" x2="270" y2="473" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a2)"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ INDUSTRY OVERVIEW ═══════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZkZjRmZiIvPjxlbGxpcHNlIGN4PSIxNiIgY3k9IjEyIiByeD0iMTEiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM5MzMzZWEiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSI1IiB5MT0iMTIiIHgyPSI1IiB5Mj0iMjAiIHN0cm9rZT0iIzkzMzNlYSIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjI3IiB5MT0iMTIiIHgyPSIyNyIgeTI9IjIwIiBzdHJva2U9IiM5MzMzZWEiIHN0cm9rZS13aWR0aD0iMiIvPjxlbGxpcHNlIGN4PSIxNiIgY3k9IjIwIiByeD0iMTEiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM5MzMzZWEiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="data"/>
+    <h2>Industry Data Overview</h2>
+  </div>
+  <div class="card-body">
+    <div class="industry-grid">
+      <div class="ind-card tech">
+        <h3 style="color:#1d4ed8">💻 Technology</h3>
+        <div class="stat">YAML key: <code>technology</code></div>
+        <div class="stat">18 job titles · 20 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#1d4ed8">$80k – $220k / year</div>
+      </div>
+      <div class="ind-card hcare">
+        <h3 style="color:#065f46">🏥 Healthcare</h3>
+        <div class="stat">YAML key: <code>healthcare</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#065f46">$50k – $180k / year</div>
+      </div>
+      <div class="ind-card fin">
+        <h3 style="color:#92400e">📈 Finance</h3>
+        <div class="stat">YAML key: <code>finance</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#92400e">$70k – $250k / year</div>
+      </div>
+      <div class="ind-card ret">
+        <h3 style="color:#991b1b">🛍️ Retail</h3>
+        <div class="stat">YAML key: <code>retail</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#991b1b">$35k – $120k / year</div>
+      </div>
+      <div class="ind-card mfg">
+        <h3 style="color:#334155">🏭 Manufacturing</h3>
+        <div class="stat">YAML key: <code>manufacturing</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#334155">$45k – $130k / year</div>
+      </div>
+      <div class="ind-card log">
+        <h3 style="color:#0e7490">🚚 Logistics</h3>
+        <div class="stat">YAML key: <code>logistics</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#0e7490">$40k – $120k / year</div>
+      </div>
+      <div class="ind-card edu">
+        <h3 style="color:#4c1d95">🎓 Education</h3>
+        <div class="stat">YAML key: <code>education</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#4c1d95">$38k – $110k / year</div>
+      </div>
+      <div class="ind-card sta">
+        <h3 style="color:#9d174d">🤝 Staffing &amp; Recruiting</h3>
+        <div class="stat">YAML key: <code>staffing</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#9d174d">$45k – $140k / year</div>
+      </div>
+      <div class="ind-card con">
+        <h3 style="color:#1e3a8a">🧩 Consulting</h3>
+        <div class="stat">YAML key: <code>consulting</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#1e3a8a">$70k – $220k / year</div>
+      </div>
+      <div class="ind-card med">
+        <h3 style="color:#9a3412">🎬 Media &amp; Entertainment</h3>
+        <div class="stat">YAML key: <code>media</code></div>
+        <div class="stat">15 job titles · 15 skills</div>
+        <div class="stat">4 description templates</div>
+        <div class="salary" style="color:#9a3412">$40k – $150k / year</div>
+      </div>
+    </div>
+
+    <!-- Salary range comparison — 10 industries -->
+    <!-- scale: 0..250k mapped to x 140..790 → 650px / 250k = 2.6px per $1k -->
+    <div style="margin-top:28px">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 330" width="820" style="max-width:100%">
+        <text x="20" y="20" font-size="11" font-weight="600" fill="#475569">Salary range comparison (USD/year)</text>
+
+        <!-- axis lines -->
+        <line x1="140" y1="32" x2="795" y2="32"  stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="140" y1="32" x2="140" y2="302" stroke="#e2e8f0" stroke-width="1"/>
+
+        <!-- vertical grid lines + axis labels (0 / 62.5k / 125k / 187.5k / 250k) -->
+        <text x="140" y="316" text-anchor="middle" font-size="8.5" fill="#94a3b8">$0</text>
+        <line x1="303" y1="32" x2="303" y2="302" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="303" y="316" text-anchor="middle" font-size="8.5" fill="#94a3b8">$62.5k</text>
+        <line x1="465" y1="32" x2="465" y2="302" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="465" y="316" text-anchor="middle" font-size="8.5" fill="#94a3b8">$125k</text>
+        <line x1="628" y1="32" x2="628" y2="302" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="628" y="316" text-anchor="middle" font-size="8.5" fill="#94a3b8">$187.5k</text>
+        <text x="790" y="316" text-anchor="middle" font-size="8.5" fill="#94a3b8">$250k</text>
+
+        <!-- row height 26px, bar height 16px, bar top = rowStart + 5 -->
+        <!-- x = 140 + salary_in_k * 2.6 -->
+
+        <!-- Technology  $80k–$220k  → x=348 w=364 -->
+        <text x="134" y="52" text-anchor="end" font-size="9" fill="#1d4ed8" font-weight="600">Technology</text>
+        <rect x="348" y="40" width="364" height="16" rx="3" fill="#2563eb" opacity=".85"/>
+        <text x="354" y="52" font-size="8" fill="white">$80k</text>   <text x="700" y="52" font-size="8" fill="white">$220k</text>
+
+        <!-- Healthcare  $50k–$180k  → x=270 w=338 -->
+        <text x="134" y="78" text-anchor="end" font-size="9" fill="#065f46" font-weight="600">Healthcare</text>
+        <rect x="270" y="66" width="338" height="16" rx="3" fill="#059669" opacity=".85"/>
+        <text x="276" y="78" font-size="8" fill="white">$50k</text>   <text x="592" y="78" font-size="8" fill="white">$180k</text>
+
+        <!-- Finance  $70k–$250k  → x=322 w=468 -->
+        <text x="134" y="104" text-anchor="end" font-size="9" fill="#92400e" font-weight="600">Finance</text>
+        <rect x="322" y="92" width="468" height="16" rx="3" fill="#d97706" opacity=".85"/>
+        <text x="328" y="104" font-size="8" fill="white">$70k</text>  <text x="778" y="104" font-size="8" fill="white">$250k</text>
+
+        <!-- Retail  $35k–$120k  → x=231 w=221 -->
+        <text x="134" y="130" text-anchor="end" font-size="9" fill="#991b1b" font-weight="600">Retail</text>
+        <rect x="231" y="118" width="221" height="16" rx="3" fill="#dc2626" opacity=".85"/>
+        <text x="237" y="130" font-size="8" fill="white">$35k</text>  <text x="436" y="130" font-size="8" fill="white">$120k</text>
+
+        <!-- Manufacturing  $45k–$130k  → x=257 w=221 -->
+        <text x="134" y="156" text-anchor="end" font-size="9" fill="#334155" font-weight="600">Manufactur.</text>
+        <rect x="257" y="144" width="221" height="16" rx="3" fill="#64748b" opacity=".85"/>
+        <text x="263" y="156" font-size="8" fill="white">$45k</text>  <text x="462" y="156" font-size="8" fill="white">$130k</text>
+
+        <!-- Logistics  $40k–$120k  → x=244 w=208 -->
+        <text x="134" y="182" text-anchor="end" font-size="9" fill="#0e7490" font-weight="600">Logistics</text>
+        <rect x="244" y="170" width="208" height="16" rx="3" fill="#0891b2" opacity=".85"/>
+        <text x="250" y="182" font-size="8" fill="white">$40k</text>  <text x="436" y="182" font-size="8" fill="white">$120k</text>
+
+        <!-- Education  $38k–$110k  → x=239 w=187 -->
+        <text x="134" y="208" text-anchor="end" font-size="9" fill="#4c1d95" font-weight="600">Education</text>
+        <rect x="239" y="196" width="187" height="16" rx="3" fill="#7c3aed" opacity=".85"/>
+        <text x="245" y="208" font-size="8" fill="white">$38k</text>  <text x="410" y="208" font-size="8" fill="white">$110k</text>
+
+        <!-- Staffing  $45k–$140k  → x=257 w=247 -->
+        <text x="134" y="234" text-anchor="end" font-size="9" fill="#9d174d" font-weight="600">Staffing</text>
+        <rect x="257" y="222" width="247" height="16" rx="3" fill="#db2777" opacity=".85"/>
+        <text x="263" y="234" font-size="8" fill="white">$45k</text>  <text x="488" y="234" font-size="8" fill="white">$140k</text>
+
+        <!-- Consulting  $70k–$220k  → x=322 w=390 -->
+        <text x="134" y="260" text-anchor="end" font-size="9" fill="#1e3a8a" font-weight="600">Consulting</text>
+        <rect x="322" y="248" width="390" height="16" rx="3" fill="#1d4ed8" opacity=".85"/>
+        <text x="328" y="260" font-size="8" fill="white">$70k</text>  <text x="700" y="260" font-size="8" fill="white">$220k</text>
+
+        <!-- Media  $40k–$150k  → x=244 w=286 -->
+        <text x="134" y="286" text-anchor="end" font-size="9" fill="#9a3412" font-weight="600">Media</text>
+        <rect x="244" y="274" width="286" height="16" rx="3" fill="#ea580c" opacity=".85"/>
+        <text x="250" y="286" font-size="8" fill="white">$40k</text>  <text x="514" y="286" font-size="8" fill="white">$150k</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ REFERENCE DATA ═══════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZkZjRmZiIvPjxlbGxpcHNlIGN4PSIxNiIgY3k9IjEyIiByeD0iMTEiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM5MzMzZWEiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSI1IiB5MT0iMTIiIHgyPSI1IiB5Mj0iMjAiIHN0cm9rZT0iIzkzMzNlYSIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjI3IiB5MT0iMTIiIHgyPSIyNyIgeTI9IjIwIiBzdHJva2U9IiM5MzMzZWEiIHN0cm9rZS13aWR0aD0iMiIvPjxlbGxpcHNlIGN4PSIxNiIgY3k9IjIwIiByeD0iMTEiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM5MzMzZWEiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="data"/>
+    <h2>Reference Data &nbsp;<span style="font-weight:400;font-size:.9rem;color:#64748b">— global YAML lists used across all industries</span></h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 230" width="820" style="max-width:100%">
+        <defs>
+          <filter id="sh3" x="-4%" y="-4%" width="108%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#00000012"/>
+          </filter>
+        </defs>
+
+        <!-- ── employment_type ── -->
+        <rect x="10" y="10" width="250" height="210" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="135" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">employment_type</text>
+        <text x="135" y="50" text-anchor="middle" font-size="9" fill="#64748b">YAML key  ·  7 values</text>
+        <line x1="30" y1="58" x2="240" y2="58" stroke="#bfdbfe" stroke-width="1"/>
+        <text x="135" y="76"  text-anchor="middle" font-size="10.5" fill="#1e40af">FULL_TIME</text>
+        <text x="135" y="96"  text-anchor="middle" font-size="10.5" fill="#1e40af">PART_TIME</text>
+        <text x="135" y="116" text-anchor="middle" font-size="10.5" fill="#1e40af">CONTRACTOR</text>
+        <text x="135" y="136" text-anchor="middle" font-size="10.5" fill="#1e40af">TEMPORARY</text>
+        <text x="135" y="156" text-anchor="middle" font-size="10.5" fill="#1e40af">INTERN</text>
+        <text x="135" y="176" text-anchor="middle" font-size="10.5" fill="#6d28d9">VOLUNTEER</text>
+        <text x="135" y="196" text-anchor="middle" font-size="10.5" fill="#6d28d9">PER_DIEM</text>
+        <text x="135" y="214" text-anchor="middle" font-size="8" fill="#94a3b8">new in this version ↑</text>
+
+        <!-- ── currency ── -->
+        <rect x="285" y="10" width="250" height="210" rx="8" fill="#f0fdf4" stroke="#059669" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="410" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">currency</text>
+        <text x="410" y="50" text-anchor="middle" font-size="9" fill="#64748b">YAML key  ·  7 values</text>
+        <line x1="305" y1="58" x2="515" y2="58" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="410" y="76"  text-anchor="middle" font-size="10.5" fill="#065f46">USD — US Dollar</text>
+        <text x="410" y="96"  text-anchor="middle" font-size="10.5" fill="#065f46">EUR — Euro</text>
+        <text x="410" y="116" text-anchor="middle" font-size="10.5" fill="#065f46">GBP — British Pound</text>
+        <text x="410" y="136" text-anchor="middle" font-size="10.5" fill="#065f46">INR — Indian Rupee</text>
+        <text x="410" y="156" text-anchor="middle" font-size="10.5" fill="#065f46">CAD — Canadian Dollar</text>
+        <text x="410" y="176" text-anchor="middle" font-size="10.5" fill="#065f46">AUD — Australian Dollar</text>
+        <text x="410" y="196" text-anchor="middle" font-size="10.5" fill="#065f46">SGD — Singapore Dollar</text>
+        <text x="410" y="214" text-anchor="middle" font-size="8" fill="#94a3b8">randomly assigned per posting</text>
+
+        <!-- ── salary_unit ── -->
+        <rect x="560" y="10" width="250" height="210" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="685" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">salary_unit</text>
+        <text x="685" y="50" text-anchor="middle" font-size="9" fill="#64748b">YAML key  ·  5 values</text>
+        <line x1="580" y1="58" x2="790" y2="58" stroke="#fde68a" stroke-width="1"/>
+        <text x="685" y="83"  text-anchor="middle" font-size="10.5" fill="#92400e">HOUR</text>
+        <text x="685" y="107" text-anchor="middle" font-size="10.5" fill="#92400e">DAY</text>
+        <text x="685" y="131" text-anchor="middle" font-size="10.5" fill="#92400e">WEEK</text>
+        <text x="685" y="155" text-anchor="middle" font-size="10.5" fill="#92400e">MONTH</text>
+        <text x="685" y="179" text-anchor="middle" font-size="10.5" fill="#92400e">YEAR</text>
+        <text x="685" y="214" text-anchor="middle" font-size="8" fill="#94a3b8">randomly assigned per posting</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ USAGE EXAMPLE ═══════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2VmZjZmZiIvPjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyMCIgaGVpZ2h0PSI1IiByeD0iMiIgZmlsbD0iIzI1NjNlYiIvPjxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iMjAiIGhlaWdodD0iNSIgcng9IjIiIGZpbGw9IiMzYjgyZjYiLz48cmVjdCB4PSI2IiB5PSIyMiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjUiIHJ4PSIyIiBmaWxsPSIjOTNjNWZkIi8+PC9zdmc+" alt="arch"/>
+    <h2>Usage Examples</h2>
+  </div>
+  <div class="card-body">
+<pre><span class="cm">// Fully random posting</span>
+<span class="ty">JobFaker</span> faker = <span class="kw">new</span> <span class="ty">JobFaker</span>();
+<span class="ty">JobPosting</span> job = faker.jobPosting().build();
+
+<span class="cm">// Industry-targeted</span>
+<span class="ty">JobPosting</span> tech = faker.jobPosting().buildForIndustry(<span class="st">"technology"</span>);
+
+<span class="cm">// Seeded — fully reproducible</span>
+<span class="ty">JobFaker</span> seeded = <span class="kw">new</span> <span class="ty">JobFaker</span>(<span class="kw">new</span> <span class="ty">Random</span>(42L));
+<span class="ty">JobPosting</span> same  = seeded.jobPosting().build(); <span class="cm">// always identical</span>
+
+<span class="cm">// Inspect reference-data lists (all sourced from YAML)</span>
+faker.jobPosting().availableIndustries();      <span class="cm">// 10 industry keys</span>
+faker.jobPosting().availableEmploymentTypes(); <span class="cm">// ["FULL_TIME","PART_TIME","CONTRACTOR","TEMPORARY","INTERN","VOLUNTEER","PER_DIEM"]</span>
+faker.jobPosting().availableCurrencies();      <span class="cm">// ["USD","EUR","GBP","INR","CAD","AUD","SGD"]</span>
+faker.jobPosting().availableSalaryUnits();     <span class="cm">// ["HOUR","DAY","WEEK","MONTH","YEAR"]</span>
+
+<span class="cm">// Access fields</span>
+System.out.println(job.industry());                  <span class="cm">// "Technology"</span>
+System.out.println(job.title());                     <span class="cm">// "Staff Software Engineer"</span>
+System.out.println(job.skills());                    <span class="cm">// ["Java", "Kubernetes", "AWS"]</span>
+System.out.println(job.employmentType());            <span class="cm">// "CONTRACTOR"</span>
+System.out.println(job.baseSalary().currency());     <span class="cm">// "EUR"</span>
+System.out.println(job.baseSalary().minValue());     <span class="cm">// 95000</span>
+System.out.println(job.baseSalary().unitText());     <span class="cm">// "MONTH"</span>
+System.out.println(job.jobLocation());               <span class="cm">// "Austin, TX" or "Remote"</span></pre>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <p>
+    DataFaker JobPosting Provider &nbsp;·&nbsp;
+    <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a> &nbsp;·&nbsp;
+    &copy; 2026 Suresh Shanmugam &nbsp;·&nbsp;
+    Built with <a href="https://www.datafaker.net/">DataFaker 2.4.1</a>
+  </p>
+</footer>
+</body>
+</html>
