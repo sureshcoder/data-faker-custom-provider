@@ -28,7 +28,8 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <datafaker.version>2.4.1</datafaker.version>
+        <datafaker.version>2.5.4</datafaker.version>
+        <snakeyaml.version>2.5</snakeyaml.version>
         <junit.version>5.11.0</junit.version>
     </properties>
 
@@ -37,6 +38,14 @@
             <groupId>net.datafaker</groupId>
             <artifactId>datafaker</artifactId>
             <version>${datafaker.version}</version>
+        </dependency>
+
+        <!-- Declared explicitly: both providers import org.yaml.snakeyaml.Yaml directly.
+             Pinned to the same version DataFaker 2.5.4 itself uses so they stay aligned. -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
         </dependency>
 
         <dependency>
