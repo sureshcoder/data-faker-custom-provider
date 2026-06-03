@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DataFaker Candidate Provider – Design</title>
+<style>
+  :root {
+    --blue:    #2563eb; --blue-lt: #eff6ff; --blue-md: #93c5fd;
+    --purple:  #7c3aed; --purple-lt: #fdf4ff;
+    --green:   #059669; --green-lt: #f0fdf4;
+    --amber:   #d97706; --amber-lt: #fffbeb;
+    --red:     #dc2626; --red-lt:   #fef2f2;
+    --slate:   #1e293b; --slate-md: #475569; --slate-lt: #f8fafc;
+    --card:    #ffffff; --border:  #e2e8f0;
+    --radius:  10px;    --shadow:  0 2px 12px rgba(0,0,0,.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Inter", system-ui, sans-serif; background: var(--slate-lt); color: var(--slate); line-height: 1.6; }
+
+  header {
+    background: linear-gradient(135deg, #1a0533 0%, #2d0f5e 55%, #1e1b4b 100%);
+    color: #fff; padding: 48px 40px 40px;
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; gap: 24px; }
+  .header-text h1 { font-size: 2rem; font-weight: 700; letter-spacing: -.5px; }
+  .header-text p  { color: #c4b5fd; margin-top: 6px; font-size: .95rem; }
+  .badges { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .badges img { height: 26px; }
+
+  main { max-width: 960px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    margin-bottom: 32px; overflow: hidden;
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px; border-bottom: 1px solid var(--border);
+    background: var(--slate-lt);
+  }
+  .card-header img { width: 32px; height: 32px; }
+  .card-header h2 { font-size: 1.1rem; font-weight: 600; color: var(--slate); }
+  .card-body { padding: 28px 24px; }
+
+  .diagram-wrap { overflow-x: auto; }
+  svg text { font-family: "Inter", system-ui, sans-serif; }
+
+  .industry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .ind-card { border-radius: 8px; padding: 18px; border: 1px solid var(--border); }
+  .ind-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: 10px; }
+  .ind-card .stat { font-size: .8rem; color: var(--slate-md); margin: 3px 0; }
+  .tech  { background: #eff6ff; border-color: #93c5fd; }
+  .hcare { background: #f0fdf4; border-color: #6ee7b7; }
+  .fin   { background: #fffbeb; border-color: #fcd34d; }
+  .ret   { background: #fef2f2; border-color: #fca5a5; }
+  .mfg   { background: #f8fafc; border-color: #94a3b8; }
+  .log   { background: #ecfeff; border-color: #67e8f9; }
+  .edu   { background: #f5f3ff; border-color: #c4b5fd; }
+  .sta   { background: #fdf2f8; border-color: #f9a8d4; }
+  .con   { background: #eff6ff; border-color: #93c5fd; }
+  .med   { background: #fff7ed; border-color: #fdba74; }
+
+  pre {
+    background: #0f172a; color: #e2e8f0; font-size: .82rem;
+    border-radius: 8px; padding: 18px 20px; overflow-x: auto;
+    font-family: "Fira Code", "Cascadia Code", monospace; line-height: 1.7;
+  }
+  .kw { color: #93c5fd; } .ty { color: #6ee7b7; }
+  .cm { color: #475569; } .st { color: #fca5a5; }
+
+  footer { text-align: center; color: var(--slate-md); font-size: .8rem; padding: 24px; }
+  footer a { color: var(--blue); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <div class="header-inner">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MCA4MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIzOCIgZmlsbD0iIzJkMGY1ZSIgc3Ryb2tlPSIjN2MzYWVkIiBzdHJva2Utd2lkdGg9IjMiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjMwIiByPSIxMiIgZmlsbD0iIzdjM2FlZCIvPjxwYXRoIGQ9Ik0xNCA2OCBRMTQ1NSA2OCA0MCA1NSBRNTUgNTUgNjYgNjgiIGZpbGw9IiM3YzNhZWQiLz48dGV4dCB4PSI0MCIgeT0iNzciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNjNGI1ZmQiIGZvbnQtc2l6ZT0iOSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiPkNhbmRpZGF0ZUZha2VyPC90ZXh0Pjwvc3ZnPg==" alt="CandidateFaker" width="80" height="80"/>
+    <div class="header-text">
+      <h1>DataFaker Candidate Provider</h1>
+      <p>Custom DataFaker 2.x provider generating fully-synthetic, industry-aware job candidates<br/>
+         <strong style="color:#e9d5ff">10 industries</strong> &nbsp;·&nbsp;
+         <strong style="color:#e9d5ff">9 candidate fields</strong> &nbsp;·&nbsp;
+         <strong style="color:#e9d5ff">35 tests</strong> &nbsp;·&nbsp;
+         <strong style="color:#e9d5ff">Seeded &amp; reproducible</strong></p>
+      <div class="badges">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSIyNiI+PHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjI2IiByeD0iNSIgZmlsbD0iIzUzODJhMSIvPjx0ZXh0IHg9IjQwIiB5PSIxNy41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj5KYXZhIDIxPC90ZXh0Pjwvc3ZnPg==" alt="Java 21"/>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzYiIGhlaWdodD0iMjYiPjxyZWN0IHdpZHRoPSIxMzYiIGhlaWdodD0iMjYiIHJ4PSI1IiBmaWxsPSIjN2MzYWVkIi8+PHRleHQgeD0iNjgiIHk9IjE3LjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjEyIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPkRhdGFGYWtlciAyLjUuNDwvdGV4dD48L3N2Zz4=" alt="DataFaker 2.5.4"/>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYiIGhlaWdodD0iMjYiPjxyZWN0IHdpZHRoPSIxMDYiIGhlaWdodD0iMjYiIHJ4PSI1IiBmaWxsPSIjZDk3NzA2Ii8+PHRleHQgeD0iNTMiIHk9IjE3LjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjEyIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPkFwYWNoZSAyLjA8L3RleHQ+PC9zdmc+" alt="Apache 2.0"/>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MiIgaGVpZ2h0PSIyNiI+PHJlY3Qgd2lkdGg9IjcyIiBoZWlnaHQ9IjI2IiByeD0iNSIgZmlsbD0iI2RjMjYyNiIvPjx0ZXh0IHg9IjM2IiB5PSIxNy41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj5NYXZlbjwvdGV4dD48L3N2Zz4=" alt="Maven"/>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════════ 1. ARCHITECTURE ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZkZjRmZiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTEiIHI9IjYiIGZpbGw9IiM3YzNhZWQiLz48cGF0aCBkPSJNNSAyOSBDNSAyMSAyNyAyMSAyNyAyOSIgZmlsbD0iIzdjM2FlZCIvPjwvc3ZnPg==" alt="arch"/>
+    <h2>System Architecture</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 540" width="820" style="max-width:100%">
+        <defs>
+          <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0,10 3.5,0 7" fill="#64748b"/>
+          </marker>
+          <filter id="sh" x="-5%" y="-5%" width="110%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000018"/>
+          </filter>
+        </defs>
+
+        <!-- User App -->
+        <rect x="285" y="10" width="250" height="48" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5" filter="url(#sh)"/>
+        <text x="410" y="30" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">USER APPLICATION</text>
+        <text x="410" y="48" text-anchor="middle" font-size="10" fill="#94a3b8">new CandidateFaker()  ·  .candidate().build()</text>
+
+        <line x1="410" y1="58" x2="410" y2="98" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+
+        <!-- CandidateFaker -->
+        <rect x="235" y="98" width="350" height="66" rx="8" fill="#fdf4ff" stroke="#7c3aed" stroke-width="2" filter="url(#sh)"/>
+        <text x="410" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9">CandidateFaker</text>
+        <text x="410" y="140" text-anchor="middle" font-size="10.5" fill="#7c3aed">extends Faker  ·  faker/CandidateFaker.java</text>
+        <text x="410" y="155" text-anchor="middle" font-size="10" fill="#64748b">+ candidate() : CandidateProvider</text>
+
+        <line x1="410" y1="164" x2="410" y2="208" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+        <text x="422" y="194" font-size="9" fill="#94a3b8">getProvider(…)</text>
+
+        <!-- CandidateProvider -->
+        <rect x="160" y="208" width="500" height="88" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#sh)"/>
+        <text x="410" y="234" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">CandidateProvider</text>
+        <text x="410" y="252" text-anchor="middle" font-size="10.5" fill="#2563eb">extends AbstractProvider&lt;Faker&gt;  ·  provider/CandidateProvider.java</text>
+        <text x="265" y="272" font-size="9.5" fill="#64748b">+ build()</text>
+        <text x="345" y="272" font-size="9.5" fill="#64748b">+ buildForIndustry(key)</text>
+        <text x="508" y="272" font-size="9.5" fill="#64748b">+ availableIndustries()</text>
+        <text x="300" y="287" font-size="9.5" fill="#64748b">+ availableCertificationNames(key)</text>
+
+        <!-- Arrow left to YAML -->
+        <line x1="160" y1="254" x2="120" y2="254" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="140" y="248" text-anchor="middle" font-size="9" fill="#94a3b8">reads</text>
+
+        <!-- Arrow right to Faker built-ins -->
+        <line x1="660" y1="254" x2="700" y2="254" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="678" y="248" text-anchor="middle" font-size="9" fill="#94a3b8">uses</text>
+
+        <!-- YAML box -->
+        <rect x="10" y="198" width="110" height="128" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" filter="url(#sh)"/>
+        <text x="65" y="218" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">YAML</text>
+        <text x="65" y="232" text-anchor="middle" font-size="8" fill="#78350f">candidate-</text>
+        <text x="65" y="244" text-anchor="middle" font-size="8" fill="#78350f">mappings.yml</text>
+        <text x="65" y="259" text-anchor="middle" font-size="8" fill="#b45309">10 industries</text>
+        <text x="65" y="272" text-anchor="middle" font-size="8" fill="#b45309">20 colleges</text>
+        <text x="65" y="285" text-anchor="middle" font-size="8" fill="#b45309">4 degree levels</text>
+        <text x="65" y="298" text-anchor="middle" font-size="8" fill="#b45309">15 specializations</text>
+        <text x="65" y="314" text-anchor="middle" font-size="8" fill="#b45309">~7 certs / industry</text>
+
+        <!-- Faker built-ins box -->
+        <rect x="700" y="212" width="110" height="100" rx="8" fill="#f0fdf4" stroke="#059669" stroke-width="1.5" filter="url(#sh)"/>
+        <text x="755" y="234" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">Faker</text>
+        <text x="755" y="249" text-anchor="middle" font-size="9" fill="#065f46">Built-ins</text>
+        <text x="755" y="264" text-anchor="middle" font-size="8.5" fill="#047857">name()</text>
+        <text x="755" y="277" text-anchor="middle" font-size="8.5" fill="#047857">address()</text>
+        <text x="755" y="290" text-anchor="middle" font-size="8.5" fill="#047857">company()</text>
+        <text x="755" y="303" text-anchor="middle" font-size="8.5" fill="#047857">random()</text>
+
+        <!-- Arrow down to Candidate record -->
+        <line x1="410" y1="296" x2="410" y2="354" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+
+        <!-- Candidate record (large box showing all sub-records) -->
+        <rect x="50" y="354" width="720" height="170" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.5" filter="url(#sh)"/>
+        <text x="410" y="376" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Candidate  (Java 21 record)</text>
+
+        <!-- Left column fields -->
+        <text x="90" y="397" font-size="10" fill="#64748b">· firstName : String</text>
+        <text x="90" y="412" font-size="10" fill="#64748b">· lastName  : String</text>
+        <text x="90" y="427" font-size="10" fill="#64748b">· email     : String</text>
+        <text x="90" y="442" font-size="10" fill="#64748b">· mobileNumber : String</text>
+        <text x="90" y="457" font-size="10" fill="#64748b">· address   : <tspan fill="#2563eb" font-weight="600">Address</tspan></text>
+
+        <!-- Center column -->
+        <text x="290" y="397" font-size="10" fill="#64748b">· educationHistory : <tspan fill="#059669" font-weight="600">List&lt;EducationHistory&gt;</tspan></text>
+        <text x="290" y="412" font-size="10" fill="#64748b">· jobHistory       : <tspan fill="#d97706" font-weight="600">List&lt;JobHistory&gt;</tspan></text>
+        <text x="290" y="427" font-size="10" fill="#64748b">· skills           : List&lt;String&gt;</text>
+        <text x="290" y="442" font-size="10" fill="#64748b">· certifications   : <tspan fill="#7c3aed" font-weight="600">List&lt;Certification&gt;</tspan></text>
+
+        <!-- Sub-record chips -->
+        <rect x="70" y="470" width="100" height="42" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+        <text x="120" y="487" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1d4ed8">Address</text>
+        <text x="120" y="502" text-anchor="middle" font-size="8.5" fill="#64748b">6 fields</text>
+
+        <rect x="192" y="470" width="155" height="42" rx="6" fill="#f0fdf4" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="269" y="487" text-anchor="middle" font-size="9.5" font-weight="700" fill="#065f46">EducationHistory</text>
+        <text x="269" y="502" text-anchor="middle" font-size="8.5" fill="#64748b">8 fields · 1–3 per candidate</text>
+
+        <rect x="370" y="470" width="140" height="42" rx="6" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+        <text x="440" y="487" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e">JobHistory</text>
+        <text x="440" y="502" text-anchor="middle" font-size="8.5" fill="#64748b">5 fields · 1–4 per candidate</text>
+
+        <rect x="532" y="470" width="140" height="42" rx="6" fill="#fdf4ff" stroke="#c4b5fd" stroke-width="1"/>
+        <text x="602" y="487" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6d28d9">Certification</text>
+        <text x="602" y="502" text-anchor="middle" font-size="8.5" fill="#64748b">3 fields · 0–3 per candidate</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 2. DATA MODEL ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2VmZjZmZiIvPjxyZWN0IHg9IjQiIHk9IjQiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSIxOCIgeT0iNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzkzYzVmZCIvPjxyZWN0IHg9IjQiIHk9IjE4IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHJ4PSIyIiBmaWxsPSIjOTNjNWZkIi8+PHJlY3QgeD0iMTgiIHk9IjE4IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHJ4PSIyIiBmaWxsPSIjMjU2M2ViIi8+PC9zdmc+" alt="model"/>
+    <h2>Candidate Data Model</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 520" width="820" style="max-width:100%">
+        <defs>
+          <marker id="arr2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#94a3b8"/>
+          </marker>
+          <filter id="sh2" x="-5%" y="-5%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#00000015"/>
+          </filter>
+        </defs>
+
+        <!-- Candidate record (top centre) -->
+        <rect x="200" y="10" width="420" height="120" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="410" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">Candidate</text>
+        <text x="410" y="50" text-anchor="middle" font-size="9" fill="#94a3b8">model/Candidate.java  ·  Java 21 record</text>
+        <line x1="220" y1="58" x2="600" y2="58" stroke="#334155" stroke-width="1"/>
+        <text x="290" y="73" font-size="9.5" fill="#93c5fd">firstName : String</text>
+        <text x="290" y="87" font-size="9.5" fill="#93c5fd">lastName : String</text>
+        <text x="290" y="101" font-size="9.5" fill="#93c5fd">email : String</text>
+        <text x="290" y="115" font-size="9.5" fill="#93c5fd">mobileNumber : String</text>
+        <text x="445" y="73" font-size="9.5" fill="#6ee7b7">address : Address</text>
+        <text x="445" y="87" font-size="9.5" fill="#6ee7b7">educationHistory : List&lt;…&gt;</text>
+        <text x="445" y="101" font-size="9.5" fill="#6ee7b7">jobHistory : List&lt;…&gt;</text>
+        <text x="445" y="115" font-size="9.5" fill="#fca5a5">skills / certifications</text>
+
+        <!-- Connecting lines (from bottom of Candidate to top of sub-records) -->
+        <!-- Candidate bottom y=130; sub-records top y=220 -->
+        <line x1="105" y1="130" x2="105" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+        <line x1="260" y1="130" x2="260" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+        <line x1="540" y1="130" x2="540" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+        <line x1="720" y1="130" x2="720" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+        <!-- Fan out from candidate center -->
+        <path d="M 410 130 Q 410 175 105 175 L 105 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <path d="M 410 130 Q 410 175 260 175 L 260 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <path d="M 410 130 Q 410 175 540 175 L 540 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <path d="M 410 130 Q 410 175 720 175 L 720 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+
+        <!-- Address record -->
+        <rect x="10" y="218" width="190" height="186" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="105" y="240" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">Address</text>
+        <text x="105" y="255" text-anchor="middle" font-size="8.5" fill="#94a3b8">model/Address.java</text>
+        <line x1="25" y1="262" x2="190" y2="262" stroke="#bfdbfe" stroke-width="1"/>
+        <text x="30" y="278" font-size="9.5" fill="#1e40af">addressLine1 : String</text>
+        <text x="30" y="294" font-size="9.5" fill="#1e40af">addressLine2 : String</text>
+        <text x="30" y="310" font-size="9.5" fill="#64748b">  (blank if no suite/apt)</text>
+        <text x="30" y="326" font-size="9.5" fill="#1e40af">city : String</text>
+        <text x="30" y="342" font-size="9.5" fill="#1e40af">state : String  (abbr.)</text>
+        <text x="30" y="358" font-size="9.5" fill="#1e40af">country : String  ("US")</text>
+        <text x="30" y="374" font-size="9.5" fill="#1e40af">zipCode : String</text>
+        <text x="105" y="396" text-anchor="middle" font-size="8" fill="#94a3b8">40 % chance of addressLine2</text>
+
+        <!-- EducationHistory record -->
+        <rect x="218" y="218" width="192" height="220" rx="8" fill="#f0fdf4" stroke="#059669" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="314" y="240" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">EducationHistory</text>
+        <text x="314" y="255" text-anchor="middle" font-size="8.5" fill="#94a3b8">model/EducationHistory.java</text>
+        <line x1="233" y1="262" x2="400" y2="262" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="233" y="278" font-size="9.5" fill="#065f46">institutionName : String</text>
+        <text x="233" y="294" font-size="9.5" fill="#065f46">degreeLevel : String</text>
+        <text x="233" y="308" font-size="8.5" fill="#64748b">  UNDERGRADUATE / POSTGRADUATE</text>
+        <text x="233" y="320" font-size="8.5" fill="#64748b">  DOCTORATE / POST_DOCTORAL</text>
+        <text x="233" y="336" font-size="9.5" fill="#065f46">courseName : String</text>
+        <text x="233" y="352" font-size="9.5" fill="#065f46">specialization : String</text>
+        <text x="233" y="368" font-size="9.5" fill="#065f46">startDate : LocalDate</text>
+        <text x="233" y="384" font-size="9.5" fill="#065f46">endDate : LocalDate</text>
+        <text x="233" y="400" font-size="9.5" fill="#065f46">scoreType : String</text>
+        <text x="233" y="414" font-size="8.5" fill="#64748b">  "CGPA" or "PERCENTAGE"</text>
+        <text x="233" y="428" font-size="9.5" fill="#065f46">scoreValue : double</text>
+
+        <!-- JobHistory record -->
+        <rect x="428" y="218" width="192" height="190" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="524" y="240" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">JobHistory</text>
+        <text x="524" y="255" text-anchor="middle" font-size="8.5" fill="#94a3b8">model/JobHistory.java</text>
+        <line x1="443" y1="262" x2="610" y2="262" stroke="#fde68a" stroke-width="1"/>
+        <text x="443" y="278" font-size="9.5" fill="#92400e">companyName : String</text>
+        <text x="443" y="294" font-size="9.5" fill="#92400e">role : String</text>
+        <text x="443" y="308" font-size="8.5" fill="#64748b">  e.g. "Software Development"</text>
+        <text x="443" y="324" font-size="9.5" fill="#92400e">designation : String</text>
+        <text x="443" y="338" font-size="8.5" fill="#64748b">  e.g. "Senior Eng."</text>
+        <text x="443" y="354" font-size="9.5" fill="#92400e">responsibilities : List&lt;String&gt;</text>
+        <text x="443" y="368" font-size="8.5" fill="#64748b">  2–4 bullet points</text>
+        <text x="443" y="384" font-size="9.5" fill="#92400e">skills : List&lt;String&gt;</text>
+        <text x="443" y="398" font-size="8.5" fill="#64748b">  3–5 unique skills</text>
+
+        <!-- Certification record -->
+        <rect x="638" y="218" width="172" height="158" rx="8" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh2)"/>
+        <text x="724" y="240" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">Certification</text>
+        <text x="724" y="255" text-anchor="middle" font-size="8.5" fill="#94a3b8">model/Certification.java</text>
+        <line x1="653" y1="262" x2="800" y2="262" stroke="#ddd6fe" stroke-width="1"/>
+        <text x="653" y="278" font-size="9.5" fill="#6d28d9">name : String</text>
+        <text x="653" y="294" font-size="8.5" fill="#64748b">  from YAML cert list</text>
+        <text x="653" y="310" font-size="9.5" fill="#6d28d9">issuingOrganization</text>
+        <text x="653" y="324" font-size="8.5" fill="#64748b">  : String</text>
+        <text x="653" y="340" font-size="9.5" fill="#6d28d9">issuedDate : LocalDate</text>
+        <text x="653" y="354" font-size="8.5" fill="#64748b">  random within last 5yr</text>
+        <text x="724" y="374" text-anchor="middle" font-size="8" fill="#94a3b8">0–3 per candidate</text>
+
+        <!-- Cardinality labels -->
+        <text x="105" y="212" text-anchor="middle" font-size="8" fill="#2563eb" font-style="italic">1 per candidate</text>
+        <text x="314" y="212" text-anchor="middle" font-size="8" fill="#059669" font-style="italic">1–3 per candidate</text>
+        <text x="524" y="212" text-anchor="middle" font-size="8" fill="#d97706" font-style="italic">1–4 per candidate</text>
+        <text x="724" y="212" text-anchor="middle" font-size="8" fill="#7c3aed" font-style="italic">0–3 per candidate</text>
+
+        <!-- Bottom: Skills note -->
+        <rect x="218" y="462" width="400" height="46" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="418" y="482" text-anchor="middle" font-size="10" font-weight="600" fill="#475569">skills : List&lt;String&gt;</text>
+        <text x="418" y="498" text-anchor="middle" font-size="9" fill="#64748b">4–8 unique skills from industry pool  ·  separate from per-job skills</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 3. EDUCATION ALGORITHM ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2YwZmRmNCIvPjxyZWN0IHg9IjQiIHk9IjEwIiB3aWR0aD0iMjQiIGhlaWdodD0iMTYiIHJ4PSIyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwNTk2NjkiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSI4IiB5MT0iMTYiIHgyPSIyNCIgeTI9IjE2IiBzdHJva2U9IiMwNTk2NjkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGxpbmUgeDE9IjgiIHkxPSIyMCIgeDI9IjE4IiB5Mj0iMjAiIHN0cm9rZT0iIzA1OTY2OSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cG9seWdvbiBwb2ludHM9IjE2LDQgMjAsOSAxMiw5IiBmaWxsPSIjMDU5NjY5Ii8+PC9zdmc+" alt="edu"/>
+    <h2>Education History Generation — Backward Chronological Algorithm</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 300" width="820" style="max-width:100%">
+        <defs>
+          <marker id="arr3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#2563eb"/>
+          </marker>
+          <marker id="arr4" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- Title / legend row -->
+        <text x="20" y="22" font-size="11" font-weight="600" fill="#475569">Timeline (left = oldest, right = most recent)</text>
+        <rect x="560" y="10" width="12" height="12" rx="2" fill="#2563eb" opacity=".8"/>
+        <text x="576" y="21" font-size="9" fill="#475569">UNDERGRADUATE</text>
+        <rect x="672" y="10" width="12" height="12" rx="2" fill="#059669" opacity=".8"/>
+        <text x="688" y="21" font-size="9" fill="#475569">POSTGRADUATE</text>
+        <rect x="762" y="10" width="12" height="12" rx="2" fill="#7c3aed" opacity=".8"/>
+        <text x="778" y="21" font-size="9" fill="#475569">DOCTORATE</text>
+
+        <!-- Time axis -->
+        <line x1="30" y1="130" x2="790" y2="130" stroke="#e2e8f0" stroke-width="1.5"/>
+
+        <!-- ── UNDERGRAD block: x=40 to x=220 (3.5yr avg, ~51px/yr) ── -->
+        <rect x="40" y="100" width="180" height="32" rx="4" fill="#2563eb" opacity=".82"/>
+        <text x="130" y="121" text-anchor="middle" font-size="9.5" fill="white" font-weight="600">UNDERGRADUATE  (~3–4 yr)</text>
+        <!-- duration brace below -->
+        <text x="130" y="148" text-anchor="middle" font-size="8.5" fill="#2563eb">start</text>
+        <text x="220" y="148" text-anchor="middle" font-size="8.5" fill="#2563eb">end</text>
+
+        <!-- Gap 1 -->
+        <text x="244" y="120" text-anchor="middle" font-size="8" fill="#94a3b8">gap</text>
+        <text x="244" y="132" text-anchor="middle" font-size="7.5" fill="#94a3b8">3–12 mo</text>
+        <line x1="220" y1="116" x2="268" y2="116" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,2"/>
+
+        <!-- ── POSTGRAD block: x=268 to x=370 (2yr avg) ── -->
+        <rect x="268" y="100" width="102" height="32" rx="4" fill="#059669" opacity=".82"/>
+        <text x="319" y="121" text-anchor="middle" font-size="9.5" fill="white" font-weight="600">POSTGRADUATE</text>
+        <text x="319" y="148" text-anchor="middle" font-size="8.5" fill="#059669">~1–2 yr</text>
+
+        <!-- Gap 2 -->
+        <text x="393" y="120" text-anchor="middle" font-size="8" fill="#94a3b8">gap</text>
+        <text x="393" y="132" text-anchor="middle" font-size="7.5" fill="#94a3b8">3–12 mo</text>
+        <line x1="370" y1="116" x2="416" y2="116" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,2"/>
+
+        <!-- ── DOCTORATE block: x=416 to x=616 (4yr avg) ── -->
+        <rect x="416" y="100" width="200" height="32" rx="4" fill="#7c3aed" opacity=".82"/>
+        <text x="516" y="121" text-anchor="middle" font-size="9.5" fill="white" font-weight="600">DOCTORATE  (~3–5 yr)</text>
+        <text x="616" y="148" text-anchor="middle" font-size="8.5" fill="#7c3aed">end</text>
+
+        <!-- Gap to today -->
+        <rect x="616" y="108" width="140" height="16" rx="2" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="686" y="120" text-anchor="middle" font-size="8.5" fill="#64748b">1–5 years ago</text>
+
+        <!-- TODAY marker -->
+        <line x1="756" y1="90" x2="756" y2="155" stroke="#dc2626" stroke-width="2"/>
+        <rect x="730" y="74" width="52" height="20" rx="4" fill="#dc2626"/>
+        <text x="756" y="88" text-anchor="middle" font-size="9" fill="white" font-weight="700">TODAY</text>
+        <text x="756" y="168" text-anchor="middle" font-size="8.5" fill="#dc2626">LocalDate.now()</text>
+
+        <!-- Generation order annotations (above bars) -->
+        <text x="130" y="90" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">③ generated last (oldest)</text>
+        <text x="319" y="90" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">② generated 2nd</text>
+        <text x="516" y="90" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">① generated first (most recent)</text>
+
+        <!-- Backward arrow annotation -->
+        <line x1="620" y1="72" x2="50" y2="72" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <text x="335" y="66" text-anchor="middle" font-size="9" fill="#2563eb" font-weight="600">Algorithm walks backward →</text>
+
+        <!-- Key rules (bottom) -->
+        <rect x="20" y="185" width="780" height="100" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="410" y="204" text-anchor="middle" font-size="10" font-weight="600" fill="#475569">Key invariants guaranteed by the algorithm</text>
+        <text x="50" y="224" font-size="9.5" fill="#64748b">✓  All degrees end in the past (most recent ends 1–5 years before today)</text>
+        <text x="50" y="241" font-size="9.5" fill="#64748b">✓  Entries are returned in chronological order — oldest degree at index 0</text>
+        <text x="50" y="258" font-size="9.5" fill="#64748b">✓  No degree overlap — a gap of 3–12 months always separates consecutive degrees</text>
+        <text x="50" y="275" font-size="9.5" fill="#64748b">✓  Seeded reproducible: all date arithmetic uses integer nextInt() through faker.random()</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 4. SCORE SYSTEM ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZlZjJmMiIvPjxwYXRoIGQ9Ik02IDI0IFExMCAxMCAxNiAxNCBRMjIgMTggMjYgOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZGMyNjI2IiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMjQiIHI9IjIiIGZpbGw9IiNkYzI2MjYiLz48Y2lyY2xlIGN4PSIxNiIgY3k9IjE0IiByPSIyIiBmaWxsPSIjZGMyNjI2Ii8+PGNpcmNsZSBjeD0iMjYiIGN5PSI4IiByPSIyIiBmaWxsPSIjZGMyNjI2Ii8+PC9zdmc+" alt="score"/>
+    <h2>Education Score System</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 250" width="820" style="max-width:100%">
+
+        <!-- CGPA row label -->
+        <text x="20" y="50" font-size="11" font-weight="700" fill="#065f46">CGPA</text>
+        <text x="20" y="65" font-size="9" fill="#64748b">scoreType = "CGPA"</text>
+        <!-- Full ruler background -->
+        <rect x="100" y="38" width="680" height="22" rx="4" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/>
+        <!-- Valid range: 6.0–10.0 = 60%–100% of [0,10] → x_start=100+0.6*680=508, w=272 -->
+        <rect x="508" y="38" width="272" height="22" rx="2" fill="#059669" opacity=".85"/>
+        <text x="644" y="53" text-anchor="middle" font-size="9" fill="white" font-weight="700">6.0 – 10.0  (step 0.1)</text>
+        <!-- Tick marks and labels: 0,2,4,6,8,10 -->
+        <line x1="100" y1="60" x2="100" y2="68" stroke="#94a3b8" stroke-width="1"/><text x="100" y="78" text-anchor="middle" font-size="8.5" fill="#94a3b8">0</text>
+        <line x1="236" y1="60" x2="236" y2="68" stroke="#94a3b8" stroke-width="1"/><text x="236" y="78" text-anchor="middle" font-size="8.5" fill="#94a3b8">2</text>
+        <line x1="372" y1="60" x2="372" y2="68" stroke="#94a3b8" stroke-width="1"/><text x="372" y="78" text-anchor="middle" font-size="8.5" fill="#94a3b8">4</text>
+        <line x1="508" y1="60" x2="508" y2="68" stroke="#059669" stroke-width="1.5"/><text x="508" y="78" text-anchor="middle" font-size="9" fill="#059669" font-weight="600">6.0 ✓</text>
+        <line x1="644" y1="60" x2="644" y2="68" stroke="#059669" stroke-width="1.5"/><text x="644" y="78" text-anchor="middle" font-size="8.5" fill="#059669">8</text>
+        <line x1="780" y1="60" x2="780" y2="68" stroke="#059669" stroke-width="1.5"/><text x="780" y="78" text-anchor="middle" font-size="9" fill="#059669" font-weight="600">10.0 ✓</text>
+
+        <!-- PERCENTAGE row label -->
+        <text x="20" y="140" font-size="11" font-weight="700" fill="#92400e">PERCENTAGE</text>
+        <text x="20" y="155" font-size="9" fill="#64748b">scoreType = "PERCENTAGE"</text>
+        <!-- Full ruler background -->
+        <rect x="100" y="128" width="680" height="22" rx="4" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+        <!-- Valid range: 55–100 = 55%–100% of [0,100] → x_start=100+0.55*680=474, w=306 -->
+        <rect x="474" y="128" width="306" height="22" rx="2" fill="#d97706" opacity=".85"/>
+        <text x="627" y="143" text-anchor="middle" font-size="9" fill="white" font-weight="700">55.0 – 100.0  (step 0.5)</text>
+        <!-- Tick marks: 0,20,40,60,80,100 -->
+        <line x1="100" y1="150" x2="100" y2="158" stroke="#94a3b8" stroke-width="1"/><text x="100" y="168" text-anchor="middle" font-size="8.5" fill="#94a3b8">0</text>
+        <line x1="236" y1="150" x2="236" y2="158" stroke="#94a3b8" stroke-width="1"/><text x="236" y="168" text-anchor="middle" font-size="8.5" fill="#94a3b8">20</text>
+        <line x1="372" y1="150" x2="372" y2="158" stroke="#94a3b8" stroke-width="1"/><text x="372" y="168" text-anchor="middle" font-size="8.5" fill="#94a3b8">40</text>
+        <line x1="474" y1="150" x2="474" y2="158" stroke="#d97706" stroke-width="1.5"/><text x="474" y="168" text-anchor="middle" font-size="9" fill="#d97706" font-weight="600">55 ✓</text>
+        <line x1="644" y1="150" x2="644" y2="158" stroke="#d97706" stroke-width="1.5"/><text x="644" y="168" text-anchor="middle" font-size="8.5" fill="#d97706">80</text>
+        <line x1="780" y1="150" x2="780" y2="158" stroke="#d97706" stroke-width="1.5"/><text x="780" y="168" text-anchor="middle" font-size="9" fill="#d97706" font-weight="600">100 ✓</text>
+
+        <!-- Implementation note box -->
+        <rect x="20" y="188" width="780" height="50" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="40" y="208" font-size="9.5" fill="#475569" font-weight="600">Implementation:</text>
+        <text x="40" y="224" font-size="9.5" fill="#64748b">CGPA = 6.0 + faker.random().nextInt(41) * 0.1    |    PERCENTAGE = 55.0 + faker.random().nextInt(91) * 0.5</text>
+        <text x="40" y="232" font-size="8.5" fill="#94a3b8">Integer-only arithmetic preserves seed reproducibility. scoreType chosen with nextInt(2) == 0 (50/50).</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 5. INDUSTRY OVERVIEW ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZkZjRmZiIvPjxyZWN0IHg9IjQiIHk9IjE0IiB3aWR0aD0iOCIgaGVpZ2h0PSIxMiIgcng9IjEiIGZpbGw9IiM3YzNhZWQiLz48cmVjdCB4PSIxNCIgeT0iMTAiIHdpZHRoPSI4IiBoZWlnaHQ9IjE2IiByeD0iMSIgZmlsbD0iIzkzMzNlYSIvPjxyZWN0IHg9IjI0IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iOCIgcng9IjEiIGZpbGw9IiNjNGI1ZmQiLz48bGluZSB4MT0iNCIgeTE9IjI2IiB4Mj0iMjgiIHkyPSIyNiIgc3Ryb2tlPSIjN2MzYWVkIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==" alt="industry"/>
+    <h2>Industry Data Overview</h2>
+  </div>
+  <div class="card-body">
+    <div class="industry-grid">
+      <div class="ind-card tech">
+        <h3 style="color:#1d4ed8">💻 Technology</h3>
+        <div class="stat">YAML key: <code>technology</code></div>
+        <div class="stat">7 functional roles</div>
+        <div class="stat">12 designations · 18 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">8 certifications (AWS, GCP, CKA…)</div>
+      </div>
+      <div class="ind-card hcare">
+        <h3 style="color:#065f46">🏥 Healthcare</h3>
+        <div class="stat">YAML key: <code>healthcare</code></div>
+        <div class="stat">6 functional roles</div>
+        <div class="stat">10 designations · 14 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">8 certifications (BLS, ACLS, EPIC…)</div>
+      </div>
+      <div class="ind-card fin">
+        <h3 style="color:#92400e">📈 Finance</h3>
+        <div class="stat">YAML key: <code>finance</code></div>
+        <div class="stat">6 functional roles</div>
+        <div class="stat">10 designations · 13 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">7 certifications (CFA, CPA, FRM…)</div>
+      </div>
+      <div class="ind-card ret">
+        <h3 style="color:#991b1b">🛍️ Retail</h3>
+        <div class="stat">YAML key: <code>retail</code></div>
+        <div class="stat">6 functional roles</div>
+        <div class="stat">10 designations · 11 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">4 certifications (NRF, Shopify…)</div>
+      </div>
+      <div class="ind-card mfg">
+        <h3 style="color:#334155">🏭 Manufacturing</h3>
+        <div class="stat">YAML key: <code>manufacturing</code></div>
+        <div class="stat">5 functional roles</div>
+        <div class="stat">10 designations · 12 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">6 certifications (Six Sigma, ISO…)</div>
+      </div>
+      <div class="ind-card log">
+        <h3 style="color:#0e7490">🚚 Logistics</h3>
+        <div class="stat">YAML key: <code>logistics</code></div>
+        <div class="stat">5 functional roles</div>
+        <div class="stat">10 designations · 11 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">5 certifications (CPIM, CSCP…)</div>
+      </div>
+      <div class="ind-card edu">
+        <h3 style="color:#4c1d95">🎓 Education</h3>
+        <div class="stat">YAML key: <code>education</code></div>
+        <div class="stat">5 functional roles</div>
+        <div class="stat">10 designations · 12 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">5 certifications (Google CE, ATD…)</div>
+      </div>
+      <div class="ind-card sta">
+        <h3 style="color:#9d174d">🤝 Staffing &amp; Recruiting</h3>
+        <div class="stat">YAML key: <code>staffing</code></div>
+        <div class="stat">5 functional roles</div>
+        <div class="stat">10 designations · 11 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">6 certifications (SHRM, PHR…)</div>
+      </div>
+      <div class="ind-card con">
+        <h3 style="color:#1e3a8a">🧩 Consulting</h3>
+        <div class="stat">YAML key: <code>consulting</code></div>
+        <div class="stat">5 functional roles</div>
+        <div class="stat">10 designations · 12 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">6 certifications (PMP, CMC, ACP…)</div>
+      </div>
+      <div class="ind-card med">
+        <h3 style="color:#9a3412">🎬 Media &amp; Entertainment</h3>
+        <div class="stat">YAML key: <code>media</code></div>
+        <div class="stat">5 functional roles</div>
+        <div class="stat">10 designations · 13 skills</div>
+        <div class="stat">8 responsibility bullets</div>
+        <div class="stat">7 certifications (GA4, HubSpot…)</div>
+      </div>
+    </div>
+
+    <!-- Certifications visual per industry -->
+    <div style="margin-top:28px">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 220" width="820" style="max-width:100%">
+        <text x="20" y="20" font-size="11" font-weight="600" fill="#475569">Certifications available per industry (maximum pool size)</text>
+        <!-- axis -->
+        <line x1="140" y1="32" x2="795" y2="32" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="140" y1="32" x2="140" y2="192" stroke="#e2e8f0" stroke-width="1"/>
+        <!-- grid at 2,4,6,8 → scale: 1 cert = 79px, x_start=140 -->
+        <line x1="298" y1="32" x2="298" y2="192" stroke="#f1f5f9" stroke-width="1"/><text x="298" y="206" text-anchor="middle" font-size="8.5" fill="#94a3b8">2</text>
+        <line x1="456" y1="32" x2="456" y2="192" stroke="#f1f5f9" stroke-width="1"/><text x="456" y="206" text-anchor="middle" font-size="8.5" fill="#94a3b8">4</text>
+        <line x1="614" y1="32" x2="614" y2="192" stroke="#f1f5f9" stroke-width="1"/><text x="614" y="206" text-anchor="middle" font-size="8.5" fill="#94a3b8">6</text>
+        <line x1="772" y1="32" x2="772" y2="192" stroke="#f1f5f9" stroke-width="1"/><text x="772" y="206" text-anchor="middle" font-size="8.5" fill="#94a3b8">8</text>
+        <!-- bars (row height 16px, bar height 10px) -->
+        <!-- Technology: 8 -->
+        <text x="134" y="50" text-anchor="end" font-size="9" fill="#1d4ed8" font-weight="600">Technology</text>
+        <rect x="140" y="40" width="632" height="14" rx="3" fill="#2563eb" opacity=".85"/>
+        <text x="780" y="51" font-size="8.5" fill="#475569">8</text>
+        <!-- Healthcare: 8 -->
+        <text x="134" y="70" text-anchor="end" font-size="9" fill="#065f46" font-weight="600">Healthcare</text>
+        <rect x="140" y="60" width="632" height="14" rx="3" fill="#059669" opacity=".85"/>
+        <text x="780" y="71" font-size="8.5" fill="#475569">8</text>
+        <!-- Finance: 7 -->
+        <text x="134" y="90" text-anchor="end" font-size="9" fill="#92400e" font-weight="600">Finance</text>
+        <rect x="140" y="80" width="553" height="14" rx="3" fill="#d97706" opacity=".85"/>
+        <text x="702" y="91" font-size="8.5" fill="#475569">7</text>
+        <!-- Retail: 4 -->
+        <text x="134" y="110" text-anchor="end" font-size="9" fill="#991b1b" font-weight="600">Retail</text>
+        <rect x="140" y="100" width="316" height="14" rx="3" fill="#dc2626" opacity=".85"/>
+        <text x="464" y="111" font-size="8.5" fill="#475569">4</text>
+        <!-- Manufacturing: 6 -->
+        <text x="134" y="130" text-anchor="end" font-size="9" fill="#334155" font-weight="600">Manufacturing</text>
+        <rect x="140" y="120" width="474" height="14" rx="3" fill="#64748b" opacity=".85"/>
+        <text x="622" y="131" font-size="8.5" fill="#475569">6</text>
+        <!-- Logistics: 5 -->
+        <text x="134" y="150" text-anchor="end" font-size="9" fill="#0e7490" font-weight="600">Logistics</text>
+        <rect x="140" y="140" width="395" height="14" rx="3" fill="#0891b2" opacity=".85"/>
+        <text x="543" y="151" font-size="8.5" fill="#475569">5</text>
+        <!-- Education: 5 -->
+        <text x="134" y="170" text-anchor="end" font-size="9" fill="#4c1d95" font-weight="600">Education</text>
+        <rect x="140" y="160" width="395" height="14" rx="3" fill="#7c3aed" opacity=".85"/>
+        <text x="543" y="171" font-size="8.5" fill="#475569">5</text>
+        <!-- Staffing: 6 (shown in separate run below) -->
+        <text x="134" y="190" text-anchor="end" font-size="9" fill="#9d174d" font-weight="600">Staffing / Consulting / Media</text>
+        <rect x="140" y="180" width="474" height="14" rx="3" fill="#db2777" opacity=".85"/>
+        <text x="622" y="191" font-size="8.5" fill="#475569">6–7</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 6. PACKAGE STRUCTURE ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2YwZmRmNCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzA1OTY2OSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiPiZsdDsvJmd0OzwvdGV4dD48L3N2Zz4=" alt="pkg"/>
+    <h2>Package &amp; File Structure</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 380" width="820" style="max-width:100%">
+        <defs>
+          <filter id="sh3" x="-5%" y="-5%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#00000012"/>
+          </filter>
+        </defs>
+
+        <!-- ── LEFT: candidate package (NEW) ── -->
+        <rect x="10" y="10" width="395" height="360" rx="10" fill="#fdf4ff" stroke="#7c3aed" stroke-width="2"/>
+        <text x="207" y="32" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9" font-family="monospace">in.sureshcoder.datafaker.candidate  ✦ NEW</text>
+
+        <!-- faker/ sub-package -->
+        <rect x="26" y="44" width="165" height="88" rx="7" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="108" y="64" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1d4ed8" font-family="monospace">faker/</text>
+        <rect x="40" y="72" width="137" height="48" rx="5" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="108" y="91" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e40af">CandidateFaker</text>
+        <text x="108" y="106" text-anchor="middle" font-size="8.5" fill="#64748b">+ candidate()</text>
+
+        <!-- model/ sub-package -->
+        <rect x="26" y="150" width="165" height="206" rx="7" fill="#f0fdf4" stroke="#059669" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="108" y="170" text-anchor="middle" font-size="9.5" font-weight="700" fill="#065f46" font-family="monospace">model/</text>
+        <rect x="40" y="178" width="137" height="30" rx="4" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="108" y="197" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">Candidate</text>
+        <rect x="40" y="212" width="137" height="30" rx="4" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="108" y="231" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">Address</text>
+        <rect x="40" y="246" width="137" height="30" rx="4" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="108" y="265" text-anchor="middle" font-size="9.5" font-weight="700" fill="#065f46">EducationHistory</text>
+        <rect x="40" y="280" width="137" height="30" rx="4" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="108" y="299" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">JobHistory</text>
+        <rect x="40" y="314" width="137" height="30" rx="4" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="108" y="333" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">Certification</text>
+
+        <!-- provider/ sub-package -->
+        <rect x="210" y="44" width="180" height="312" rx="7" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="300" y="64" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6d28d9" font-family="monospace">provider/</text>
+        <rect x="224" y="72" width="152" height="76" rx="5" fill="white" stroke="#c4b5fd" stroke-width="1"/>
+        <text x="300" y="94" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6d28d9">CandidateProvider</text>
+        <text x="300" y="109" text-anchor="middle" font-size="8.5" fill="#7c3aed">+ build()</text>
+        <text x="300" y="122" text-anchor="middle" font-size="8.5" fill="#7c3aed">+ buildForIndustry(key)</text>
+        <text x="300" y="135" text-anchor="middle" font-size="8.5" fill="#7c3aed">+ availableIndustries()</text>
+        <rect x="224" y="162" width="152" height="60" rx="5" fill="#fdf4ff" stroke="#ddd6fe" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="300" y="186" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8b5cf6">CandidateIndustry</text>
+        <text x="300" y="200" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8b5cf6">Data</text>
+        <text x="300" y="213" text-anchor="middle" font-size="8" fill="#64748b">record — pkg-private</text>
+        <rect x="224" y="236" width="152" height="56" rx="5" fill="#fdf4ff" stroke="#ddd6fe" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="300" y="258" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8b5cf6">CertificationData</text>
+        <text x="300" y="272" text-anchor="middle" font-size="8.5" fill="#64748b">record — pkg-private</text>
+        <text x="300" y="284" text-anchor="middle" font-size="8" fill="#a78bfa">YAML cert holder</text>
+        <!-- YAML resource -->
+        <rect x="224" y="306" width="152" height="38" rx="5" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+        <text x="300" y="322" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e">resources/</text>
+        <text x="300" y="337" text-anchor="middle" font-size="8" fill="#b45309" font-family="monospace">candidate-mappings.yml</text>
+
+        <!-- ── RIGHT: jobposting package (EXISTING) ── -->
+        <rect x="420" y="10" width="390" height="360" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="615" y="32" text-anchor="middle" font-size="10" font-weight="700" fill="#475569" font-family="monospace">in.sureshcoder.datafaker.jobposting  (existing)</text>
+
+        <rect x="436" y="44" width="165" height="88" rx="7" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="518" y="64" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1d4ed8" font-family="monospace">faker/</text>
+        <rect x="450" y="72" width="137" height="48" rx="5" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="518" y="91" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e40af">JobFaker</text>
+        <text x="518" y="106" text-anchor="middle" font-size="8.5" fill="#64748b">+ jobPosting()</text>
+
+        <rect x="436" y="150" width="165" height="120" rx="7" fill="#f0fdf4" stroke="#059669" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="518" y="170" text-anchor="middle" font-size="9.5" font-weight="700" fill="#065f46" font-family="monospace">model/</text>
+        <rect x="450" y="178" width="137" height="40" rx="5" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="518" y="200" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">JobPosting</text>
+        <rect x="450" y="222" width="137" height="40" rx="5" fill="white" stroke="#6ee7b7" stroke-width="1"/>
+        <text x="518" y="244" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">BaseSalary</text>
+
+        <rect x="618" y="44" width="178" height="286" rx="7" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh3)"/>
+        <text x="707" y="64" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6d28d9" font-family="monospace">provider/</text>
+        <rect x="632" y="72" width="150" height="76" rx="5" fill="white" stroke="#c4b5fd" stroke-width="1"/>
+        <text x="707" y="94" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6d28d9">JobPosting</text>
+        <text x="707" y="108" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6d28d9">Provider</text>
+        <text x="707" y="123" text-anchor="middle" font-size="8.5" fill="#7c3aed">+ build() / buildForIndustry()</text>
+        <text x="707" y="135" text-anchor="middle" font-size="8.5" fill="#7c3aed">+ availableIndustries()</text>
+        <rect x="632" y="162" width="150" height="56" rx="5" fill="#fdf4ff" stroke="#ddd6fe" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="707" y="194" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8b5cf6">IndustryData</text>
+        <text x="707" y="208" text-anchor="middle" font-size="8" fill="#64748b">record — pkg-private</text>
+        <rect x="632" y="232" width="150" height="56" rx="5" fill="#fdf4ff" stroke="#ddd6fe" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="707" y="264" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8b5cf6">SalaryRange</text>
+        <text x="707" y="278" text-anchor="middle" font-size="8" fill="#64748b">record — pkg-private</text>
+        <rect x="632" y="302" width="150" height="38" rx="5" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+        <text x="707" y="318" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e">resources/</text>
+        <text x="707" y="333" text-anchor="middle" font-size="8" fill="#b45309" font-family="monospace">job-posting-mappings.yml</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 7. USAGE EXAMPLES ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2VmZjZmZiIvPjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyMCIgaGVpZ2h0PSI1IiByeD0iMiIgZmlsbD0iIzI1NjNlYiIvPjxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iMjAiIGhlaWdodD0iNSIgcng9IjIiIGZpbGw9IiMzYjgyZjYiLz48cmVjdCB4PSI2IiB5PSIyMiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjUiIHJ4PSIyIiBmaWxsPSIjOTNjNWZkIi8+PC9zdmc+" alt="usage"/>
+    <h2>Usage Examples</h2>
+  </div>
+  <div class="card-body">
+<pre><span class="cm">// Fully random candidate (industry picked at random)</span>
+<span class="ty">CandidateFaker</span> faker = <span class="kw">new</span> <span class="ty">CandidateFaker</span>();
+<span class="ty">Candidate</span> c = faker.candidate().build();
+
+<span class="cm">// Industry-targeted — job history, skills and certifications match</span>
+<span class="ty">Candidate</span> techCandidate = faker.candidate().buildForIndustry(<span class="st">"technology"</span>);
+
+<span class="cm">// Seeded — fully deterministic across runs</span>
+<span class="ty">CandidateFaker</span> seeded = <span class="kw">new</span> <span class="ty">CandidateFaker</span>(<span class="kw">new</span> <span class="ty">Random</span>(42L));
+<span class="ty">Candidate</span> same = seeded.candidate().build(); <span class="cm">// always identical</span>
+
+<span class="cm">// Query available industries</span>
+faker.candidate().availableIndustries();               <span class="cm">// ["technology","healthcare",…]</span>
+
+<span class="cm">// Query certifications for a given industry (useful in tests)</span>
+faker.candidate().availableCertificationNames(<span class="st">"finance"</span>); <span class="cm">// ["CFA Level I","CPA","FRM",…]</span>
+
+<span class="cm">// Access fields</span>
+System.out.println(c.firstName());                    <span class="cm">// "Sarah"</span>
+System.out.println(c.email());                        <span class="cm">// "sarahjohnson47@yopmail.com"</span>
+System.out.println(c.mobileNumber());                 <span class="cm">// "+1-415-782-3091"</span>
+System.out.println(c.address().country());            <span class="cm">// "US"</span>
+System.out.println(c.address().addressLine2());       <span class="cm">// "Apt 204" or ""</span>
+
+<span class="cm">// Education history (1–3 entries, chronological)</span>
+c.educationHistory().forEach(edu -> {
+    System.out.printf(<span class="st">"%s | %s | %s %.1f%n"</span>,
+        edu.degreeLevel(), edu.institutionName(),
+        edu.scoreType(), edu.scoreValue());
+});
+<span class="cm">// UNDERGRADUATE | MIT | CGPA 8.7</span>
+<span class="cm">// POSTGRADUATE  | Stanford University | PERCENTAGE 82.5</span>
+
+<span class="cm">// Job history (1–4 entries)</span>
+c.jobHistory().forEach(job -> {
+    System.out.printf(<span class="st">"%s @ %s — %s%n"</span>,
+        job.designation(), job.companyName(), job.role());
+    job.responsibilities().forEach(r -> System.out.println(<span class="st">"  • "</span> + r));
+});
+
+<span class="cm">// Certifications (0–3, industry-specific)</span>
+c.certifications().forEach(cert ->
+    System.out.printf(<span class="st">"%s  (%s)  issued %s%n"</span>,
+        cert.name(), cert.issuingOrganization(), cert.issuedDate()));
+<span class="cm">// AWS Certified Solutions Architect – Associate  (Amazon Web Services)  issued 2023-08-15</span></pre>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <p>
+    DataFaker Candidate Provider &nbsp;·&nbsp;
+    <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a> &nbsp;·&nbsp;
+    &copy; 2026 Suresh Shanmugam &nbsp;·&nbsp;
+    Built with <a href="https://www.datafaker.net/">DataFaker 2.5.4</a>
+    &nbsp;·&nbsp;
+    <a href="index.html">↩ JobPosting Provider Design</a>
+  </p>
+</footer>
+</body>
+</html>
