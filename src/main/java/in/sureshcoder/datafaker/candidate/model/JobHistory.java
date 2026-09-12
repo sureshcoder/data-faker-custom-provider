@@ -15,16 +15,25 @@
  */
 package in.sureshcoder.datafaker.candidate.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
  * One position in a candidate's employment history.
  * role is the functional area (e.g., "Software Development"); designation is the formal title.
+ * endDate is null when the position is the candidate's current job.
  */
 public record JobHistory(
         String companyName,
         String role,
         String designation,
+        LocalDate startDate,
+        LocalDate endDate,
         List<String> responsibilities,
         List<String> skills
-) {}
+) {
+    /** True when this is the candidate's current position (no end date). */
+    public boolean isCurrent() {
+        return endDate == null;
+    }
+}

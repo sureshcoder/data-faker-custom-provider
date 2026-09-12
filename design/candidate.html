@@ -230,7 +230,7 @@
         </defs>
 
         <!-- Candidate record (top centre) -->
-        <rect x="200" y="10" width="420" height="120" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5" filter="url(#sh2)"/>
+        <rect x="200" y="10" width="420" height="134" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5" filter="url(#sh2)"/>
         <text x="410" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#e2e8f0">Candidate</text>
         <text x="410" y="50" text-anchor="middle" font-size="9" fill="#94a3b8">model/Candidate.java  ·  Java 21 record</text>
         <line x1="220" y1="58" x2="600" y2="58" stroke="#334155" stroke-width="1"/>
@@ -238,22 +238,23 @@
         <text x="290" y="87" font-size="9.5" fill="#93c5fd">lastName : String</text>
         <text x="290" y="101" font-size="9.5" fill="#93c5fd">email : String</text>
         <text x="290" y="115" font-size="9.5" fill="#93c5fd">mobileNumber : String</text>
+        <text x="290" y="129" font-size="9.5" fill="#fcd34d">professionalSummary : String</text>
         <text x="445" y="73" font-size="9.5" fill="#6ee7b7">address : Address</text>
         <text x="445" y="87" font-size="9.5" fill="#6ee7b7">educationHistory : List&lt;…&gt;</text>
         <text x="445" y="101" font-size="9.5" fill="#6ee7b7">jobHistory : List&lt;…&gt;</text>
         <text x="445" y="115" font-size="9.5" fill="#fca5a5">skills / certifications</text>
 
         <!-- Connecting lines (from bottom of Candidate to top of sub-records) -->
-        <!-- Candidate bottom y=130; sub-records top y=220 -->
-        <line x1="105" y1="130" x2="105" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
-        <line x1="260" y1="130" x2="260" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
-        <line x1="540" y1="130" x2="540" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
-        <line x1="720" y1="130" x2="720" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+        <!-- Candidate bottom y=144; sub-records top y=220 -->
+        <line x1="105" y1="144" x2="105" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+        <line x1="260" y1="144" x2="260" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+        <line x1="540" y1="144" x2="540" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+        <line x1="720" y1="144" x2="720" y2="218" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
         <!-- Fan out from candidate center -->
-        <path d="M 410 130 Q 410 175 105 175 L 105 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
-        <path d="M 410 130 Q 410 175 260 175 L 260 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
-        <path d="M 410 130 Q 410 175 540 175 L 540 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
-        <path d="M 410 130 Q 410 175 720 175 L 720 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <path d="M 410 144 Q 410 178 105 178 L 105 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <path d="M 410 144 Q 410 178 260 178 L 260 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <path d="M 410 144 Q 410 178 540 178 L 540 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <path d="M 410 144 Q 410 178 720 178 L 720 218" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
 
         <!-- Address record -->
         <rect x="10" y="218" width="190" height="186" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" filter="url(#sh2)"/>
@@ -287,7 +288,7 @@
         <text x="233" y="428" font-size="9.5" fill="#065f46">scoreValue : double</text>
 
         <!-- JobHistory record -->
-        <rect x="428" y="218" width="192" height="190" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" filter="url(#sh2)"/>
+        <rect x="428" y="218" width="192" height="236" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" filter="url(#sh2)"/>
         <text x="524" y="240" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">JobHistory</text>
         <text x="524" y="255" text-anchor="middle" font-size="8.5" fill="#94a3b8">model/JobHistory.java</text>
         <line x1="443" y1="262" x2="610" y2="262" stroke="#fde68a" stroke-width="1"/>
@@ -296,10 +297,13 @@
         <text x="443" y="308" font-size="8.5" fill="#64748b">  e.g. "Software Development"</text>
         <text x="443" y="324" font-size="9.5" fill="#92400e">designation : String</text>
         <text x="443" y="338" font-size="8.5" fill="#64748b">  e.g. "Senior Eng."</text>
-        <text x="443" y="354" font-size="9.5" fill="#92400e">responsibilities : List&lt;String&gt;</text>
-        <text x="443" y="368" font-size="8.5" fill="#64748b">  2–4 bullet points</text>
-        <text x="443" y="384" font-size="9.5" fill="#92400e">skills : List&lt;String&gt;</text>
-        <text x="443" y="398" font-size="8.5" fill="#64748b">  3–5 unique skills</text>
+        <text x="443" y="354" font-size="9.5" fill="#92400e">startDate : LocalDate</text>
+        <text x="443" y="370" font-size="9.5" fill="#92400e">endDate : LocalDate</text>
+        <text x="443" y="384" font-size="8.5" fill="#64748b">  null ⇒ current job (isCurrent())</text>
+        <text x="443" y="400" font-size="9.5" fill="#92400e">responsibilities : List&lt;String&gt;</text>
+        <text x="443" y="414" font-size="8.5" fill="#64748b">  2–4 bullet points</text>
+        <text x="443" y="430" font-size="9.5" fill="#92400e">skills : List&lt;String&gt;</text>
+        <text x="443" y="444" font-size="8.5" fill="#64748b">  3–5 unique skills</text>
 
         <!-- Certification record -->
         <rect x="638" y="218" width="172" height="158" rx="8" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh2)"/>
@@ -412,6 +416,163 @@
         <text x="50" y="241" font-size="9.5" fill="#64748b">✓  Entries are returned in chronological order — oldest degree at index 0</text>
         <text x="50" y="258" font-size="9.5" fill="#64748b">✓  No degree overlap — a gap of 3–12 months always separates consecutive degrees</text>
         <text x="50" y="275" font-size="9.5" fill="#64748b">✓  Seeded reproducible: all date arithmetic uses integer nextInt() through faker.random()</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 3b. JOB HISTORY ALGORITHM ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZmJlYiIvPjxyZWN0IHg9IjUiIHk9IjExIiB3aWR0aD0iMjIiIGhlaWdodD0iMTUiIHJ4PSIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNkOTc3MDYiIHN0cm9rZS13aWR0aD0iMiIvPjxyZWN0IHg9IjEyIiB5PSI3IiB3aWR0aD0iOCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2Q5NzcwNiIvPjxsaW5lIHgxPSI1IiB5MT0iMTciIHgyPSIyNyIgeTI9IjE3IiBzdHJva2U9IiNkOTc3MDYiIHN0cm9rZS13aWR0aD0iMS41Ii8+PC9zdmc+" alt="job"/>
+    <h2>Job History Generation — Backward Algorithm with Career Floor</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 300" width="820" style="max-width:100%">
+        <defs>
+          <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#d97706"/>
+          </marker>
+        </defs>
+
+        <text x="20" y="22" font-size="11" font-weight="600" fill="#475569">Timeline (left = oldest, right = today)</text>
+        <rect x="560" y="10" width="12" height="12" rx="2" fill="#059669" opacity=".8"/>
+        <text x="576" y="21" font-size="9" fill="#475569">latest degree</text>
+        <rect x="652" y="10" width="12" height="12" rx="2" fill="#d97706" opacity=".8"/>
+        <text x="668" y="21" font-size="9" fill="#475569">past job</text>
+        <rect x="722" y="10" width="12" height="12" rx="2" fill="#b45309"/>
+        <text x="738" y="21" font-size="9" fill="#475569">current job</text>
+
+        <!-- Time axis -->
+        <line x1="30" y1="130" x2="790" y2="130" stroke="#e2e8f0" stroke-width="1.5"/>
+
+        <!-- Latest degree (education) ending at career floor -->
+        <rect x="40" y="100" width="110" height="32" rx="4" fill="#059669" opacity=".82"/>
+        <text x="95" y="121" text-anchor="middle" font-size="9.5" fill="white" font-weight="600">latest degree</text>
+
+        <!-- Career floor marker -->
+        <line x1="150" y1="88" x2="150" y2="158" stroke="#059669" stroke-width="2" stroke-dasharray="4,2"/>
+        <text x="150" y="170" text-anchor="middle" font-size="8.5" fill="#059669" font-weight="600">career floor</text>
+        <text x="150" y="181" text-anchor="middle" font-size="7.5" fill="#64748b">= education[last].endDate</text>
+
+        <!-- Job 1 (oldest) -->
+        <text x="176" y="120" text-anchor="middle" font-size="8" fill="#94a3b8">gap</text>
+        <text x="176" y="132" text-anchor="middle" font-size="7.5" fill="#94a3b8">0–6 mo</text>
+        <rect x="202" y="100" width="160" height="32" rx="4" fill="#d97706" opacity=".82"/>
+        <text x="282" y="121" text-anchor="middle" font-size="9.5" fill="white" font-weight="600">job[0]  (6–36 mo)</text>
+        <text x="202" y="148" text-anchor="middle" font-size="8.5" fill="#d97706">start ≥ floor</text>
+        <text x="362" y="148" text-anchor="middle" font-size="8.5" fill="#d97706">end</text>
+
+        <!-- Job 2 -->
+        <text x="388" y="120" text-anchor="middle" font-size="8" fill="#94a3b8">gap</text>
+        <text x="388" y="132" text-anchor="middle" font-size="7.5" fill="#94a3b8">0–6 mo</text>
+        <rect x="414" y="100" width="150" height="32" rx="4" fill="#d97706" opacity=".82"/>
+        <text x="489" y="121" text-anchor="middle" font-size="9.5" fill="white" font-weight="600">job[1]  (6–36 mo)</text>
+
+        <!-- Current job -->
+        <text x="590" y="120" text-anchor="middle" font-size="8" fill="#94a3b8">gap</text>
+        <text x="590" y="132" text-anchor="middle" font-size="7.5" fill="#94a3b8">0–6 mo</text>
+        <rect x="616" y="100" width="140" height="32" rx="4" fill="#b45309"/>
+        <text x="686" y="121" text-anchor="middle" font-size="9.5" fill="white" font-weight="600">job[last]  current</text>
+        <text x="616" y="148" text-anchor="middle" font-size="8.5" fill="#b45309">1–36 mo ago</text>
+        <text x="716" y="148" text-anchor="middle" font-size="8.5" fill="#b45309">endDate = null</text>
+
+        <!-- TODAY marker -->
+        <line x1="756" y1="90" x2="756" y2="155" stroke="#dc2626" stroke-width="2"/>
+        <rect x="730" y="74" width="52" height="20" rx="4" fill="#dc2626"/>
+        <text x="756" y="88" text-anchor="middle" font-size="9" fill="white" font-weight="700">TODAY</text>
+
+        <!-- Generation order -->
+        <text x="282" y="90" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">③ generated last</text>
+        <text x="489" y="90" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">② generated 2nd</text>
+        <text x="686" y="66" text-anchor="middle" font-size="8.5" fill="#64748b" font-style="italic">① generated first</text>
+        <line x1="600" y1="72" x2="210" y2="72" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr5)"/>
+        <text x="405" y="66" text-anchor="middle" font-size="9" fill="#d97706" font-weight="600">Algorithm walks backward → stops at the career floor</text>
+
+        <!-- Key rules -->
+        <rect x="20" y="195" width="780" height="95" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="410" y="214" text-anchor="middle" font-size="10" font-weight="600" fill="#475569">Key invariants guaranteed by the algorithm</text>
+        <text x="50" y="233" font-size="9.5" fill="#64748b">✓  Exactly one current job — always the last entry, endDate == null, isCurrent() == true</text>
+        <text x="50" y="250" font-size="9.5" fill="#64748b">✓  Oldest first, non-overlapping, 0–6 month gaps; every startDate ≥ latest education endDate (the career floor)</text>
+        <text x="50" y="267" font-size="9.5" fill="#64748b">✓  1–4 entries drawn; fewer may fit when the floor is recent — total experience is capped at ~5 years (latest degree ends 1–5 yr ago)</text>
+        <text x="50" y="284" font-size="9.5" fill="#64748b">✓  Seeded reproducible: all date arithmetic uses integer nextInt() through faker.random()</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 3c. PROFESSIONAL SUMMARY ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZkZjRmZiIvPjxyZWN0IHg9IjciIHk9IjkiIHdpZHRoPSIxOCIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjN2MzYWVkIi8+PHJlY3QgeD0iNyIgeT0iMTUiIHdpZHRoPSIxOCIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjN2MzYWVkIi8+PHJlY3QgeD0iNyIgeT0iMjEiIHdpZHRoPSIxMiIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjN2MzYWVkIi8+PC9zdmc+" alt="summary"/>
+    <h2>Professional Summary Generation — Template Interpolation</h2>
+  </div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 250" width="820" style="max-width:100%">
+        <defs>
+          <marker id="arr6" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#94a3b8"/>
+          </marker>
+        </defs>
+
+        <!-- Source data column -->
+        <text x="110" y="22" text-anchor="middle" font-size="10" font-weight="600" fill="#475569">Already-generated data</text>
+        <rect x="20" y="32" width="180" height="26" rx="5" fill="#fffbeb" stroke="#d97706"/>
+        <text x="110" y="49" text-anchor="middle" font-size="9" fill="#92400e">jobHistory[last].designation</text>
+        <rect x="20" y="64" width="180" height="26" rx="5" fill="#fffbeb" stroke="#d97706"/>
+        <text x="110" y="81" text-anchor="middle" font-size="9" fill="#92400e">jobHistory[0].startDate → experience</text>
+        <rect x="20" y="96" width="180" height="26" rx="5" fill="#eff6ff" stroke="#2563eb"/>
+        <text x="110" y="113" text-anchor="middle" font-size="9" fill="#1e40af">industry.displayName</text>
+        <rect x="20" y="128" width="180" height="26" rx="5" fill="#f1f5f9" stroke="#94a3b8"/>
+        <text x="110" y="145" text-anchor="middle" font-size="9" fill="#475569">skills[0..2] → "A, B and C"</text>
+        <rect x="20" y="160" width="180" height="26" rx="5" fill="#f0fdf4" stroke="#059669"/>
+        <text x="110" y="177" text-anchor="middle" font-size="9" fill="#065f46">education[last].courseName</text>
+        <rect x="20" y="192" width="180" height="26" rx="5" fill="#fdf4ff" stroke="#7c3aed"/>
+        <text x="110" y="209" text-anchor="middle" font-size="9" fill="#6d28d9">certifications[0].name  (optional)</text>
+
+        <!-- Arrows to token map -->
+        <line x1="200" y1="125" x2="258" y2="125" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr6)"/>
+
+        <!-- Token map -->
+        <rect x="260" y="40" width="170" height="170" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+        <text x="345" y="62" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e2e8f0">Map&lt;String,String&gt;</text>
+        <line x1="275" y1="70" x2="415" y2="70" stroke="#334155"/>
+        <text x="280" y="88" font-size="9" fill="#fcd34d" font-family="monospace">{designation}</text>
+        <text x="280" y="106" font-size="9" fill="#fcd34d" font-family="monospace">{experience}</text>
+        <text x="280" y="124" font-size="9" fill="#fcd34d" font-family="monospace">{industry}</text>
+        <text x="280" y="142" font-size="9" fill="#fcd34d" font-family="monospace">{skills}</text>
+        <text x="280" y="160" font-size="9" fill="#fcd34d" font-family="monospace">{degree}</text>
+        <text x="280" y="178" font-size="9" fill="#fcd34d" font-family="monospace">{certification}</text>
+        <text x="345" y="200" text-anchor="middle" font-size="8" fill="#94a3b8">plain String.replace per token</text>
+
+        <!-- Template pools -->
+        <text x="560" y="22" text-anchor="middle" font-size="10" font-weight="600" fill="#475569">Template pool (YAML, shared by all industries)</text>
+        <rect x="460" y="32" width="200" height="60" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+        <text x="560" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="#065f46">withoutCertification</text>
+        <text x="560" y="66" text-anchor="middle" font-size="8.5" fill="#64748b">used when certifications.isEmpty()</text>
+        <text x="560" y="80" text-anchor="middle" font-size="8.5" fill="#64748b">7 templates · 2–3 sentences each</text>
+        <rect x="460" y="104" width="200" height="60" rx="6" fill="#fdf4ff" stroke="#7c3aed" stroke-width="1.5"/>
+        <text x="560" y="122" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6d28d9">withCertification</text>
+        <text x="560" y="138" text-anchor="middle" font-size="8.5" fill="#64748b">used when ≥ 1 certification</text>
+        <text x="560" y="152" text-anchor="middle" font-size="8.5" fill="#64748b">only pool allowed to use {certification}</text>
+        <text x="560" y="186" text-anchor="middle" font-size="8.5" fill="#475569">pickRandom(pool) via faker.random() — seed-safe</text>
+
+        <!-- Arrows into interpolate -->
+        <line x1="430" y1="125" x2="458" y2="125" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr6)"/>
+        <line x1="660" y1="98" x2="700" y2="98" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr6)"/>
+
+        <!-- Output -->
+        <rect x="702" y="60" width="100" height="76" rx="6" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5"/>
+        <text x="752" y="82" text-anchor="middle" font-size="9.5" font-weight="700" fill="#854d0e">professional</text>
+        <text x="752" y="95" text-anchor="middle" font-size="9.5" font-weight="700" fill="#854d0e">Summary</text>
+        <text x="752" y="112" text-anchor="middle" font-size="8" fill="#64748b">one paragraph</text>
+        <text x="752" y="124" text-anchor="middle" font-size="8" fill="#64748b">2–3 sentences</text>
+
+        <!-- Footer note -->
+        <rect x="20" y="228" width="780" height="1" fill="#e2e8f0"/>
+        <text x="410" y="244" text-anchor="middle" font-size="8.5" fill="#64748b">{experience}: months since first job start → "under a year" (&lt;12) · "1 year" (&lt;24) · "N years"   —   generated last in buildForIndustry, so it is coherent with every other field</text>
       </svg>
     </div>
   </div>
@@ -731,11 +892,15 @@ faker.candidate().availableIndustries();               <span class="cm">// ["tec
 
 <span class="cm">// Query certifications for a given industry (useful in tests)</span>
 faker.candidate().availableCertificationNames(<span class="st">"finance"</span>); <span class="cm">// ["CFA Level I","CPA","FRM",…]</span>
+faker.candidate().availableSummaryTemplates();         <span class="cm">// all 14 summary templates</span>
 
 <span class="cm">// Access fields</span>
 System.out.println(c.firstName());                    <span class="cm">// "Sarah"</span>
 System.out.println(c.email());                        <span class="cm">// "sarahjohnson47@yopmail.com"</span>
 System.out.println(c.mobileNumber());                 <span class="cm">// "+1-415-782-3091"</span>
+System.out.println(c.professionalSummary());
+<span class="cm">// "Senior Software Engineer with 3 years of experience in the Technology industry.</span>
+<span class="cm">//  Skilled in Java, Kubernetes and AWS, ... Holds a Master of Science in Computer Science."</span>
 System.out.println(c.address().country());            <span class="cm">// "US"</span>
 System.out.println(c.address().addressLine2());       <span class="cm">// "Apt 204" or ""</span>
 
@@ -748,10 +913,11 @@ c.educationHistory().forEach(edu -> {
 <span class="cm">// UNDERGRADUATE | MIT | CGPA 8.7</span>
 <span class="cm">// POSTGRADUATE  | Stanford University | PERCENTAGE 82.5</span>
 
-<span class="cm">// Job history (1–4 entries)</span>
+<span class="cm">// Job history (1–4 entries, oldest first; last entry is the current job)</span>
 c.jobHistory().forEach(job -> {
-    System.out.printf(<span class="st">"%s @ %s — %s%n"</span>,
-        job.designation(), job.companyName(), job.role());
+    System.out.printf(<span class="st">"%s @ %s — %s  (%s → %s)%n"</span>,
+        job.designation(), job.companyName(), job.role(),
+        job.startDate(), job.isCurrent() ? <span class="st">"present"</span> : job.endDate());
     job.responsibilities().forEach(r -> System.out.println(<span class="st">"  • "</span> + r));
 });
 

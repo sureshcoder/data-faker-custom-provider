@@ -24,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
@@ -54,6 +55,7 @@ class CandidateProviderTest {
         assertThat(c.lastName()).isNotBlank();
         assertThat(c.email()).isNotBlank();
         assertThat(c.mobileNumber()).isNotBlank();
+        assertThat(c.professionalSummary()).isNotBlank();
         assertThat(c.address()).isNotNull();
         assertThat(c.educationHistory()).isNotEmpty();
         assertThat(c.jobHistory()).isNotEmpty();
@@ -268,6 +270,149 @@ class CandidateProviderTest {
         }
     }
 
+    @Test
+    @DisplayName("Most recent job is current (endDate null); all earlier jobs have an endDate")
+    void mostRecentJobIsCurrent() {
+        for (int i = 0; i < 50; i++) {
+            List<JobHistory> jobs = faker.candidate().build().jobHistory();
+            JobHistory current = jobs.get(jobs.size() - 1);
+            assertThat(current.endDate()).isNull();
+            assertThat(current.isCurrent()).isTrue();
+            for (int j = 0; j < jobs.size() - 1; j++) {
+                assertThat(jobs.get(j).endDate()).isNotNull();
+                assertThat(jobs.get(j).isCurrent()).isFalse();
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Past jobs have startDate before endDate")
+    void pastJobsHaveStartBeforeEnd() {
+        for (int i = 0; i < 50; i++) {
+            for (JobHistory job : faker.candidate().build().jobHistory()) {
+                if (!job.isCurrent()) {
+                    assertThat(job.startDate()).isBefore(job.endDate());
+                }
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Job history is chronological (oldest first) and non-overlapping")
+    void jobHistoryIsChronologicalAndNonOverlapping() {
+        for (int i = 0; i < 50; i++) {
+            List<JobHistory> jobs = faker.candidate().build().jobHistory();
+            for (int j = 0; j < jobs.size() - 1; j++) {
+                assertThat(jobs.get(j).endDate())
+                        .as("job[%d].endDate should be on/before job[%d].startDate", j, j + 1)
+                        .isBeforeOrEqualTo(jobs.get(j + 1).startDate());
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Career starts on/after the most recent education end date")
+    void careerStartsAfterLatestEducation() {
+        for (int i = 0; i < 50; i++) {
+            Candidate c = faker.candidate().build();
+            LocalDate latestEducationEnd = c.educationHistory().get(c.educationHistory().size() - 1).endDate();
+            assertThat(c.jobHistory().get(0).startDate()).isAfterOrEqualTo(latestEducationEnd);
+        }
+    }
+
+    @Test
+    @DisplayName("No job start date is in the future")
+    void allJobStartDatesAreNotInTheFuture() {
+        LocalDate today = LocalDate.now();
+        for (int i = 0; i < 50; i++) {
+            for (JobHistory job : faker.candidate().build().jobHistory()) {
+                assertThat(job.startDate()).isBeforeOrEqualTo(today);
+            }
+        }
+    }
+
+    // ── professional summary ──────────────────────────────────────────────
+
+    @Test
+    @DisplayName("professionalSummary has no unresolved placeholders")
+    void professionalSummaryHasNoUnresolvedPlaceholders() {
+        for (int i = 0; i < 100; i++) {
+            String summary = faker.candidate().build().professionalSummary();
+            assertThat(summary).doesNotContain("{").doesNotContain("}");
+        }
+    }
+
+    @Test
+    @DisplayName("professionalSummary mentions the current job designation")
+    void professionalSummaryMentionsCurrentDesignation() {
+        for (int i = 0; i < 20; i++) {
+            Candidate c = faker.candidate().build();
+            String designation = c.jobHistory().get(c.jobHistory().size() - 1).designation();
+            assertThat(c.professionalSummary()).contains(designation);
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "technology, Technology",
+            "healthcare, Healthcare",
+            "staffing, Staffing & Recruiting",
+            "media, Media & Entertainment"
+    })
+    @DisplayName("professionalSummary mentions the industry display name")
+    void professionalSummaryMentionsIndustryDisplayName(String key, String displayName) {
+        for (int i = 0; i < 10; i++) {
+            assertThat(faker.candidate().buildForIndustry(key).professionalSummary())
+                    .contains(displayName);
+        }
+    }
+
+    @Test
+    @DisplayName("professionalSummary mentions a certification when the candidate has one")
+    void professionalSummaryMentionsCertificationWhenPresent() {
+        int withCert = 0;
+        for (int i = 0; i < 100; i++) {
+            Candidate c = faker.candidate().build();
+            if (!c.certifications().isEmpty()) {
+                withCert++;
+                assertThat(c.professionalSummary()).contains(c.certifications().get(0).name());
+            }
+        }
+        assertThat(withCert).isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("professionalSummary mentions the highest degree and top skill")
+    void professionalSummaryMentionsDegreeAndSkill() {
+        for (int i = 0; i < 20; i++) {
+            Candidate c = faker.candidate().build();
+            String highestDegree = c.educationHistory().get(c.educationHistory().size() - 1).courseName();
+            assertThat(c.professionalSummary())
+                    .contains(highestDegree)
+                    .contains(c.skills().get(0));
+        }
+    }
+
+    @Test
+    @DisplayName("professionalSummary is 2–3 sentences")
+    void professionalSummaryIsTwoToThreeSentences() {
+        for (int i = 0; i < 100; i++) {
+            String summary = faker.candidate().build().professionalSummary();
+            long sentences = summary.chars().filter(ch -> ch == '.' || ch == '!' || ch == '?').count();
+            assertThat(sentences).as("summary '%s'", summary).isBetween(2L, 3L);
+        }
+    }
+
+    @Test
+    @DisplayName("availableSummaryTemplates is non-empty and every template ends with a period")
+    void availableSummaryTemplatesAreWellFormed() {
+        List<String> templates = faker.candidate().availableSummaryTemplates();
+        assertThat(templates).isNotEmpty();
+        for (String t : templates) {
+            assertThat(t).endsWith(".").contains("{designation}").contains("{industry}");
+        }
+    }
+
     // ── candidate-level skills ────────────────────────────────────────────
 
     @Test
@@ -366,8 +511,10 @@ class CandidateProviderTest {
         assertThat(c1.lastName()).isEqualTo(c2.lastName());
         assertThat(c1.email()).isEqualTo(c2.email());
         assertThat(c1.mobileNumber()).isEqualTo(c2.mobileNumber());
+        assertThat(c1.professionalSummary()).isEqualTo(c2.professionalSummary());
         assertThat(c1.skills()).isEqualTo(c2.skills());
         assertThat(c1.educationHistory()).isEqualTo(c2.educationHistory());
-        assertThat(c1.jobHistory().size()).isEqualTo(c2.jobHistory().size());
+        assertThat(c1.jobHistory()).isEqualTo(c2.jobHistory());
+        assertThat(c1.certifications()).isEqualTo(c2.certifications());
     }
 }

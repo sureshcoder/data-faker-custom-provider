@@ -27,6 +27,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -40,6 +41,8 @@ public class CandidateProvider extends AbstractProvider<Faker> {
     private static final Map<String, List<String>> COURSES_BY_DEGREE;
     private static final List<String> COLLEGES;
     private static final List<String> SPECIALIZATIONS;
+    private static final List<String> SUMMARY_TEMPLATES_PLAIN;
+    private static final List<String> SUMMARY_TEMPLATES_WITH_CERT;
 
     private static final String[] DEGREE_LEVELS =
             {"UNDERGRADUATE", "POSTGRADUATE", "DOCTORATE", "POST_DOCTORAL"};
@@ -52,6 +55,8 @@ public class CandidateProvider extends AbstractProvider<Faker> {
         COURSES_BY_DEGREE = parseCourseMap(root);
         INDUSTRY_MAP    = parseIndustries(root);
         INDUSTRY_KEYS   = List.copyOf(INDUSTRY_MAP.keySet());
+        SUMMARY_TEMPLATES_PLAIN     = parseSummaryTemplates(root, "withoutCertification");
+        SUMMARY_TEMPLATES_WITH_CERT = parseSummaryTemplates(root, "withCertification");
     }
 
     public CandidateProvider(Faker f) {
@@ -70,19 +75,31 @@ public class CandidateProvider extends AbstractProvider<Faker> {
                 INDUSTRY_MAP.get(INDUSTRY_KEYS.get(0))
         );
 
-        String firstName = faker.name().firstName();
-        String lastName  = faker.name().lastName();
+        String firstName    = faker.name().firstName();
+        String lastName     = faker.name().lastName();
+        String email        = buildEmail(firstName, lastName);
+        String mobileNumber = buildMobileNumber();
+        Address address     = buildAddress();
+
+        List<EducationHistory> educationHistory = buildEducationHistory();
+        LocalDate careerFloor = educationHistory.get(educationHistory.size() - 1).endDate();
+        List<JobHistory> jobHistory = buildJobHistory(data, careerFloor);
+        List<String> skills = pickUniqueN(data.skills(), 4 + faker.random().nextInt(5));
+        List<Certification> certifications = buildCertifications(data);
+        String professionalSummary = buildProfessionalSummary(
+                data, jobHistory, skills, certifications, educationHistory);
 
         return new Candidate(
                 firstName,
                 lastName,
-                buildEmail(firstName, lastName),
-                buildMobileNumber(),
-                buildAddress(),
-                buildEducationHistory(),
-                buildJobHistory(data),
-                pickUniqueN(data.skills(), 4 + faker.random().nextInt(5)),
-                buildCertifications(data)
+                email,
+                mobileNumber,
+                professionalSummary,
+                address,
+                educationHistory,
+                jobHistory,
+                skills,
+                certifications
         );
     }
 
@@ -98,6 +115,13 @@ public class CandidateProvider extends AbstractProvider<Faker> {
                 INDUSTRY_MAP.get(INDUSTRY_KEYS.get(0))
         );
         return data.certifications().stream().map(CertificationData::name).toList();
+    }
+
+    /** Returns every professional summary template (with and without certification) — useful in tests. */
+    public List<String> availableSummaryTemplates() {
+        List<String> all = new ArrayList<>(SUMMARY_TEMPLATES_PLAIN);
+        all.addAll(SUMMARY_TEMPLATES_WITH_CERT);
+        return Collections.unmodifiableList(all);
     }
 
     // ── private builders ────────────────────────────────────────────────────
@@ -189,23 +213,47 @@ public class CandidateProvider extends AbstractProvider<Faker> {
         );
     }
 
-    /** Generates 1–4 job history entries for the given industry. */
-    private List<JobHistory> buildJobHistory(CandidateIndustryData data) {
+    /**
+     * Generates 1–4 job history entries in chronological order (oldest first).
+     * Works backwards from a current job (endDate == null) so that all positions are
+     * non-overlapping, separated by 0–6 month gaps, and never start before careerFloor
+     * (the end date of the most recent degree). When the window between careerFloor and
+     * today is short, fewer than the drawn count may fit; the current job always exists.
+     */
+    private List<JobHistory> buildJobHistory(CandidateIndustryData data, LocalDate careerFloor) {
         int count = 1 + faker.random().nextInt(4); // 1–4
+        LocalDate today = LocalDate.now();
+        long windowMonths = Math.max(1, ChronoUnit.MONTHS.between(careerFloor, today));
+
+        // Current job began 1..min(36, window) months ago — never before careerFloor
+        int maxStartAgo = (int) Math.min(36, windowMonths);
+        LocalDate currentStart = today.minusMonths(1 + faker.random().nextInt(maxStartAgo));
+
         List<JobHistory> result = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            result.add(buildJob(data));
+        result.add(buildJob(data, currentStart, null));
+
+        LocalDate cursorEnd = currentStart.minusMonths(faker.random().nextInt(7)); // gap 0–6 months
+        while (result.size() < count && !cursorEnd.minusMonths(1).isBefore(careerFloor)) {
+            int durationMonths = 6 + faker.random().nextInt(31); // 6–36 months
+            LocalDate start = cursorEnd.minusMonths(durationMonths);
+            if (start.isBefore(careerFloor)) {
+                start = careerFloor;
+            }
+            result.add(0, buildJob(data, start, cursorEnd));
+            cursorEnd = start.minusMonths(faker.random().nextInt(7)); // gap 0–6 months
         }
         return Collections.unmodifiableList(result);
     }
 
-    private JobHistory buildJob(CandidateIndustryData data) {
+    private JobHistory buildJob(CandidateIndustryData data, LocalDate start, LocalDate end) {
         int respCount  = 2 + faker.random().nextInt(3); // 2–4 bullet points
         int skillCount = 3 + faker.random().nextInt(3); // 3–5 skills
         return new JobHistory(
                 faker.company().name(),
                 pickRandom(data.roles()),
                 pickRandom(data.designations()),
+                start,
+                end,
                 pickUniqueN(data.responsibilities(), respCount),
                 pickUniqueN(data.skills(), skillCount)
         );
@@ -221,6 +269,63 @@ public class CandidateProvider extends AbstractProvider<Faker> {
                         LocalDate.now().minusMonths(faker.random().nextInt(60))
                 ))
                 .toList();
+    }
+
+    /**
+     * Builds a 2–3 sentence professional summary from a YAML template, filled with the
+     * candidate's own generated data so the text is coherent with the rest of the record.
+     */
+    private String buildProfessionalSummary(CandidateIndustryData data,
+                                            List<JobHistory> jobHistory,
+                                            List<String> skills,
+                                            List<Certification> certifications,
+                                            List<EducationHistory> educationHistory) {
+        List<String> templates = certifications.isEmpty()
+                ? SUMMARY_TEMPLATES_PLAIN
+                : SUMMARY_TEMPLATES_WITH_CERT;
+        String template = pickRandom(templates);
+
+        Map<String, String> tokens = Map.of(
+                "{designation}",   jobHistory.get(jobHistory.size() - 1).designation(),
+                "{industry}",      data.displayName(),
+                "{skills}",        joinNatural(skills.subList(0, Math.min(3, skills.size()))),
+                "{degree}",        educationHistory.get(educationHistory.size() - 1).courseName(),
+                "{experience}",    experiencePhrase(jobHistory.get(0).startDate()),
+                "{certification}", certifications.isEmpty() ? "" : certifications.get(0).name()
+        );
+        return interpolate(template, tokens);
+    }
+
+    /** "under a year", "1 year", or "N years" measured from the first job's start date. */
+    private static String experiencePhrase(LocalDate firstJobStart) {
+        long months = ChronoUnit.MONTHS.between(firstJobStart, LocalDate.now());
+        if (months < 12) {
+            return "under a year";
+        }
+        if (months < 24) {
+            return "1 year";
+        }
+        return (months / 12) + " years";
+    }
+
+    /** Joins as "A", "A and B", or "A, B and C". */
+    private static String joinNatural(List<String> items) {
+        if (items.isEmpty()) {
+            return "";
+        }
+        if (items.size() == 1) {
+            return items.get(0);
+        }
+        return String.join(", ", items.subList(0, items.size() - 1))
+                + " and " + items.get(items.size() - 1);
+    }
+
+    private static String interpolate(String template, Map<String, String> tokens) {
+        String result = template;
+        for (Map.Entry<String, String> e : tokens.entrySet()) {
+            result = result.replace(e.getKey(), e.getValue());
+        }
+        return result;
     }
 
     // ── helpers ─────────────────────────────────────────────────────────────
@@ -267,6 +372,17 @@ public class CandidateProvider extends AbstractProvider<Faker> {
     @SuppressWarnings("unchecked")
     private static List<String> parseStringList(Map<String, Object> root, String key) {
         return Collections.unmodifiableList((List<String>) root.get(key));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<String> parseSummaryTemplates(Map<String, Object> root, String key) {
+        Map<String, Object> block = (Map<String, Object>) root.get("professionalSummaryTemplates");
+        List<String> list = block == null ? null : (List<String>) block.get(key);
+        if (list == null || list.isEmpty()) {
+            throw new IllegalStateException(
+                    "candidate-mappings.yml: professionalSummaryTemplates." + key + " is missing or empty");
+        }
+        return Collections.unmodifiableList(list);
     }
 
     @SuppressWarnings("unchecked")
