@@ -28,9 +28,9 @@ JAVA_HOME=… mvn compile
 JAVA_HOME=… mvn test
 ```
 
-**61 tests total**, running in ~400 ms:
-- `JobPostingProviderTest` — 26 tests (existing)
-- `CandidateProviderTest` — 35 tests (new)
+**76 tests total**, running in ~500 ms:
+- `JobPostingProviderTest` — 26 tests
+- `CandidateProviderTest` — 50 tests
 
 ## Project structure
 
@@ -51,10 +51,10 @@ src/main/
       faker/
         CandidateFaker.java        extends Faker; exposes candidate()
       model/
-        Candidate.java             9-field Java 21 record
+        Candidate.java             10-field Java 21 record (includes professionalSummary)
         Address.java               6-field record (US address)
         EducationHistory.java      8-field record (degree, dates, score)
-        JobHistory.java            5-field record (company, role, responsibilities, skills)
+        JobHistory.java            7-field record (company, role, designation, startDate, endDate, responsibilities, skills)
         Certification.java         3-field record (name, issuer, issuedDate)
       provider/
         CandidateProvider.java     core generation logic
@@ -62,14 +62,14 @@ src/main/
         CertificationData.java     package-private record (YAML cert holder)
   resources/
     job-posting-mappings.yml       employment_type / currency / salary_unit + 10 industries
-    candidate-mappings.yml         colleges / courses / specializations + 10 industries
+    candidate-mappings.yml         colleges / courses / specializations / professionalSummaryTemplates + 10 industries
 
 src/test/
   java/in/sureshcoder/datafaker/
     jobposting/
       JobPostingProviderTest.java  26 JUnit 5 tests
     candidate/
-      CandidateProviderTest.java   35 JUnit 5 tests
+      CandidateProviderTest.java   50 JUnit 5 tests
 
 design/
   index.html                       JobPosting provider — architecture & design document
@@ -116,14 +116,18 @@ Candidate same = seeded.candidate().build(); // deterministic
 // Query reference data
 List<String> industries = faker.candidate().availableIndustries();
 List<String> certNames  = faker.candidate().availableCertificationNames("finance");
+List<String> templates  = faker.candidate().availableSummaryTemplates();
 
 // Access generated fields
 c.firstName();                    // "Sarah"
 c.email();                        // "sarahjohnson47@yopmail.com"
 c.mobileNumber();                 // "+1-415-782-3091"
+c.professionalSummary();          // "Senior Software Engineer with 3 years of experience in the Technology industry. ..."
 c.address().country();            // "US"
 c.educationHistory();             // 1–3 EducationHistory records, chronological
-c.jobHistory();                   // 1–4 JobHistory records
+c.jobHistory();                   // 1–4 JobHistory records, oldest first; last one is current
+c.jobHistory().get(0).startDate(); // career starts on/after the latest education endDate
+c.jobHistory().get(c.jobHistory().size() - 1).isCurrent(); // true — endDate() is null
 c.skills();                       // 4–8 unique skills
 c.certifications();               // 0–3 industry-specific Certification records
 ```
@@ -168,7 +172,7 @@ industries:
 
 ## Adding a new candidate industry
 
-Edit `src/main/resources/candidate-mappings.yml` under `industries:` — no Java changes needed:
+Edit `src/main/resources/candidate-mappings.yml` under `industries:` — no Java changes needed. Professional summary templates are shared across industries, so a new industry needs none of its own:
 
 ```yaml
 industries:
@@ -190,6 +194,29 @@ industries:
         issuer: "ACEDS"
 ```
 
+## Editing professional summary templates
+
+Templates live at the top level of `candidate-mappings.yml` under `professionalSummaryTemplates`, split into two pools. Each template is one complete 2–3 sentence paragraph ending with a period:
+
+```yaml
+professionalSummaryTemplates:
+  withoutCertification:
+    - "{designation} with {experience} of experience in the {industry} industry. Skilled in {skills}. Holds a {degree}."
+  withCertification:
+    - "{designation} with {experience} of experience in {industry}. Skilled in {skills} and certified as {certification}. Holds a {degree}."
+```
+
+| Placeholder | Resolved from |
+|---|---|
+| `{designation}` | designation of the current (last) job history entry |
+| `{industry}` | the industry's `displayName` |
+| `{skills}` | first three top-level skills, joined as "A, B and C" |
+| `{degree}` | `courseName` of the highest (last) education entry |
+| `{experience}` | months from the first job's `startDate` to today: "under a year", "1 year", or "N years" |
+| `{certification}` | name of the first certification — **only valid in `withCertification`** |
+
+The `withCertification` pool is used only when the candidate has at least one certification, so `{certification}` is never blank.
+
 ## Key implementation notes — JobPosting provider
 
 - **YAML loading** — `JobPostingProvider` loads `job-posting-mappings.yml` at class-init via SnakeYAML (transitive DataFaker dep). The map is `static final`; one parse per JVM lifetime.
@@ -206,6 +233,9 @@ industries:
 - **Email domains** — restricted to `@yopmail.com` and `@mailinator.com`. Local part is `(firstName + lastName).toLowerCase().replaceAll("[^a-z0-9]","") + nextInt(999)`.
 - **Phone format** — US format `+1-XXX-XXX-XXXX` using three separate `faker.random().nextInt()` calls, never `faker.numerify()`, ensuring seed safety.
 - **Address line 2** — 40 % probability (when `faker.random().nextInt(5) < 2`); blank string otherwise.
+- **Job history backward algorithm** — the career floor is the most recent education `endDate`. The current job (always last, `endDate == null`, `isCurrent() == true`) starts 1–36 months ago, bounded by the floor. Earlier jobs are placed backwards with 6–36 month durations and 0–6 month gaps, clamped to the floor. Because the latest degree ended only 1–5 years ago, total experience is capped at ~5 years, and fewer than the drawn 1–4 jobs may fit in a short window.
+- **Professional summary** — generated last, from data already on the record (current designation, industry display name, top skills, highest degree, first certification, experience phrase). Template pool is chosen by whether certifications exist; the pick uses `faker.random()` so it is seed-safe. Generic `interpolate(template, Map)` does plain `String.replace` per token.
+- **Generation order in `buildForIndustry`** — name, email, mobile, address, education, jobs, skills, certifications, summary. Changing this order changes the RNG sequence and therefore seeded output.
 - **Certifications** — drawn from the industry's YAML list using Fisher-Yates shuffle; 0–3 per candidate. `availableCertificationNames(key)` exposes the full list per industry for test assertions.
 - **Generic `pickUniqueN<T>`** — single generic Fisher-Yates helper handles String skills, String responsibilities, and `CertificationData` objects uniformly.
 - **Separate fakers** — `CandidateFaker` and `JobFaker` both extend `Faker` independently; they share no state. Use each standalone.

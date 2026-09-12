@@ -23,6 +23,7 @@ public record Candidate(
         String lastName,
         String email,
         String mobileNumber,
+        String professionalSummary,
         Address address,
         List<EducationHistory> educationHistory,
         List<JobHistory> jobHistory,

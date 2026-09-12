@@ -75,6 +75,27 @@ specializations:
   - "Digital Marketing"
   - "Organizational Behavior"
 
+# Professional summary templates — shared across all industries.
+# Placeholders: {designation} {industry} {skills} {degree} {experience} {certification}
+# {certification} is only permitted in the withCertification list.
+professionalSummaryTemplates:
+  withoutCertification:
+    - "{designation} with {experience} of experience in the {industry} industry. Skilled in {skills}, with a strong record of delivering results in fast-paced environments. Holds a {degree}."
+    - "Results-driven {industry} professional currently working as a {designation}, bringing {experience} of hands-on experience. Core strengths include {skills}. Academic background includes a {degree}."
+    - "{designation} with {experience} in {industry}, known for combining {skills} to solve complex business problems. Committed to continuous learning, backed by a {degree}."
+    - "Experienced {industry} specialist with {experience} of progressive responsibility, most recently as a {designation}. Brings deep expertise in {skills} and a collaborative, outcome-focused approach. Earned a {degree}."
+    - "Motivated {designation} offering {experience} of experience across the {industry} sector. Proficient in {skills}, with a reputation for reliability and attention to detail. Holds a {degree}."
+    - "{industry} professional and {designation} with {experience} of experience building high-performing teams and processes. Technical toolkit includes {skills}. Educated with a {degree}."
+    - "Detail-oriented {designation} with {experience} of experience delivering measurable impact in {industry}. Expertise spans {skills}. Completed a {degree}."
+  withCertification:
+    - "{designation} with {experience} of experience in the {industry} industry. Skilled in {skills} and certified as {certification}. Holds a {degree}."
+    - "Certified {industry} professional ({certification}) currently working as a {designation}, with {experience} of hands-on experience. Core strengths include {skills}. Academic background includes a {degree}."
+    - "{designation} with {experience} in {industry}, combining {skills} to deliver dependable results. Credentials include {certification} and a {degree}."
+    - "Experienced {industry} specialist with {experience} of progressive responsibility, most recently as a {designation}. Brings expertise in {skills}, backed by the {certification} credential and a {degree}."
+    - "Motivated {designation} offering {experience} of experience across the {industry} sector. Proficient in {skills}, and holds {certification} alongside a {degree}."
+    - "{industry} professional and {designation} with {experience} of experience leading initiatives from concept to delivery. Technical toolkit includes {skills}. Certified as {certification}; educated with a {degree}."
+    - "Detail-oriented {designation} with {experience} of experience delivering measurable impact in {industry}. Expertise spans {skills}. Certifications include {certification}; completed a {degree}."
+
 industries:
   technology:
     displayName: "Technology"
