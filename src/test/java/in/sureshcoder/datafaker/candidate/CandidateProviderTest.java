@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
@@ -32,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -354,10 +356,12 @@ class CandidateProviderTest {
 
     @ParameterizedTest
     @CsvSource({
-            "technology, Technology",
-            "healthcare, Healthcare",
-            "staffing, Staffing & Recruiting",
-            "media, Media & Entertainment"
+            "technology_information_and_media, 'Technology, Information and Media'",
+            "hospitals_and_health_care, Hospitals and Health Care",
+            "administrative_and_support_services, Administrative and Support Services",
+            "entertainment_providers, Entertainment Providers",
+            "oil_gas_and_mining, 'Oil, Gas, and Mining'",
+            "holding_companies, Holding Companies"
     })
     @DisplayName("professionalSummary mentions the industry display name")
     void professionalSummaryMentionsIndustryDisplayName(String key, String displayName) {
@@ -493,14 +497,64 @@ class CandidateProviderTest {
     }
 
     @Test
-    @DisplayName("availableIndustries returns all 10 industry keys")
-    void availableIndustriesReturnsAll10() {
+    @DisplayName("availableIndustries returns all 20 LinkedIn industry keys")
+    void availableIndustriesReturnsAll20() {
         assertThat(faker.candidate().availableIndustries())
                 .containsExactlyInAnyOrder(
-                        "technology", "healthcare", "finance", "retail",
-                        "manufacturing", "logistics", "education", "staffing",
-                        "consulting", "media"
+                        "accommodation_services", "administrative_and_support_services",
+                        "construction", "consumer_services", "education",
+                        "entertainment_providers", "farming_ranching_forestry",
+                        "financial_services", "government_administration",
+                        "holding_companies", "hospitals_and_health_care", "manufacturing",
+                        "oil_gas_and_mining", "professional_services",
+                        "real_estate_and_equipment_rental_services", "retail",
+                        "technology_information_and_media",
+                        "transportation_logistics_supply_chain_and_storage",
+                        "utilities", "wholesale"
                 );
+    }
+
+    @Test
+    @DisplayName("availableIndustries does not list the legacy aliases")
+    void availableIndustriesExcludesAliases() {
+        assertThat(faker.candidate().availableIndustries())
+                .doesNotContain("technology", "healthcare", "finance",
+                                "logistics", "staffing", "consulting", "media");
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "technology, technology_information_and_media",
+            "healthcare, hospitals_and_health_care",
+            "finance,    financial_services",
+            "logistics,  transportation_logistics_supply_chain_and_storage",
+            "staffing,   administrative_and_support_services",
+            "consulting, professional_services",
+            "media,      entertainment_providers"
+    })
+    @DisplayName("Legacy industry keys resolve to their canonical industry")
+    void legacyAliasesResolveToCanonicalIndustry(String alias, String canonical) {
+        assertThat(faker.candidate().availableCertificationNames(alias))
+                .isEqualTo(faker.candidate().availableCertificationNames(canonical))
+                .isNotEmpty();
+    }
+
+    @ParameterizedTest
+    @MethodSource("allIndustryKeys")
+    @DisplayName("Every industry produces a complete candidate")
+    void everyIndustryProducesCompleteCandidate(String industryKey) {
+        Candidate c = faker.candidate().buildForIndustry(industryKey);
+
+        assertThat(c.firstName()).isNotBlank();
+        assertThat(c.professionalSummary()).isNotBlank();
+        assertThat(c.skills()).isNotEmpty();
+        assertThat(c.jobHistory()).isNotEmpty();
+        assertThat(c.educationHistory()).isNotEmpty();
+        assertThat(faker.candidate().availableCertificationNames(industryKey)).isNotEmpty();
+    }
+
+    static Stream<String> allIndustryKeys() {
+        return new CandidateFaker().candidate().availableIndustries().stream();
     }
 
     @Test

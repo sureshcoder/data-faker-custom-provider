@@ -7,7 +7,7 @@
 [![JitPack](https://img.shields.io/jitpack/version/com.github.sureshcoder/data-faker-custom-provider.svg?color=blue)](https://jitpack.io/#sureshcoder/data-faker-custom-provider)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-yellow.svg)](LICENSE)
 
-Two independent, YAML-driven custom providers for [DataFaker](https://www.datafaker.net/) that generate realistic, fully synthetic **job postings** and **job candidates** for ten industries. Everything is seed-reproducible, returned as immutable Java 21 records, and extensible by editing YAML rather than Java.
+Two independent, YAML-driven custom providers for [DataFaker](https://www.datafaker.net/) that generate realistic, fully synthetic **job postings** and **job candidates** for the 20 top-level LinkedIn industries. Everything is seed-reproducible, returned as immutable Java 21 records, and extensible by editing YAML rather than Java.
 
 | Provider | Entry point | Produces |
 |---|---|---|
@@ -56,7 +56,7 @@ Two independent, YAML-driven custom providers for [DataFaker](https://www.datafa
 - **Two providers, one dependency.** `JobFaker` and `CandidateFaker` both extend DataFaker's `Faker`, so every built-in provider (`name()`, `company()`, `address()`, …) is available on the same instance.
 - **schema.org-modelled job postings** with per-industry title, skill and description pools and per-industry salary bounds.
 - **Fully synthetic candidates** with chronologically consistent education history, dated job history (the last job is always current), 4–8 unique skills, 0–3 industry-specific certifications and a 2–3 sentence professional summary that is coherent with the rest of the record.
-- **Ten industries shared by both providers**: technology, healthcare, finance, retail, manufacturing, logistics, education, staffing, consulting, media.
+- **20 industries shared by both providers**, matching the top-level categories of the LinkedIn industry taxonomy. Every pre-1.1.0 key still resolves: `retail`, `manufacturing` and `education` are unchanged, and the other seven (`technology`, `healthcare`, `finance`, `logistics`, `staffing`, `consulting`, `media`) are kept as aliases.
 - **YAML-driven reference data.** Add an industry, a certification or a summary template by editing a YAML file; no Java changes are needed.
 - **Seed-reproducible.** Every random pick goes through DataFaker's `RandomService`, so `new CandidateFaker(new Random(42L))` yields identical output on every run.
 - **Immutable Java 21 records** with unmodifiable lists.
@@ -190,7 +190,7 @@ Obtain the provider with `new JobFaker().jobPosting()`. `JobFaker` has the same 
 | Method | Returns | Notes |
 |---|---|---|
 | `build()` | `JobPosting` | Industry chosen at random from the configured list |
-| `buildForIndustry(String key)` | `JobPosting` | Key is case-insensitive; unknown keys fall back to the first configured industry (`technology`) |
+| `buildForIndustry(String key)` | `JobPosting` | Key is case-insensitive; unknown keys fall back to the first configured industry (`accommodation_services`) |
 | `availableIndustries()` | `List<String>` | The ten YAML keys, in file order |
 | `availableEmploymentTypes()` | `List<String>` | `FULL_TIME`, `PART_TIME`, `CONTRACTOR`, `TEMPORARY`, `INTERN`, `VOLUNTEER`, `PER_DIEM` |
 | `availableCurrencies()` | `List<String>` | `USD`, `EUR`, `GBP`, `INR`, `CAD`, `AUD`, `SGD` |
@@ -284,7 +284,7 @@ Obtain the provider with `new CandidateFaker().candidate()`. `CandidateFaker` ha
 | Method | Returns | Notes |
 |---|---|---|
 | `build()` | `Candidate` | Industry chosen at random |
-| `buildForIndustry(String key)` | `Candidate` | Job history, skills, certifications and summary all match the industry; unknown keys fall back to `technology` |
+| `buildForIndustry(String key)` | `Candidate` | Job history, skills, certifications and summary all match the industry; unknown keys fall back to the first configured industry (`accommodation_services`) |
 | `availableIndustries()` | `List<String>` | The ten YAML keys |
 | `availableCertificationNames(String key)` | `List<String>` | Every certification name configured for that industry, useful for assertions |
 | `availableSummaryTemplates()` | `List<String>` | All professional summary templates (both pools), useful for assertions |
@@ -691,22 +691,48 @@ public class InteropExample {
 
 ## Industries reference
 
-Both YAML files use the same ten keys. Salary ranges apply to the JobPosting provider and are per year in the sense of the `minLow`/`maxHigh` bounds; the `unitText` on a posting is picked separately.
+Both YAML files use the same 20 keys, taken from the top level of the LinkedIn industry taxonomy. The **Legacy alias** column lists the pre-1.1.0 key that still resolves to each industry; aliases are accepted by `buildForIndustry` but are not returned by `availableIndustries()`. Salary ranges apply to the JobPosting provider and are per year in the sense of the `minLow`/`maxHigh` bounds; the `unitText` on a posting is picked separately.
 
-| YAML key | Display name | JobPosting salary bounds (`minLow` – `maxHigh`) |
-|---|---|---|
-| `technology` | Technology | 80 000 – 220 000 |
-| `healthcare` | Healthcare | 50 000 – 180 000 |
-| `finance` | Finance | 70 000 – 250 000 |
-| `retail` | Retail | 35 000 – 120 000 |
-| `manufacturing` | Manufacturing | 45 000 – 130 000 |
-| `logistics` | Logistics | 40 000 – 120 000 |
-| `education` | Education | 38 000 – 110 000 |
-| `staffing` | Staffing & Recruiting | 45 000 – 140 000 |
-| `consulting` | Consulting | 70 000 – 220 000 |
-| `media` | Media & Entertainment | 40 000 – 150 000 |
+| YAML key | Display name | Legacy alias | JobPosting salary bounds (`minLow` – `maxHigh`) |
+|---|---|---|---|
+| `accommodation_services` | Accommodation Services | — | 30 000 – 95 000 |
+| `administrative_and_support_services` | Administrative and Support Services | `staffing` | 45 000 – 140 000 |
+| `construction` | Construction | — | 45 000 – 160 000 |
+| `consumer_services` | Consumer Services | — | 32 000 – 105 000 |
+| `education` | Education | — | 38 000 – 110 000 |
+| `entertainment_providers` | Entertainment Providers | `media` | 40 000 – 150 000 |
+| `farming_ranching_forestry` | Farming, Ranching, Forestry | — | 35 000 – 115 000 |
+| `financial_services` | Financial Services | `finance` | 70 000 – 250 000 |
+| `government_administration` | Government Administration | — | 42 000 – 130 000 |
+| `holding_companies` | Holding Companies | — | 70 000 – 210 000 |
+| `hospitals_and_health_care` | Hospitals and Health Care | `healthcare` | 50 000 – 180 000 |
+| `manufacturing` | Manufacturing | — | 45 000 – 130 000 |
+| `oil_gas_and_mining` | Oil, Gas, and Mining | — | 60 000 – 200 000 |
+| `professional_services` | Professional Services | `consulting` | 70 000 – 220 000 |
+| `real_estate_and_equipment_rental_services` | Real Estate and Equipment Rental Services | — | 40 000 – 165 000 |
+| `retail` | Retail | — | 35 000 – 120 000 |
+| `technology_information_and_media` | Technology, Information and Media | `technology` | 80 000 – 220 000 |
+| `transportation_logistics_supply_chain_and_storage` | Transportation, Logistics, Supply Chain and Storage | `logistics` | 40 000 – 120 000 |
+| `utilities` | Utilities | — | 48 000 – 150 000 |
+| `wholesale` | Wholesale | — | 40 000 – 135 000 |
 
 Per industry, `job-posting-mappings.yml` holds titles, skills, description templates and salary bounds; `candidate-mappings.yml` holds roles, designations, skills, responsibilities and certifications.
+
+### Industry aliases
+
+Both YAML files carry a top-level `aliases:` block mapping an old key onto a canonical one:
+
+```yaml
+aliases:
+  technology: technology_information_and_media
+  healthcare: hospitals_and_health_care
+```
+
+An alias is resolved before industry lookup, so `buildForIndustry("technology")` and
+`buildForIndustry("technology_information_and_media")` return postings for the same industry.
+Aliases are deliberately absent from `availableIndustries()`, which lists only the 20 canonical
+keys. An alias whose target is not a configured industry throws at class initialisation rather
+than silently falling back, so a typo surfaces on the first use of the provider.
 
 ## Extending via YAML
 

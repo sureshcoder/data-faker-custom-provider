@@ -23,9 +23,763 @@ salary_unit:
   - "MONTH"
   - "YEAR"
 
+# Legacy industry keys retained as aliases onto the LinkedIn taxonomy.
+# Resolved by the provider before industry lookup; not listed by availableIndustries().
+aliases:
+  technology: technology_information_and_media
+  healthcare: hospitals_and_health_care
+  finance: financial_services
+  logistics: transportation_logistics_supply_chain_and_storage
+  staffing: administrative_and_support_services
+  consulting: professional_services
+  media: entertainment_providers
+
 industries:
-  technology:
-    displayName: "Technology"
+  accommodation_services:
+    displayName: "Accommodation Services"
+    titles:
+      - "Hotel General Manager"
+      - "Front Office Manager"
+      - "Executive Chef"
+      - "Sous Chef"
+      - "Restaurant Manager"
+      - "Food and Beverage Director"
+      - "Housekeeping Supervisor"
+      - "Guest Services Agent"
+      - "Banquet Manager"
+      - "Revenue Manager"
+      - "Catering Sales Manager"
+      - "Line Cook"
+      - "Reservations Supervisor"
+      - "Night Auditor"
+      - "Concierge"
+    skills:
+      - "Property Management Systems"
+      - "Opera PMS"
+      - "Guest Relations"
+      - "Revenue Management"
+      - "HACCP Food Safety"
+      - "Menu Planning"
+      - "Banquet Operations"
+      - "Inventory Control"
+      - "Point of Sale Systems"
+      - "Housekeeping Operations"
+      - "Front Desk Operations"
+      - "Event Coordination"
+      - "Labor Cost Control"
+      - "Kitchen Management"
+      - "ServSafe"
+      - "Occupancy Forecasting"
+      - "Vendor Negotiation"
+      - "Guest Recovery"
+      - "Upselling"
+      - "Shift Scheduling"
+    descriptionTemplates:
+      - "{company} is seeking a {title} to deliver exceptional guest experiences. You will apply {skills} across daily operations in a fast-paced hospitality environment."
+      - "As a {title} at {company}, you will lead a service team and drive guest satisfaction scores. Hands-on experience with {skills} is essential."
+      - "Join {company} as a {title}. The role combines {skills} with a genuine passion for hospitality and a commitment to service excellence."
+      - "Our property is hiring a {title} to strengthen operations across the guest journey. Proficiency in {skills} will set you up for success."
+    salaryRange:
+      minLow: 30000
+      minHigh: 45000
+      maxLow: 55000
+      maxHigh: 95000
+  administrative_and_support_services:
+    displayName: "Administrative and Support Services"
+    titles:
+      - "Talent Acquisition Specialist"
+      - "Recruiter"
+      - "Senior Recruiter"
+      - "Technical Recruiter"
+      - "Staffing Coordinator"
+      - "HR Business Partner"
+      - "Sourcing Specialist"
+      - "Recruitment Manager"
+      - "Executive Recruiter"
+      - "Campus Recruiter"
+      - "Workforce Planning Analyst"
+      - "HR Generalist"
+      - "Talent Acquisition Manager"
+      - "Director of Talent Acquisition"
+      - "RPO Delivery Lead"
+    skills:
+      - "Applicant Tracking Systems (ATS)"
+      - "LinkedIn Recruiter"
+      - "Boolean Search"
+      - "Candidate Sourcing"
+      - "Offer Negotiation"
+      - "Employer Branding"
+      - "Talent Pipeline Management"
+      - "Workday"
+      - "Greenhouse"
+      - "Lever"
+      - "Interview Coordination"
+      - "Workforce Planning"
+      - "HRIS"
+      - "Job Marketing & Advertising"
+      - "Competency-Based Interviewing"
+    descriptionTemplates:
+      - "We are hiring a driven {title} to help us attract and retain top talent. You should bring hands-on experience with {skills} and a passion for connecting great people with great opportunities."
+      - "Join {company} as a {title}. You will manage full-cycle recruiting, leveraging your expertise in {skills} to build high-performing teams across the organization."
+      - "{company} needs a sharp {title} with a proven track record in {skills}. You will own the candidate experience from first contact through offer, partnering closely with hiring managers."
+      - "Our talent team is growing and we need a {title} who excels in {skills}. You will drive sourcing strategies, run structured interviews, and help us scale our hiring pipeline."
+    salaryRange:
+      minLow: 45000
+      minHigh: 70000
+      maxLow: 75000
+      maxHigh: 140000
+  construction:
+    displayName: "Construction"
+    titles:
+      - "Construction Project Manager"
+      - "Site Superintendent"
+      - "Construction Estimator"
+      - "Civil Engineer"
+      - "Structural Engineer"
+      - "Construction Foreman"
+      - "Safety Manager"
+      - "Project Engineer"
+      - "Quantity Surveyor"
+      - "BIM Coordinator"
+      - "Field Engineer"
+      - "Construction Scheduler"
+      - "Electrical Supervisor"
+      - "Contracts Administrator"
+      - "Survey Technician"
+    skills:
+      - "AutoCAD"
+      - "Revit"
+      - "Primavera P6"
+      - "Procore"
+      - "Blueprint Reading"
+      - "OSHA Compliance"
+      - "Cost Estimating"
+      - "Structural Analysis"
+      - "Site Supervision"
+      - "Concrete Construction"
+      - "Steel Erection"
+      - "Subcontractor Management"
+      - "Change Order Management"
+      - "BIM Coordination"
+      - "Project Scheduling"
+      - "Quality Control"
+      - "Geotechnical Analysis"
+      - "Building Codes"
+      - "Load Calculations"
+      - "Punch List Management"
+    descriptionTemplates:
+      - "{company} is looking for a {title} to deliver projects on time and on budget. You will apply {skills} from preconstruction through closeout."
+      - "As a {title} at {company}, you will coordinate trades and keep complex builds moving safely. Strong command of {skills} is required."
+      - "Join {company} as a {title} on a portfolio of commercial projects. The ideal candidate brings deep experience with {skills} and a safety-first mindset."
+      - "We are hiring a {title} to support field operations and project controls. Proficiency in {skills} and strong communication with subcontractors are key."
+    salaryRange:
+      minLow: 45000
+      minHigh: 75000
+      maxLow: 95000
+      maxHigh: 160000
+  consumer_services:
+    displayName: "Consumer Services"
+    titles:
+      - "Customer Success Manager"
+      - "Service Center Manager"
+      - "Field Service Technician"
+      - "Client Relations Specialist"
+      - "Repair Technician"
+      - "Account Coordinator"
+      - "Membership Manager"
+      - "Community Outreach Coordinator"
+      - "Program Manager"
+      - "Customer Experience Lead"
+      - "Volunteer Coordinator"
+      - "Donor Relations Manager"
+      - "Appliance Service Technician"
+      - "Service Dispatch Supervisor"
+      - "Quality Assurance Specialist"
+    skills:
+      - "Customer Relationship Management"
+      - "Salesforce"
+      - "Zendesk"
+      - "Conflict Resolution"
+      - "Service Scheduling"
+      - "Warranty Administration"
+      - "Technical Troubleshooting"
+      - "Client Retention"
+      - "Quality Assurance"
+      - "Volunteer Management"
+      - "Grant Writing"
+      - "Community Engagement"
+      - "Membership Systems"
+      - "Field Service Management"
+      - "Escalation Handling"
+      - "Service Level Agreements"
+      - "Diagnostics"
+      - "Appointment Systems"
+      - "Vendor Coordination"
+      - "Customer Onboarding"
+    descriptionTemplates:
+      - "{company} is seeking a {title} to keep our customers supported and loyal. You will draw on {skills} every day to resolve issues and build trust."
+      - "As a {title} at {company}, you will own the client relationship end to end. Experience with {skills} is what makes the difference in this role."
+      - "Join {company} as a {title} in a service-led organisation. The role rewards strong {skills} and a genuine instinct for helping people."
+      - "We are hiring a {title} to raise service standards across our accounts. Proficiency in {skills} and calm escalation handling are essential."
+    salaryRange:
+      minLow: 32000
+      minHigh: 50000
+      maxLow: 62000
+      maxHigh: 105000
+  education:
+    displayName: "Education"
+    titles:
+      - "Teacher"
+      - "Professor"
+      - "Curriculum Developer"
+      - "Instructional Designer"
+      - "School Principal"
+      - "Academic Advisor"
+      - "Education Administrator"
+      - "Special Education Teacher"
+      - "Learning & Development Specialist"
+      - "E-Learning Developer"
+      - "Training Manager"
+      - "Career Counselor"
+      - "Educational Technologist"
+      - "Dean of Students"
+      - "Director of Education"
+    skills:
+      - "Curriculum Development"
+      - "Instructional Design"
+      - "Classroom Management"
+      - "Canvas LMS"
+      - "Blackboard"
+      - "Google Classroom"
+      - "STEM Education"
+      - "Special Education (IEP)"
+      - "Differentiated Instruction"
+      - "Assessment Design"
+      - "Student Engagement"
+      - "Education Technology"
+      - "Professional Development"
+      - "Adult Learning Theory"
+      - "Bloom's Taxonomy"
+    descriptionTemplates:
+      - "We are looking for a passionate {title} to inspire and educate our students. Experience with {skills} and a genuine commitment to learner success are essential for this role."
+      - "Join {company} as a {title}. You will design and deliver engaging educational experiences, drawing on your expertise in {skills} to meet the diverse needs of every learner."
+      - "{company} is seeking a dedicated {title} who excels in {skills}. You will collaborate with faculty, staff, and families to create an inclusive and high-achieving learning environment."
+      - "Our institution is hiring a {title} with a strong foundation in {skills}. You will shape the educational journey of students and contribute to a culture of academic excellence."
+    salaryRange:
+      minLow: 38000
+      minHigh: 60000
+      maxLow: 65000
+      maxHigh: 110000
+  entertainment_providers:
+    displayName: "Entertainment Providers"
+    titles:
+      - "Content Creator"
+      - "Video Producer"
+      - "Social Media Manager"
+      - "Graphic Designer"
+      - "Creative Director"
+      - "Copywriter"
+      - "Digital Marketing Specialist"
+      - "SEO Specialist"
+      - "Brand Manager"
+      - "Marketing Manager"
+      - "Media Buyer"
+      - "Public Relations Manager"
+      - "Podcast Producer"
+      - "Event Producer"
+      - "UX/UI Designer"
+    skills:
+      - "Adobe Creative Suite"
+      - "Premiere Pro"
+      - "Final Cut Pro"
+      - "After Effects"
+      - "Social Media Marketing"
+      - "Content Strategy"
+      - "SEO/SEM"
+      - "Google Analytics"
+      - "Copywriting"
+      - "Brand Development"
+      - "Video Editing"
+      - "Photography"
+      - "Digital Advertising"
+      - "Audience Analytics"
+      - "Figma"
+    descriptionTemplates:
+      - "We are looking for a creative {title} to help tell our brand story and grow our audience. Hands-on experience with {skills} and a portfolio of compelling work are required."
+      - "Join {company} as a {title} and shape the content experiences that connect with millions. Deep expertise in {skills} and a strong creative vision will set you apart."
+      - "{company} is hiring a talented {title} with a passion for storytelling and a strong command of {skills}. You will collaborate with creative teams to produce content that drives engagement and brand awareness."
+      - "Our media team needs a {title} who lives and breathes {skills}. You will ideate, produce, and optimize content across channels to grow our audience and exceed campaign goals."
+    salaryRange:
+      minLow: 40000
+      minHigh: 65000
+      maxLow: 70000
+      maxHigh: 150000
+  farming_ranching_forestry:
+    displayName: "Farming, Ranching, Forestry"
+    titles:
+      - "Farm Manager"
+      - "Agronomist"
+      - "Livestock Manager"
+      - "Forestry Technician"
+      - "Crop Scientist"
+      - "Ranch Operations Supervisor"
+      - "Irrigation Specialist"
+      - "Harvest Coordinator"
+      - "Soil Scientist"
+      - "Aquaculture Technician"
+      - "Horticulturist"
+      - "Precision Agriculture Specialist"
+      - "Timber Buyer"
+      - "Herd Health Manager"
+      - "Greenhouse Manager"
+    skills:
+      - "Crop Rotation"
+      - "Soil Analysis"
+      - "Irrigation Systems"
+      - "Livestock Management"
+      - "Precision Agriculture"
+      - "GPS Field Mapping"
+      - "Integrated Pest Management"
+      - "Harvest Planning"
+      - "Silviculture"
+      - "Timber Cruising"
+      - "Agricultural Equipment Operation"
+      - "Feed Formulation"
+      - "Greenhouse Operations"
+      - "Yield Forecasting"
+      - "Sustainable Farming"
+      - "Water Rights Management"
+      - "Grain Storage"
+      - "Farm Safety"
+      - "USDA Compliance"
+      - "Herd Health"
+    descriptionTemplates:
+      - "{company} is seeking a {title} to manage productive land and livestock. You will apply {skills} across the full growing season."
+      - "As a {title} at {company}, you will balance yield, sustainability and cost. Practical experience with {skills} is essential."
+      - "Join {company} as a {title} on a working operation. The role combines {skills} with early mornings and real responsibility for the land."
+      - "We are hiring a {title} to modernise our agricultural practice. Strength in {skills} and a data-driven approach to yield are what we are after."
+    salaryRange:
+      minLow: 35000
+      minHigh: 52000
+      maxLow: 68000
+      maxHigh: 115000
+  financial_services:
+    displayName: "Financial Services"
+    titles:
+      - "Financial Analyst"
+      - "Senior Financial Analyst"
+      - "Investment Banker"
+      - "Portfolio Manager"
+      - "Risk Analyst"
+      - "Compliance Officer"
+      - "Credit Analyst"
+      - "Quantitative Analyst"
+      - "Actuary"
+      - "Accountant"
+      - "Certified Public Accountant"
+      - "Wealth Manager"
+      - "Treasury Analyst"
+      - "Financial Controller"
+      - "Chief Financial Officer"
+    skills:
+      - "Financial Modeling"
+      - "Advanced Excel"
+      - "Bloomberg Terminal"
+      - "Python"
+      - "SQL"
+      - "Risk Management"
+      - "Regulatory Compliance"
+      - "GAAP"
+      - "IFRS"
+      - "Derivatives Pricing"
+      - "Portfolio Analysis"
+      - "VBA"
+      - "Tableau"
+      - "Power BI"
+      - "CFA Certification"
+    descriptionTemplates:
+      - "We are looking for a detail-oriented {title} to join our finance team. The ideal candidate has strong skills in {skills} and proven experience in financial services or investment banking."
+      - "As a {title} at {company}, you will analyze financial data, manage risk, and support strategic decision-making. Proficiency in {skills} is required alongside a track record of delivering insights under pressure."
+      - "Join our growing financial services firm as a {title}. You will leverage your expertise in {skills} to drive business outcomes, optimize capital allocation, and ensure full regulatory compliance."
+      - "{company} seeks a sharp {title} who excels in {skills}. This high-visibility role partners directly with senior leadership to shape investment strategy and reporting frameworks."
+    salaryRange:
+      minLow: 70000
+      minHigh: 110000
+      maxLow: 120000
+      maxHigh: 250000
+  government_administration:
+    displayName: "Government Administration"
+    titles:
+      - "Policy Analyst"
+      - "Public Program Manager"
+      - "Urban Planner"
+      - "Budget Analyst"
+      - "Public Health Administrator"
+      - "Compliance Officer"
+      - "Legislative Aide"
+      - "Emergency Management Coordinator"
+      - "Grants Manager"
+      - "City Administrator"
+      - "Environmental Program Specialist"
+      - "Procurement Officer"
+      - "Public Information Officer"
+      - "Records Manager"
+      - "Permit Technician"
+    skills:
+      - "Public Policy Analysis"
+      - "Grant Administration"
+      - "Regulatory Compliance"
+      - "Budget Planning"
+      - "GIS Mapping"
+      - "Stakeholder Engagement"
+      - "Legislative Research"
+      - "Emergency Preparedness"
+      - "Procurement Regulations"
+      - "Zoning Ordinances"
+      - "Public Records Management"
+      - "Program Evaluation"
+      - "Community Outreach"
+      - "Contract Administration"
+      - "Statistical Analysis"
+      - "Report Writing"
+      - "Intergovernmental Relations"
+      - "Census Data Analysis"
+      - "Municipal Code"
+      - "Freedom of Information Act"
+    descriptionTemplates:
+      - "{company} is recruiting a {title} to serve the public interest. You will apply {skills} to programs that affect residents directly."
+      - "As a {title} at {company}, you will translate policy into delivery. Demonstrated experience with {skills} is required for this role."
+      - "Join {company} as a {title} supporting municipal operations. The position calls for {skills} and clear communication with elected officials."
+      - "We are hiring a {title} to strengthen program oversight and compliance. Proficiency in {skills} and a commitment to public service are essential."
+    salaryRange:
+      minLow: 42000
+      minHigh: 62000
+      maxLow: 78000
+      maxHigh: 130000
+  holding_companies:
+    displayName: "Holding Companies"
+    titles:
+      - "Corporate Development Manager"
+      - "Portfolio Analyst"
+      - "Investment Associate"
+      - "Group Financial Controller"
+      - "Mergers and Acquisitions Analyst"
+      - "Treasury Manager"
+      - "Subsidiary Operations Director"
+      - "Corporate Counsel"
+      - "Internal Audit Manager"
+      - "Strategy Director"
+      - "Consolidation Accountant"
+      - "Risk Manager"
+      - "Capital Allocation Analyst"
+      - "Board Relations Manager"
+    skills:
+      - "Financial Consolidation"
+      - "Mergers and Acquisitions"
+      - "Due Diligence"
+      - "Portfolio Management"
+      - "Corporate Governance"
+      - "Treasury Management"
+      - "IFRS"
+      - "US GAAP"
+      - "Valuation Modelling"
+      - "Capital Structure"
+      - "Intercompany Accounting"
+      - "Board Reporting"
+      - "Risk Assessment"
+      - "Transfer Pricing"
+      - "Subsidiary Oversight"
+      - "Strategic Planning"
+      - "Cash Flow Forecasting"
+      - "Investor Relations"
+      - "Regulatory Filings"
+      - "Dividend Policy"
+    descriptionTemplates:
+      - "{company} is seeking a {title} to support oversight across a diversified portfolio. You will apply {skills} at group level."
+      - "As a {title} at {company}, you will work across subsidiary finance and corporate strategy. Strong command of {skills} is expected."
+      - "Join {company} as a {title} reporting into group leadership. The role demands {skills} and comfort operating across multiple operating companies."
+      - "We are hiring a {title} to strengthen governance and capital allocation. Proficiency in {skills} and sound commercial judgement are essential."
+    salaryRange:
+      minLow: 70000
+      minHigh: 105000
+      maxLow: 130000
+      maxHigh: 210000
+  hospitals_and_health_care:
+    displayName: "Hospitals and Health Care"
+    titles:
+      - "Registered Nurse"
+      - "Licensed Practical Nurse"
+      - "Nurse Practitioner"
+      - "Physician Assistant"
+      - "Medical Doctor"
+      - "Clinical Research Associate"
+      - "Healthcare Administrator"
+      - "Medical Laboratory Technician"
+      - "Radiologic Technologist"
+      - "Physical Therapist"
+      - "Occupational Therapist"
+      - "Pharmacy Technician"
+      - "Health Informatics Specialist"
+      - "Clinical Data Manager"
+      - "Patient Care Coordinator"
+    skills:
+      - "Patient Care"
+      - "Electronic Health Records (EHR)"
+      - "HIPAA Compliance"
+      - "Clinical Documentation"
+      - "BLS Certification"
+      - "ACLS Certification"
+      - "Medication Administration"
+      - "Wound Care"
+      - "IV Therapy"
+      - "Phlebotomy"
+      - "Epic Systems"
+      - "Cerner"
+      - "Medical Coding (ICD-10)"
+      - "Care Coordination"
+      - "Telehealth"
+    descriptionTemplates:
+      - "We are hiring a compassionate {title} to join our healthcare team. Experience with {skills} is essential. You will provide exceptional patient care in a supportive, team-oriented environment."
+      - "Join {company} as a {title}. This role requires proficiency in {skills}. We are committed to delivering high-quality healthcare outcomes while supporting every team member's professional growth."
+      - "Our healthcare facility seeks a dedicated {title}. The ideal candidate has deep expertise in {skills} and a genuine passion for improving patient outcomes across our community."
+      - "{company} is expanding and needs a skilled {title}. You will leverage your knowledge of {skills} to support a multidisciplinary care team delivering industry-leading patient experiences."
+    salaryRange:
+      minLow: 50000
+      minHigh: 80000
+      maxLow: 90000
+      maxHigh: 180000
+  manufacturing:
+    displayName: "Manufacturing"
+    titles:
+      - "Manufacturing Engineer"
+      - "Senior Manufacturing Engineer"
+      - "Production Manager"
+      - "Plant Manager"
+      - "Process Engineer"
+      - "Industrial Engineer"
+      - "Quality Control Inspector"
+      - "CNC Machinist"
+      - "Automation Engineer"
+      - "Maintenance Technician"
+      - "Lean Manufacturing Specialist"
+      - "Safety Manager"
+      - "Materials Manager"
+      - "Operations Manager"
+      - "Welding Technician"
+    skills:
+      - "Lean Manufacturing"
+      - "Six Sigma"
+      - "AutoCAD"
+      - "SolidWorks"
+      - "PLC Programming"
+      - "ISO 9001"
+      - "OSHA Compliance"
+      - "5S Methodology"
+      - "Statistical Process Control (SPC)"
+      - "Root Cause Analysis"
+      - "CNC Programming"
+      - "Production Planning"
+      - "SAP"
+      - "Kaizen"
+      - "FMEA"
+    descriptionTemplates:
+      - "We are seeking a skilled {title} to join our manufacturing facility. The ideal candidate has hands-on experience with {skills} and a commitment to quality and continuous improvement."
+      - "Join {company} as a {title} and help drive operational excellence on the production floor. Proficiency in {skills} is required to succeed in this fast-paced manufacturing environment."
+      - "{company} is hiring a {title} with a strong background in {skills}. You will play a key role in optimizing production processes, reducing waste, and maintaining safety standards."
+      - "Our growing manufacturing operation needs a dedicated {title}. You will apply your expertise in {skills} to meet production targets while upholding the highest quality standards."
+    salaryRange:
+      minLow: 45000
+      minHigh: 70000
+      maxLow: 75000
+      maxHigh: 130000
+  oil_gas_and_mining:
+    displayName: "Oil, Gas, and Mining"
+    titles:
+      - "Petroleum Engineer"
+      - "Drilling Supervisor"
+      - "Geologist"
+      - "Mining Engineer"
+      - "Reservoir Engineer"
+      - "HSE Manager"
+      - "Production Engineer"
+      - "Pipeline Integrity Engineer"
+      - "Mine Planner"
+      - "Geophysicist"
+      - "Completions Engineer"
+      - "Rig Manager"
+      - "Metallurgist"
+      - "Wellsite Supervisor"
+      - "Process Safety Engineer"
+    skills:
+      - "Reservoir Simulation"
+      - "Drilling Operations"
+      - "Well Completion"
+      - "Seismic Interpretation"
+      - "Mine Planning"
+      - "Petrel"
+      - "Hydraulic Fracturing"
+      - "Pipeline Integrity"
+      - "HSE Management"
+      - "Process Safety Management"
+      - "Geological Modelling"
+      - "Production Optimization"
+      - "Ore Processing"
+      - "Rock Mechanics"
+      - "Environmental Permitting"
+      - "Directional Drilling"
+      - "Reserve Estimation"
+      - "Mineral Exploration"
+      - "Flow Assurance"
+      - "Offshore Operations"
+    descriptionTemplates:
+      - "{company} is seeking a {title} for upstream operations. You will apply {skills} in a demanding field environment with uncompromising safety standards."
+      - "As a {title} at {company}, you will optimise recovery and keep production targets on track. Deep experience with {skills} is required."
+      - "Join {company} as a {title} across our asset base. The role rewards {skills} and the judgement to make decisions with incomplete subsurface data."
+      - "We are hiring a {title} to support exploration and development. Proficiency in {skills} and a strong HSE record are essential."
+    salaryRange:
+      minLow: 60000
+      minHigh: 95000
+      maxLow: 125000
+      maxHigh: 200000
+  professional_services:
+    displayName: "Professional Services"
+    titles:
+      - "Management Consultant"
+      - "Business Analyst"
+      - "Strategy Consultant"
+      - "IT Consultant"
+      - "Financial Consultant"
+      - "HR Consultant"
+      - "Operations Consultant"
+      - "Data Analytics Consultant"
+      - "Risk Consultant"
+      - "Change Management Consultant"
+      - "Organizational Development Consultant"
+      - "Technology Implementation Specialist"
+      - "Principal Consultant"
+      - "Engagement Manager"
+      - "Senior Advisor"
+    skills:
+      - "Business Analysis"
+      - "Strategic Planning"
+      - "Change Management"
+      - "Stakeholder Management"
+      - "Process Improvement"
+      - "Data Analysis"
+      - "Advanced Excel"
+      - "PowerPoint"
+      - "Project Management"
+      - "Financial Modeling"
+      - "Organizational Design"
+      - "Agile Methodology"
+      - "Client Relationship Management"
+      - "SWOT Analysis"
+      - "Industry Research"
+    descriptionTemplates:
+      - "We are looking for a high-impact {title} to help our clients solve complex business challenges. Deep expertise in {skills} and outstanding client-facing skills are essential."
+      - "Join {company} as a {title} and work alongside senior leaders to shape business strategy. You will leverage your proficiency in {skills} to deliver measurable results for our clients."
+      - "{company} is seeking a {title} with a strong command of {skills}. You will lead engagements, synthesize findings into actionable recommendations, and build lasting client relationships."
+      - "Our consulting practice is expanding and needs a {title} who thrives in ambiguity. Proven skills in {skills} and the ability to manage multiple engagements simultaneously are required."
+    salaryRange:
+      minLow: 70000
+      minHigh: 110000
+      maxLow: 120000
+      maxHigh: 220000
+  real_estate_and_equipment_rental_services:
+    displayName: "Real Estate and Equipment Rental Services"
+    titles:
+      - "Property Manager"
+      - "Real Estate Agent"
+      - "Leasing Consultant"
+      - "Asset Manager"
+      - "Commercial Broker"
+      - "Facilities Manager"
+      - "Acquisitions Analyst"
+      - "Equipment Rental Manager"
+      - "Lease Administrator"
+      - "Real Estate Appraiser"
+      - "Tenant Relations Coordinator"
+      - "Fleet Manager"
+      - "Development Manager"
+      - "Escrow Officer"
+      - "Real Estate Portfolio Manager"
+    skills:
+      - "Property Management"
+      - "Lease Negotiation"
+      - "Yardi"
+      - "MRI Software"
+      - "Tenant Relations"
+      - "Market Analysis"
+      - "Real Estate Valuation"
+      - "Argus Enterprise"
+      - "Rent Roll Analysis"
+      - "Due Diligence"
+      - "Facilities Operations"
+      - "Fleet Management"
+      - "CAM Reconciliation"
+      - "Title Review"
+      - "Zoning Regulations"
+      - "Capital Improvement Planning"
+      - "Equipment Maintenance Scheduling"
+      - "Rental Agreements"
+      - "Asset Disposition"
+      - "Broker Relations"
+    descriptionTemplates:
+      - "{company} is seeking a {title} to manage a growing portfolio. You will apply {skills} across leasing, operations and tenant relationships."
+      - "As a {title} at {company}, you will maximise asset performance and occupancy. Strong experience with {skills} is what we are looking for."
+      - "Join {company} as a {title} covering commercial and residential assets. The role combines {skills} with sharp commercial instincts."
+      - "We are hiring a {title} to support acquisitions and asset management. Proficiency in {skills} and rigorous underwriting discipline are essential."
+    salaryRange:
+      minLow: 40000
+      minHigh: 62000
+      maxLow: 85000
+      maxHigh: 165000
+  retail:
+    displayName: "Retail"
+    titles:
+      - "Store Manager"
+      - "Assistant Store Manager"
+      - "Retail Sales Associate"
+      - "Merchandising Manager"
+      - "Supply Chain Analyst"
+      - "Category Manager"
+      - "E-Commerce Manager"
+      - "Inventory Control Specialist"
+      - "Visual Merchandiser"
+      - "Loss Prevention Officer"
+      - "Customer Success Manager"
+      - "Operations Manager"
+      - "Buyer"
+      - "Retail Analyst"
+      - "District Manager"
+    skills:
+      - "Inventory Management"
+      - "POS Systems"
+      - "Customer Service"
+      - "Visual Merchandising"
+      - "Supply Chain Management"
+      - "Salesforce"
+      - "SAP"
+      - "Data Analysis"
+      - "E-Commerce Platforms"
+      - "Shopify"
+      - "Loss Prevention"
+      - "Team Leadership"
+      - "Demand Forecasting"
+      - "Vendor Management"
+      - "KPI Reporting"
+    descriptionTemplates:
+      - "We are hiring a driven {title} to lead our retail operations. You should have hands-on experience with {skills} and a passion for delivering exceptional customer experiences both in-store and online."
+      - "Join {company} as a {title}. This position requires expertise in {skills} and a proven track record of exceeding targets in fast-paced retail environments."
+      - "Our growing retail brand is looking for a {title} to manage and scale our business. Strong skills in {skills} and a customer-first mindset are the top requirements for this role."
+      - "{company} is expanding its retail footprint and needs a talented {title}. You will apply your knowledge of {skills} to optimize operations, drive revenue, and build an outstanding team."
+    salaryRange:
+      minLow: 35000
+      minHigh: 55000
+      maxLow: 60000
+      maxHigh: 120000
+  technology_information_and_media:
+    displayName: "Technology, Information and Media"
     titles:
       - "Software Engineer"
       - "Senior Software Engineer"
@@ -76,189 +830,8 @@ industries:
       minHigh: 120000
       maxLow: 130000
       maxHigh: 220000
-
-  healthcare:
-    displayName: "Healthcare"
-    titles:
-      - "Registered Nurse"
-      - "Licensed Practical Nurse"
-      - "Nurse Practitioner"
-      - "Physician Assistant"
-      - "Medical Doctor"
-      - "Clinical Research Associate"
-      - "Healthcare Administrator"
-      - "Medical Laboratory Technician"
-      - "Radiologic Technologist"
-      - "Physical Therapist"
-      - "Occupational Therapist"
-      - "Pharmacy Technician"
-      - "Health Informatics Specialist"
-      - "Clinical Data Manager"
-      - "Patient Care Coordinator"
-    skills:
-      - "Patient Care"
-      - "Electronic Health Records (EHR)"
-      - "HIPAA Compliance"
-      - "Clinical Documentation"
-      - "BLS Certification"
-      - "ACLS Certification"
-      - "Medication Administration"
-      - "Wound Care"
-      - "IV Therapy"
-      - "Phlebotomy"
-      - "Epic Systems"
-      - "Cerner"
-      - "Medical Coding (ICD-10)"
-      - "Care Coordination"
-      - "Telehealth"
-    descriptionTemplates:
-      - "We are hiring a compassionate {title} to join our healthcare team. Experience with {skills} is essential. You will provide exceptional patient care in a supportive, team-oriented environment."
-      - "Join {company} as a {title}. This role requires proficiency in {skills}. We are committed to delivering high-quality healthcare outcomes while supporting every team member's professional growth."
-      - "Our healthcare facility seeks a dedicated {title}. The ideal candidate has deep expertise in {skills} and a genuine passion for improving patient outcomes across our community."
-      - "{company} is expanding and needs a skilled {title}. You will leverage your knowledge of {skills} to support a multidisciplinary care team delivering industry-leading patient experiences."
-    salaryRange:
-      minLow: 50000
-      minHigh: 80000
-      maxLow: 90000
-      maxHigh: 180000
-
-  finance:
-    displayName: "Finance"
-    titles:
-      - "Financial Analyst"
-      - "Senior Financial Analyst"
-      - "Investment Banker"
-      - "Portfolio Manager"
-      - "Risk Analyst"
-      - "Compliance Officer"
-      - "Credit Analyst"
-      - "Quantitative Analyst"
-      - "Actuary"
-      - "Accountant"
-      - "Certified Public Accountant"
-      - "Wealth Manager"
-      - "Treasury Analyst"
-      - "Financial Controller"
-      - "Chief Financial Officer"
-    skills:
-      - "Financial Modeling"
-      - "Advanced Excel"
-      - "Bloomberg Terminal"
-      - "Python"
-      - "SQL"
-      - "Risk Management"
-      - "Regulatory Compliance"
-      - "GAAP"
-      - "IFRS"
-      - "Derivatives Pricing"
-      - "Portfolio Analysis"
-      - "VBA"
-      - "Tableau"
-      - "Power BI"
-      - "CFA Certification"
-    descriptionTemplates:
-      - "We are looking for a detail-oriented {title} to join our finance team. The ideal candidate has strong skills in {skills} and proven experience in financial services or investment banking."
-      - "As a {title} at {company}, you will analyze financial data, manage risk, and support strategic decision-making. Proficiency in {skills} is required alongside a track record of delivering insights under pressure."
-      - "Join our growing financial services firm as a {title}. You will leverage your expertise in {skills} to drive business outcomes, optimize capital allocation, and ensure full regulatory compliance."
-      - "{company} seeks a sharp {title} who excels in {skills}. This high-visibility role partners directly with senior leadership to shape investment strategy and reporting frameworks."
-    salaryRange:
-      minLow: 70000
-      minHigh: 110000
-      maxLow: 120000
-      maxHigh: 250000
-
-  retail:
-    displayName: "Retail"
-    titles:
-      - "Store Manager"
-      - "Assistant Store Manager"
-      - "Retail Sales Associate"
-      - "Merchandising Manager"
-      - "Supply Chain Analyst"
-      - "Category Manager"
-      - "E-Commerce Manager"
-      - "Inventory Control Specialist"
-      - "Visual Merchandiser"
-      - "Loss Prevention Officer"
-      - "Customer Success Manager"
-      - "Operations Manager"
-      - "Buyer"
-      - "Retail Analyst"
-      - "District Manager"
-    skills:
-      - "Inventory Management"
-      - "POS Systems"
-      - "Customer Service"
-      - "Visual Merchandising"
-      - "Supply Chain Management"
-      - "Salesforce"
-      - "SAP"
-      - "Data Analysis"
-      - "E-Commerce Platforms"
-      - "Shopify"
-      - "Loss Prevention"
-      - "Team Leadership"
-      - "Demand Forecasting"
-      - "Vendor Management"
-      - "KPI Reporting"
-    descriptionTemplates:
-      - "We are hiring a driven {title} to lead our retail operations. You should have hands-on experience with {skills} and a passion for delivering exceptional customer experiences both in-store and online."
-      - "Join {company} as a {title}. This position requires expertise in {skills} and a proven track record of exceeding targets in fast-paced retail environments."
-      - "Our growing retail brand is looking for a {title} to manage and scale our business. Strong skills in {skills} and a customer-first mindset are the top requirements for this role."
-      - "{company} is expanding its retail footprint and needs a talented {title}. You will apply your knowledge of {skills} to optimize operations, drive revenue, and build an outstanding team."
-    salaryRange:
-      minLow: 35000
-      minHigh: 55000
-      maxLow: 60000
-      maxHigh: 120000
-
-  manufacturing:
-    displayName: "Manufacturing"
-    titles:
-      - "Manufacturing Engineer"
-      - "Senior Manufacturing Engineer"
-      - "Production Manager"
-      - "Plant Manager"
-      - "Process Engineer"
-      - "Industrial Engineer"
-      - "Quality Control Inspector"
-      - "CNC Machinist"
-      - "Automation Engineer"
-      - "Maintenance Technician"
-      - "Lean Manufacturing Specialist"
-      - "Safety Manager"
-      - "Materials Manager"
-      - "Operations Manager"
-      - "Welding Technician"
-    skills:
-      - "Lean Manufacturing"
-      - "Six Sigma"
-      - "AutoCAD"
-      - "SolidWorks"
-      - "PLC Programming"
-      - "ISO 9001"
-      - "OSHA Compliance"
-      - "5S Methodology"
-      - "Statistical Process Control (SPC)"
-      - "Root Cause Analysis"
-      - "CNC Programming"
-      - "Production Planning"
-      - "SAP"
-      - "Kaizen"
-      - "FMEA"
-    descriptionTemplates:
-      - "We are seeking a skilled {title} to join our manufacturing facility. The ideal candidate has hands-on experience with {skills} and a commitment to quality and continuous improvement."
-      - "Join {company} as a {title} and help drive operational excellence on the production floor. Proficiency in {skills} is required to succeed in this fast-paced manufacturing environment."
-      - "{company} is hiring a {title} with a strong background in {skills}. You will play a key role in optimizing production processes, reducing waste, and maintaining safety standards."
-      - "Our growing manufacturing operation needs a dedicated {title}. You will apply your expertise in {skills} to meet production targets while upholding the highest quality standards."
-    salaryRange:
-      minLow: 45000
-      minHigh: 70000
-      maxLow: 75000
-      maxHigh: 130000
-
-  logistics:
-    displayName: "Logistics"
+  transportation_logistics_supply_chain_and_storage:
+    displayName: "Transportation, Logistics, Supply Chain and Storage"
     titles:
       - "Logistics Coordinator"
       - "Supply Chain Manager"
@@ -301,183 +874,101 @@ industries:
       minHigh: 65000
       maxLow: 70000
       maxHigh: 120000
-
-  education:
-    displayName: "Education"
+  utilities:
+    displayName: "Utilities"
     titles:
-      - "Teacher"
-      - "Professor"
-      - "Curriculum Developer"
-      - "Instructional Designer"
-      - "School Principal"
-      - "Academic Advisor"
-      - "Education Administrator"
-      - "Special Education Teacher"
-      - "Learning & Development Specialist"
-      - "E-Learning Developer"
-      - "Training Manager"
-      - "Career Counselor"
-      - "Educational Technologist"
-      - "Dean of Students"
-      - "Director of Education"
+      - "Power Systems Engineer"
+      - "Transmission Operator"
+      - "Substation Technician"
+      - "Water Treatment Operator"
+      - "Grid Reliability Engineer"
+      - "Energy Analyst"
+      - "SCADA Engineer"
+      - "Distribution Planner"
+      - "Renewable Energy Project Manager"
+      - "Utility Field Supervisor"
+      - "Metering Specialist"
+      - "Wastewater Superintendent"
+      - "Load Forecasting Analyst"
+      - "Regulatory Affairs Specialist"
+      - "Outage Coordinator"
     skills:
-      - "Curriculum Development"
-      - "Instructional Design"
-      - "Classroom Management"
-      - "Canvas LMS"
-      - "Blackboard"
-      - "Google Classroom"
-      - "STEM Education"
-      - "Special Education (IEP)"
-      - "Differentiated Instruction"
-      - "Assessment Design"
-      - "Student Engagement"
-      - "Education Technology"
-      - "Professional Development"
-      - "Adult Learning Theory"
-      - "Bloom's Taxonomy"
+      - "SCADA Systems"
+      - "Power Distribution"
+      - "Grid Operations"
+      - "NERC Compliance"
+      - "Substation Design"
+      - "Load Forecasting"
+      - "Water Treatment"
+      - "Wastewater Management"
+      - "Renewable Integration"
+      - "Smart Metering"
+      - "Outage Management"
+      - "Relay Protection"
+      - "Transmission Planning"
+      - "Energy Trading"
+      - "Regulatory Reporting"
+      - "Preventive Maintenance"
+      - "High Voltage Safety"
+      - "Demand Response"
+      - "Asset Management"
+      - "Environmental Compliance"
     descriptionTemplates:
-      - "We are looking for a passionate {title} to inspire and educate our students. Experience with {skills} and a genuine commitment to learner success are essential for this role."
-      - "Join {company} as a {title}. You will design and deliver engaging educational experiences, drawing on your expertise in {skills} to meet the diverse needs of every learner."
-      - "{company} is seeking a dedicated {title} who excels in {skills}. You will collaborate with faculty, staff, and families to create an inclusive and high-achieving learning environment."
-      - "Our institution is hiring a {title} with a strong foundation in {skills}. You will shape the educational journey of students and contribute to a culture of academic excellence."
+      - "{company} is seeking a {title} to keep essential services running. You will apply {skills} to infrastructure that communities depend on daily."
+      - "As a {title} at {company}, you will support grid reliability and regulatory compliance. Hands-on experience with {skills} is required."
+      - "Join {company} as a {title} during a period of significant grid modernisation. The role calls for {skills} and a rigorous safety mindset."
+      - "We are hiring a {title} to support generation and distribution operations. Proficiency in {skills} and familiarity with utility regulation are essential."
     salaryRange:
-      minLow: 38000
-      minHigh: 60000
-      maxLow: 65000
-      maxHigh: 110000
-
-  staffing:
-    displayName: "Staffing & Recruiting"
+      minLow: 48000
+      minHigh: 72000
+      maxLow: 92000
+      maxHigh: 150000
+  wholesale:
+    displayName: "Wholesale"
     titles:
-      - "Talent Acquisition Specialist"
-      - "Recruiter"
-      - "Senior Recruiter"
-      - "Technical Recruiter"
-      - "Staffing Coordinator"
-      - "HR Business Partner"
-      - "Sourcing Specialist"
-      - "Recruitment Manager"
-      - "Executive Recruiter"
-      - "Campus Recruiter"
-      - "Workforce Planning Analyst"
-      - "HR Generalist"
-      - "Talent Acquisition Manager"
-      - "Director of Talent Acquisition"
-      - "RPO Delivery Lead"
+      - "Wholesale Account Manager"
+      - "Distribution Manager"
+      - "Purchasing Manager"
+      - "Category Manager"
+      - "Inventory Planner"
+      - "Sales Operations Manager"
+      - "Import Export Coordinator"
+      - "Warehouse Operations Manager"
+      - "Territory Sales Representative"
+      - "Merchandise Buyer"
+      - "Supply Planner"
+      - "Trade Compliance Specialist"
+      - "Key Account Executive"
+      - "Demand Planner"
+      - "Pricing Analyst"
     skills:
-      - "Applicant Tracking Systems (ATS)"
-      - "LinkedIn Recruiter"
-      - "Boolean Search"
-      - "Candidate Sourcing"
-      - "Offer Negotiation"
-      - "Employer Branding"
-      - "Talent Pipeline Management"
-      - "Workday"
-      - "Greenhouse"
-      - "Lever"
-      - "Interview Coordination"
-      - "Workforce Planning"
-      - "HRIS"
-      - "Job Marketing & Advertising"
-      - "Competency-Based Interviewing"
+      - "Inventory Management"
+      - "Demand Planning"
+      - "SAP"
+      - "Vendor Negotiation"
+      - "Purchase Order Management"
+      - "Category Management"
+      - "Trade Compliance"
+      - "Incoterms"
+      - "Distribution Logistics"
+      - "Margin Analysis"
+      - "EDI"
+      - "Customs Documentation"
+      - "Wholesale Pricing"
+      - "Supplier Relationship Management"
+      - "Order Fulfilment"
+      - "Freight Forwarding"
+      - "Stock Replenishment"
+      - "B2B Sales"
+      - "Product Sourcing"
+      - "Contract Negotiation"
     descriptionTemplates:
-      - "We are hiring a driven {title} to help us attract and retain top talent. You should bring hands-on experience with {skills} and a passion for connecting great people with great opportunities."
-      - "Join {company} as a {title}. You will manage full-cycle recruiting, leveraging your expertise in {skills} to build high-performing teams across the organization."
-      - "{company} needs a sharp {title} with a proven track record in {skills}. You will own the candidate experience from first contact through offer, partnering closely with hiring managers."
-      - "Our talent team is growing and we need a {title} who excels in {skills}. You will drive sourcing strategies, run structured interviews, and help us scale our hiring pipeline."
-    salaryRange:
-      minLow: 45000
-      minHigh: 70000
-      maxLow: 75000
-      maxHigh: 140000
-
-  consulting:
-    displayName: "Consulting"
-    titles:
-      - "Management Consultant"
-      - "Business Analyst"
-      - "Strategy Consultant"
-      - "IT Consultant"
-      - "Financial Consultant"
-      - "HR Consultant"
-      - "Operations Consultant"
-      - "Data Analytics Consultant"
-      - "Risk Consultant"
-      - "Change Management Consultant"
-      - "Organizational Development Consultant"
-      - "Technology Implementation Specialist"
-      - "Principal Consultant"
-      - "Engagement Manager"
-      - "Senior Advisor"
-    skills:
-      - "Business Analysis"
-      - "Strategic Planning"
-      - "Change Management"
-      - "Stakeholder Management"
-      - "Process Improvement"
-      - "Data Analysis"
-      - "Advanced Excel"
-      - "PowerPoint"
-      - "Project Management"
-      - "Financial Modeling"
-      - "Organizational Design"
-      - "Agile Methodology"
-      - "Client Relationship Management"
-      - "SWOT Analysis"
-      - "Industry Research"
-    descriptionTemplates:
-      - "We are looking for a high-impact {title} to help our clients solve complex business challenges. Deep expertise in {skills} and outstanding client-facing skills are essential."
-      - "Join {company} as a {title} and work alongside senior leaders to shape business strategy. You will leverage your proficiency in {skills} to deliver measurable results for our clients."
-      - "{company} is seeking a {title} with a strong command of {skills}. You will lead engagements, synthesize findings into actionable recommendations, and build lasting client relationships."
-      - "Our consulting practice is expanding and needs a {title} who thrives in ambiguity. Proven skills in {skills} and the ability to manage multiple engagements simultaneously are required."
-    salaryRange:
-      minLow: 70000
-      minHigh: 110000
-      maxLow: 120000
-      maxHigh: 220000
-
-  media:
-    displayName: "Media & Entertainment"
-    titles:
-      - "Content Creator"
-      - "Video Producer"
-      - "Social Media Manager"
-      - "Graphic Designer"
-      - "Creative Director"
-      - "Copywriter"
-      - "Digital Marketing Specialist"
-      - "SEO Specialist"
-      - "Brand Manager"
-      - "Marketing Manager"
-      - "Media Buyer"
-      - "Public Relations Manager"
-      - "Podcast Producer"
-      - "Event Producer"
-      - "UX/UI Designer"
-    skills:
-      - "Adobe Creative Suite"
-      - "Premiere Pro"
-      - "Final Cut Pro"
-      - "After Effects"
-      - "Social Media Marketing"
-      - "Content Strategy"
-      - "SEO/SEM"
-      - "Google Analytics"
-      - "Copywriting"
-      - "Brand Development"
-      - "Video Editing"
-      - "Photography"
-      - "Digital Advertising"
-      - "Audience Analytics"
-      - "Figma"
-    descriptionTemplates:
-      - "We are looking for a creative {title} to help tell our brand story and grow our audience. Hands-on experience with {skills} and a portfolio of compelling work are required."
-      - "Join {company} as a {title} and shape the content experiences that connect with millions. Deep expertise in {skills} and a strong creative vision will set you apart."
-      - "{company} is hiring a talented {title} with a passion for storytelling and a strong command of {skills}. You will collaborate with creative teams to produce content that drives engagement and brand awareness."
-      - "Our media team needs a {title} who lives and breathes {skills}. You will ideate, produce, and optimize content across channels to grow our audience and exceed campaign goals."
+      - "{company} is seeking a {title} to grow our distribution business. You will apply {skills} across supplier and customer relationships."
+      - "As a {title} at {company}, you will balance stock, margin and service levels. Strong experience with {skills} is essential."
+      - "Join {company} as a {title} in a high-volume distribution environment. The role rewards {skills} and sharp commercial negotiation."
+      - "We are hiring a {title} to strengthen sourcing and demand planning. Proficiency in {skills} and comfort with high SKU counts are key."
     salaryRange:
       minLow: 40000
-      minHigh: 65000
-      maxLow: 70000
-      maxHigh: 150000
+      minHigh: 60000
+      maxLow: 78000
+      maxHigh: 135000
