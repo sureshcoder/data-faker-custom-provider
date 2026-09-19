@@ -3,7 +3,8 @@
 [![Java 21](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)](https://www.azul.com/downloads/?version=java-21-lts)
 [![DataFaker 2.5.4](https://img.shields.io/badge/DataFaker-2.5.4-blue)](https://www.datafaker.net/)
 [![Tests](https://img.shields.io/badge/tests-76%20passing-brightgreen)](#building--testing)
-[![JitPack](https://img.shields.io/badge/JitPack-v1.0.0-blue)](https://jitpack.io/#sureshcoder/data-faker-custom-provider)
+[![Release](https://img.shields.io/github/v/release/sureshcoder/data-faker-custom-provider?label=release&color=success)](https://github.com/sureshcoder/data-faker-custom-provider/releases/latest)
+[![JitPack](https://img.shields.io/jitpack/version/com.github.sureshcoder/data-faker-custom-provider.svg?color=blue)](https://jitpack.io/#sureshcoder/data-faker-custom-provider)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-yellow.svg)](LICENSE)
 
 Two independent, YAML-driven custom providers for [DataFaker](https://www.datafaker.net/) that generate realistic, fully synthetic **job postings** and **job candidates** for ten industries. Everything is seed-reproducible, returned as immutable Java 21 records, and extensible by editing YAML rather than Java.
