@@ -91,7 +91,7 @@ Maven:
 <dependency>
     <groupId>in.sureshcoder</groupId>
     <artifactId>data-faker-custom-provider</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -99,7 +99,7 @@ Gradle (Kotlin DSL):
 
 ```kotlin
 dependencies {
-    implementation("in.sureshcoder:data-faker-custom-provider:1.0.0")
+    implementation("in.sureshcoder:data-faker-custom-provider:1.1.0")
 }
 ```
 
@@ -107,13 +107,13 @@ Gradle (Groovy DSL):
 
 ```groovy
 dependencies {
-    implementation 'in.sureshcoder:data-faker-custom-provider:1.0.0'
+    implementation 'in.sureshcoder:data-faker-custom-provider:1.1.0'
 }
 ```
 
 ### Option B: JitPack
 
-[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.0.0` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
+[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.1.0` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
 
 Maven:
 
@@ -129,7 +129,7 @@ Maven:
     <dependency>
         <groupId>com.github.sureshcoder</groupId>
         <artifactId>data-faker-custom-provider</artifactId>
-        <version>v1.0.0</version>
+        <version>v1.1.0</version>
     </dependency>
 </dependencies>
 ```
@@ -143,7 +143,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.0.0")
+    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.1.0")
 }
 ```
 
@@ -156,7 +156,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.0.0'
+    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.1.0'
 }
 ```
 
@@ -734,6 +734,25 @@ Aliases are deliberately absent from `availableIndustries()`, which lists only t
 keys. An alias whose target is not a configured industry throws at class initialisation rather
 than silently falling back, so a typo surfaces on the first use of the provider.
 
+## Upgrading from 1.0.0
+
+1.1.0 replaces the ten ad-hoc industries with the 20 top-level LinkedIn categories. Three
+things change for existing callers.
+
+**Seeded output differs from 1.0.0.** The industry count feeds the random draw, so a seeded
+faker produces different data than it did on 1.0.0 — including for industries whose own content
+did not change. Seeds remain fully reproducible *within* a version. If you pin seeds for test
+fixtures, expect to refresh any recorded expectations on upgrade.
+
+**`industry()` returns the LinkedIn label.** `"Technology"` is now
+`"Technology, Information and Media"`, `"Media & Entertainment"` is now `"Entertainment Providers"`.
+Assertions on the old display names need updating.
+
+**Industry keys still work.** No call to `buildForIndustry` needs to change: `retail`,
+`manufacturing` and `education` are canonical LinkedIn names already, and the other seven old
+keys are kept as aliases. `availableIndustries()` returns the 20 canonical keys only, so code
+that iterates it sees the new names.
+
 ## Extending via YAML
 
 Both providers parse their YAML once, at class initialisation, from the classpath. To change the data, edit the file under `src/main/resources` and rebuild. No Java changes are needed for any of the edits below.
@@ -845,7 +864,7 @@ jdk:
   - openjdk21
 ```
 
-If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.0.0/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
+If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.1.0/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
 
 ### I asked for an industry and got Technology instead
 
