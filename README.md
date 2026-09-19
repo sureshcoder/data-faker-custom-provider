@@ -91,7 +91,7 @@ Maven:
 <dependency>
     <groupId>in.sureshcoder</groupId>
     <artifactId>data-faker-custom-provider</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -99,7 +99,7 @@ Gradle (Kotlin DSL):
 
 ```kotlin
 dependencies {
-    implementation("in.sureshcoder:data-faker-custom-provider:1.1.1")
+    implementation("in.sureshcoder:data-faker-custom-provider:1.2.0")
 }
 ```
 
@@ -107,13 +107,13 @@ Gradle (Groovy DSL):
 
 ```groovy
 dependencies {
-    implementation 'in.sureshcoder:data-faker-custom-provider:1.1.1'
+    implementation 'in.sureshcoder:data-faker-custom-provider:1.2.0'
 }
 ```
 
 ### Option B: JitPack
 
-[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.1.1` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
+[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.2.0` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
 
 Maven:
 
@@ -129,7 +129,7 @@ Maven:
     <dependency>
         <groupId>com.github.sureshcoder</groupId>
         <artifactId>data-faker-custom-provider</artifactId>
-        <version>v1.1.1</version>
+        <version>v1.2.0</version>
     </dependency>
 </dependencies>
 ```
@@ -143,7 +143,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.1.1")
+    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.2.0")
 }
 ```
 
@@ -156,7 +156,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.1.1'
+    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.2.0'
 }
 ```
 
@@ -914,7 +914,7 @@ jdk:
   - openjdk21
 ```
 
-If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.1.1/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
+If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.2.0/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
 
 ### I asked for an industry and got Technology instead
 
