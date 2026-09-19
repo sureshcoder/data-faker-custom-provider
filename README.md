@@ -293,6 +293,8 @@ Obtain the provider with `new CandidateFaker().candidate()`. `CandidateFaker` ha
 | `buildForIndustry(String key)` | `Candidate` | Job history, skills, certifications and summary all match the industry; unknown keys fall back to the first configured industry (`accommodation_services`) |
 | `availableIndustries()` | `List<String>` | The ten YAML keys |
 | `availableCertificationNames(String key)` | `List<String>` | Every certification name configured for that industry, useful for assertions |
+| `availableCourses(String key)` | `Map<String, List<String>>` | Degree pools for that industry, keyed by degree level, with top-level fallback applied |
+| `availableSpecializations(String key)` | `List<String>` | Specializations that industry draws from, with top-level fallback applied |
 | `availableSummaryTemplates()` | `List<String>` | All professional summary templates (both pools), useful for assertions |
 
 ### Candidate fields and generation rules
@@ -326,8 +328,8 @@ Obtain the provider with `new CandidateFaker().candidate()`. `CandidateFaker` ha
 |---|---|
 | `institutionName` | One of 20 US universities |
 | `degreeLevel` | `UNDERGRADUATE`, `POSTGRADUATE`, `DOCTORATE` or `POST_DOCTORAL`; entry *i* of *n* gets level *i* |
-| `courseName` | From the per-level `courses` list, e.g. `"Master of Science in Data Science"` |
-| `specialization` | From the shared `specializations` list |
+| `courseName` | From the industry's own `courses` pool for that degree level, e.g. `"Master of Science in Construction Management"` for Construction |
+| `specialization` | From the industry's own `specializations` pool, e.g. `"Structural Engineering"` for Construction |
 | `startDate`, `endDate` | Duration 3–4 years (UG), 1–2 (PG), 3–5 (doctorate), 1–2 (post-doc) |
 | `scoreType`, `scoreValue` | 50/50 `CGPA` (6.0–10.0, step 0.1) or `PERCENTAGE` (55.0–100.0, step 0.5) |
 
@@ -723,6 +725,29 @@ Both YAML files use the same 20 keys, taken from the top level of the LinkedIn i
 | `wholesale` | Wholesale | — | 40 000 – 135 000 |
 
 Per industry, `job-posting-mappings.yml` holds titles, skills, description templates and salary bounds; `candidate-mappings.yml` holds roles, designations, skills, responsibilities and certifications.
+
+### Industry degrees and specializations
+
+Each industry carries its own `courses` (keyed by degree level) and `specializations`, so a
+candidate's education matches the field they work in:
+
+```yaml
+industries:
+  construction:
+    displayName: "Construction"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Civil Engineering"
+      POSTGRADUATE:
+        - "Master of Science in Construction Management"
+    specializations:
+      - "Structural Engineering"
+```
+
+Both blocks are optional. An industry that omits `courses` for a degree level, or omits
+`specializations` entirely, falls back to the top-level pools — so a new industry works with no
+education content of its own, and can be given some later. `availableCourses(key)` and
+`availableSpecializations(key)` return what generation will actually draw from, fallback included.
 
 ### Currency rates and pay periods
 

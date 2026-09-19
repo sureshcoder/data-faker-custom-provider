@@ -477,6 +477,64 @@ class CandidateProviderTest {
         }
     }
 
+    // ── industry-specific education ──────────────────────────────────────
+
+    @ParameterizedTest
+    @MethodSource("allIndustryKeys")
+    @DisplayName("Degrees and specializations come from the industry's own pools")
+    void educationMatchesIndustryPools(String industryKey) {
+        List<String> courses = faker.candidate().availableCourses(industryKey).values().stream()
+                .flatMap(List::stream).toList();
+        List<String> specializations = faker.candidate().availableSpecializations(industryKey);
+
+        for (int i = 0; i < 20; i++) {
+            for (EducationHistory e : faker.candidate().buildForIndustry(industryKey)
+                                          .educationHistory()) {
+                assertThat(courses)
+                        .as("%s degree for %s", e.courseName(), industryKey)
+                        .contains(e.courseName());
+                assertThat(specializations)
+                        .as("%s specialization for %s", e.specialization(), industryKey)
+                        .contains(e.specialization());
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("A construction candidate does not hold a computer science degree")
+    void constructionCandidateHoldsConstructionDegree() {
+        for (int i = 0; i < 50; i++) {
+            for (EducationHistory e : faker.candidate().buildForIndustry("construction")
+                                          .educationHistory()) {
+                assertThat(e.courseName())
+                        .doesNotContain("Computer Science")
+                        .doesNotContain("Data Science")
+                        .doesNotContain("Nursing");
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Each industry configures a distinct set of degrees")
+    void industriesHaveDistinctCoursePools() {
+        List<String> tech = faker.candidate()
+                .availableCourses("technology_information_and_media").get("UNDERGRADUATE");
+        List<String> farm = faker.candidate()
+                .availableCourses("farming_ranching_forestry").get("UNDERGRADUATE");
+
+        assertThat(tech).isNotEmpty();
+        assertThat(farm).isNotEmpty().doesNotContainAnyElementsOf(tech);
+    }
+
+    @Test
+    @DisplayName("Legacy aliases resolve to the canonical industry's course pool")
+    void aliasesShareCanonicalCoursePool() {
+        assertThat(faker.candidate().availableCourses("technology"))
+                .isEqualTo(faker.candidate().availableCourses("technology_information_and_media"));
+        assertThat(faker.candidate().availableSpecializations("media"))
+                .isEqualTo(faker.candidate().availableSpecializations("entertainment_providers"));
+    }
+
     // ── reference data ────────────────────────────────────────────────────
 
     @Test
