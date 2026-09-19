@@ -7,21 +7,26 @@ employment_type:
   - "VOLUNTEER"
   - "PER_DIEM"
 
+# Indicative USD conversion rates, used to express salary bounds (which are
+# calibrated in USD per year) in the drawn currency. These are approximate and
+# will drift from live rates — this is synthetic data, not an FX source.
 currency:
-  - "USD"
-  - "EUR"
-  - "GBP"
-  - "INR"
-  - "CAD"
-  - "AUD"
-  - "SGD"
+  USD: 1.0
+  EUR: 0.92
+  GBP: 0.79
+  INR: 83.0
+  CAD: 1.36
+  AUD: 1.52
+  SGD: 1.35
 
+# Pay periods per year, used to divide the annual bounds down to the drawn unit.
+# HOUR assumes a 2080-hour year; DAY assumes 260 working days.
 salary_unit:
-  - "HOUR"
-  - "DAY"
-  - "WEEK"
-  - "MONTH"
-  - "YEAR"
+  HOUR: 2080
+  DAY: 260
+  WEEK: 52
+  MONTH: 12
+  YEAR: 1
 
 # Legacy industry keys retained as aliases onto the LinkedIn taxonomy.
 # Resolved by the provider before industry lookup; not listed by availableIndustries().

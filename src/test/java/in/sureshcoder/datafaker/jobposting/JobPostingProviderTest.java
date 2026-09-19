@@ -29,6 +29,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -253,6 +254,73 @@ class JobPostingProviderTest {
     void industryKeysAreCaseInsensitive(String industryKey) {
         assertThat(faker.jobPosting().buildForIndustry(industryKey).industry())
                 .isEqualTo(faker.jobPosting().buildForIndustry("technology").industry());
+    }
+
+    // ── Salary currency / period consistency ─────────────────────────────
+
+    /** Annual USD equivalent of a posting's salary, undoing currency and period conversion. */
+    private static double annualUsd(BaseSalary s, double rate, int periods) {
+        return s.minValue() / rate * periods;
+    }
+
+    @Test
+    @DisplayName("Salary figures are consistent with the drawn currency and pay period")
+    void salaryAgreesWithCurrencyAndPeriod() {
+        Map<String, Double> rates = Map.of(
+                "USD", 1.0, "EUR", 0.92, "GBP", 0.79, "INR", 83.0,
+                "CAD", 1.36, "AUD", 1.52, "SGD", 1.35);
+        Map<String, Integer> periods = Map.of(
+                "HOUR", 2080, "DAY", 260, "WEEK", 52, "MONTH", 12, "YEAR", 1);
+
+        for (int i = 0; i < 500; i++) {
+            JobPosting job = faker.jobPosting().build();
+            BaseSalary s = job.baseSalary();
+
+            double annual = annualUsd(s, rates.get(s.currency()), periods.get(s.unitText()));
+
+            // Every configured industry sits inside 30k–250k USD per year; allow a
+            // margin for the rounding applied after conversion.
+            assertThat(annual)
+                    .as("annual USD equivalent of %s %d %s", s.currency(), s.minValue(), s.unitText())
+                    .isBetween(25_000.0, 275_000.0);
+        }
+    }
+
+    @Test
+    @DisplayName("An hourly posting is roughly a two-thousandth of an annual one")
+    void hourlyIsProportionalToAnnual() {
+        int hourly = 0, annual = 0;
+        for (int i = 0; i < 2000 && (hourly == 0 || annual == 0); i++) {
+            BaseSalary s = faker.jobPosting().buildForIndustry("technology_information_and_media")
+                                .baseSalary();
+            if (!"USD".equals(s.currency())) continue;
+            if ("HOUR".equals(s.unitText())) hourly = s.minValue();
+            if ("YEAR".equals(s.unitText())) annual = s.minValue();
+        }
+
+        assertThat(hourly).isPositive();
+        assertThat(annual).isPositive();
+        assertThat((double) annual / hourly).isBetween(1_000.0, 4_000.0);
+    }
+
+    @Test
+    @DisplayName("maxValue stays above minValue after conversion and rounding")
+    void maxStaysAboveMinAfterRounding() {
+        for (int i = 0; i < 1000; i++) {
+            BaseSalary s = faker.jobPosting().build().baseSalary();
+            assertThat(s.maxValue())
+                    .as("%s %d-%d %s", s.currency(), s.minValue(), s.maxValue(), s.unitText())
+                    .isGreaterThan(s.minValue());
+        }
+    }
+
+    @Test
+    @DisplayName("availableCurrencies and availableSalaryUnits still list every configured key")
+    void rateMapsExposeAllKeys() {
+        assertThat(faker.jobPosting().availableCurrencies())
+                .containsExactlyInAnyOrder("USD", "EUR", "GBP", "INR", "CAD", "AUD", "SGD");
+        assertThat(faker.jobPosting().availableSalaryUnits())
+                .containsExactlyInAnyOrder("HOUR", "DAY", "WEEK", "MONTH", "YEAR");
     }
 
     // ── Reference-data list tests ────────────────────────────────────────

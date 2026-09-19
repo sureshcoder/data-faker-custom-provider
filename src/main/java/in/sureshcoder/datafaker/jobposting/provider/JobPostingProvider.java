@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 public class JobPostingProvider extends AbstractProvider<Faker> {
 
@@ -39,6 +40,8 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
     private static final List<String> EMPLOYMENT_TYPES;
     private static final List<String> CURRENCIES;
     private static final List<String> SALARY_UNITS;
+    private static final Map<String, Double> CURRENCY_RATES;
+    private static final Map<String, Integer> UNIT_PERIODS;
 
     static {
         Map<String, Object> root = loadYaml();
@@ -46,8 +49,10 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
         INDUSTRY_KEYS = List.copyOf(INDUSTRY_MAP.keySet());
         ALIAS_MAP = parseAliases(root, INDUSTRY_MAP.keySet());
         EMPLOYMENT_TYPES = parseStringList(root, "employment_type");
-        CURRENCIES       = parseStringList(root, "currency");
-        SALARY_UNITS     = parseStringList(root, "salary_unit");
+        CURRENCY_RATES   = parseNumberMap(root, "currency", Number::doubleValue);
+        UNIT_PERIODS     = parseNumberMap(root, "salary_unit", Number::intValue);
+        CURRENCIES       = List.copyOf(CURRENCY_RATES.keySet());
+        SALARY_UNITS     = List.copyOf(UNIT_PERIODS.keySet());
     }
 
     public JobPostingProvider(Faker f) {
@@ -124,7 +129,36 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
         if (max <= min) {
             max = min + 20_000;
         }
-        return new BaseSalary(pickRandom(CURRENCIES), min, max, pickRandom(SALARY_UNITS));
+
+        String currency = pickRandom(CURRENCIES);
+        String unit     = pickRandom(SALARY_UNITS);
+
+        // The YAML bounds are USD per year. Convert into the drawn currency, then
+        // divide down to the drawn pay period, so the figures agree with the labels.
+        double rate   = CURRENCY_RATES.get(currency);
+        int periods   = UNIT_PERIODS.get(unit);
+        int converted = round(min * rate / periods);
+        int maxValue  = round(max * rate / periods);
+        if (maxValue <= converted) {
+            maxValue = converted + step(converted);
+        }
+
+        return new BaseSalary(currency, converted, maxValue, unit);
+    }
+
+    /** Rounds to a granularity proportional to magnitude, so figures read naturally. */
+    private static int round(double value) {
+        int v = (int) Math.round(value);
+        int step = step(v);
+        return Math.max(step, (v + step / 2) / step * step);
+    }
+
+    /** Rounding granularity: 1000 above 10k, 100 above 1k, 10 above 100, else 1. */
+    private static int step(int value) {
+        if (value >= 10_000) return 1_000;
+        if (value >= 1_000)  return 100;
+        if (value >= 100)    return 10;
+        return 1;
     }
 
     private String interpolate(String template, String title, List<String> skills, String company) {
@@ -217,6 +251,25 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
                             (Integer) sr.get("maxLow"), (Integer) sr.get("maxHigh")
                     )
             ));
+        }
+        return Collections.unmodifiableMap(result);
+    }
+
+    /** Parses a YAML mapping of name to number, preserving document order. */
+    @SuppressWarnings("unchecked")
+    private static <T> Map<String, T> parseNumberMap(
+            Map<String, Object> root, String key, Function<Number, T> mapper) {
+        Map<String, Object> raw = (Map<String, Object>) root.get(key);
+        if (raw == null || raw.isEmpty()) {
+            throw new IllegalStateException("Missing or empty '" + key + "' block in YAML");
+        }
+        Map<String, T> result = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> e : raw.entrySet()) {
+            if (!(e.getValue() instanceof Number n)) {
+                throw new IllegalStateException(
+                        "Expected a number for " + key + "." + e.getKey() + ", got: " + e.getValue());
+            }
+            result.put(e.getKey(), mapper.apply(n));
         }
         return Collections.unmodifiableMap(result);
     }

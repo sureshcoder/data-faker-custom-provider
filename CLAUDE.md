@@ -61,8 +61,8 @@ src/main/
         CandidateIndustryData.java package-private record (YAML data holder)
         CertificationData.java     package-private record (YAML cert holder)
   resources/
-    job-posting-mappings.yml       employment_type / currency / salary_unit + 10 industries
-    candidate-mappings.yml         colleges / courses / specializations / professionalSummaryTemplates + 10 industries
+    job-posting-mappings.yml       employment_type / currency rates / salary_unit periods / aliases + 20 industries
+    candidate-mappings.yml         colleges / courses / specializations / professionalSummaryTemplates / aliases + 20 industries
 
 src/test/
   java/in/sureshcoder/datafaker/
@@ -161,7 +161,7 @@ The 20 top-level categories of the LinkedIn industry taxonomy. Pre-1.1.0 keys st
 
 ## Adding a new industry
 
-Edit `src/main/resources/job-posting-mappings.yml` — no Java changes needed. The top-level `employment_type`, `currency`, and `salary_unit` lists apply to all industries; only `salaryRange` bounds are per-industry:
+Edit `src/main/resources/job-posting-mappings.yml` — no Java changes needed. The top-level `employment_type` list and the `currency` / `salary_unit` maps apply to all industries; only `salaryRange` bounds are per-industry:
 
 ```yaml
 industries:
@@ -236,7 +236,8 @@ The `withCertification` pool is used only when the candidate has at least one ce
 - **Seeded randomness** — all random picks use `faker.random()` (DataFaker's `RandomService`), not `new Random()`. This means `new JobFaker(new Random(seed))` produces fully deterministic output.
 - **DataFaker 2.x API** — `AbstractProvider<T>` exposes the faker as a `protected final T faker` field. `getProvider` takes `Function<PR, AP>`, so `JobPostingProvider::new` is the correct constructor reference.
 - **Skill deduplication** — Fisher-Yates shuffle over `faker.random()` guarantees unique skills per posting while preserving seed reproducibility.
-- **Currency / employment type / salary unit** — picked at random from the top-level YAML lists (not per-industry). These lists are exposed via `availableCurrencies()`, `availableEmploymentTypes()`, and `availableSalaryUnits()`.
+- **Currency / employment type / salary unit** — picked at random from the top-level YAML blocks (not per-industry), exposed via `availableCurrencies()`, `availableEmploymentTypes()`, and `availableSalaryUnits()`.
+- **Salary conversion** — `salaryRange` bounds are USD per year. `buildSalary` multiplies by the drawn currency's rate from the `currency` map and divides by that unit's periods-per-year from `salary_unit`, then rounds by magnitude (1000 above 10k, 100 above 1k, 10 above 100). The currency and unit picks happen before conversion, so the RNG sequence is unaffected by the arithmetic.
 - **Location** — 20 % chance of "Remote"; otherwise `faker.address().city() + ", " + stateAbbr()`.
 
 ## Key implementation notes — Candidate provider
