@@ -28,9 +28,9 @@ JAVA_HOME=… mvn compile
 JAVA_HOME=… mvn test
 ```
 
-**136 tests total**, running in ~500 ms:
-- `JobPostingProviderTest` — 52 tests
-- `CandidateProviderTest` — 84 tests
+**165 tests total**, running in ~500 ms:
+- `JobPostingProviderTest` — 56 tests
+- `CandidateProviderTest` — 109 tests
 
 ## Project structure
 
