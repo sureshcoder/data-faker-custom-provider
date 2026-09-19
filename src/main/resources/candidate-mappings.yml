@@ -90,6 +90,11 @@ professionalSummaryTemplates:
     - "{industry} professional and {designation} with {experience} of experience leading initiatives from concept to delivery. Technical toolkit includes {skills}. Certified as {certification}; educated with a {degree}."
     - "Detail-oriented {designation} with {experience} of experience delivering measurable impact in {industry}. Expertise spans {skills}. Certifications include {certification}; completed a {degree}."
 
+# Certifications name real credentials with their issuing body. Two entries are
+# licences genuinely administered per state rather than nationally, so their issuer
+# is the kind of body that grants them rather than one named organisation:
+# "Pesticide Applicator License" and "Licensed Real Estate Broker".
+
 # Legacy industry keys retained as aliases onto the LinkedIn taxonomy.
 # Resolved by the provider before industry lookup; not listed by availableIndustries().
 aliases:
@@ -438,7 +443,7 @@ industries:
       - name: "ITIL 4 Foundation"
         issuer: "PeopleCert"
       - name: "Certified Customer Service Manager (CCSM)"
-        issuer: "International Customer Service Association"
+        issuer: "Customer Service Institute of America"
       - name: "Zendesk Support Administrator Expert"
         issuer: "Zendesk"
       - name: "Certified Nonprofit Professional (CNP)"
@@ -686,10 +691,10 @@ industries:
         issuer: "State Department of Agriculture"
       - name: "Certified Professional Soil Scientist (CPSS)"
         issuer: "Soil Science Society of America"
-      - name: "USDA Organic System Plan Certification"
-        issuer: "United States Department of Agriculture"
-      - name: "Certified Livestock Manager"
-        issuer: "State Department of Agriculture"
+      - name: "Certified Organic Inspector"
+        issuer: "International Organic Inspectors Association"
+      - name: "Professional Animal Scientist (PAS)"
+        issuer: "American Registry of Professional Animal Scientists"
       - name: "Certified Irrigation Designer (CID)"
         issuer: "Irrigation Association"
   financial_services:
@@ -849,7 +854,7 @@ industries:
     certifications:
       - name: "Certified Public Manager (CPM)"
         issuer: "National Certified Public Manager Consortium"
-      - name: "American Institute of Certified Planners (AICP)"
+      - name: "Certified Planner (AICP)"
         issuer: "American Planning Association"
       - name: "Certified Government Financial Manager (CGFM)"
         issuer: "Association of Government Accountants"
@@ -942,8 +947,8 @@ industries:
         issuer: "CFA Institute"
       - name: "Certified Public Accountant (CPA)"
         issuer: "AICPA"
-      - name: "Association of Chartered Certified Accountants (ACCA)"
-        issuer: "ACCA"
+      - name: "ACCA Qualification"
+        issuer: "Association of Chartered Certified Accountants"
       - name: "Certified Internal Auditor (CIA)"
         issuer: "Institute of Internal Auditors"
       - name: "Certified Treasury Professional (CTP)"
@@ -1110,10 +1115,10 @@ industries:
         issuer: "Society of Manufacturing Engineers"
       - name: "ISO 9001 Lead Auditor"
         issuer: "BSI Group"
-      - name: "APICS Certified Supply Chain Professional (CSCP)"
-        issuer: "APICS"
+      - name: "Certified Supply Chain Professional (CSCP)"
+        issuer: "ASCM"
       - name: "Lean Six Sigma Yellow Belt"
-        issuer: "ASQ"
+        issuer: "American Society for Quality"
   oil_gas_and_mining:
     displayName: "Oil, Gas, and Mining"
     courses:
@@ -1598,16 +1603,16 @@ industries:
       - "Developed demand planning models to reduce stockouts by 35%"
       - "Supervised a fleet of 40 delivery vehicles and managed driver scheduling"
     certifications:
-      - name: "APICS Certified in Production and Inventory Management (CPIM)"
-        issuer: "APICS"
+      - name: "Certified in Planning and Inventory Management (CPIM)"
+        issuer: "ASCM"
       - name: "Certified Supply Chain Professional (CSCP)"
-        issuer: "APICS"
+        issuer: "ASCM"
       - name: "Certified Transportation and Logistics (CTL)"
         issuer: "American Society of Transportation & Logistics"
       - name: "OSHA Forklift Operator Certification"
         issuer: "OSHA"
       - name: "Certified in Logistics, Transportation and Distribution (CLTD)"
-        issuer: "APICS"
+        issuer: "ASCM"
   utilities:
     displayName: "Utilities"
     courses:
@@ -1689,7 +1694,7 @@ industries:
       - name: "NERC System Operator Certification"
         issuer: "North American Electric Reliability Corporation"
       - name: "Grade IV Water Treatment Operator"
-        issuer: "State Environmental Protection Agency"
+        issuer: "State Drinking Water Program"
       - name: "Certified Wastewater Operator"
         issuer: "Association of Boards of Certification"
       - name: "NABCEP PV Installation Professional"
@@ -1785,6 +1790,6 @@ industries:
       - name: "Certified Purchasing Professional (CPP)"
         issuer: "American Purchasing Society"
       - name: "Lean Six Sigma Green Belt"
-        issuer: "ASQ"
+        issuer: "American Society for Quality"
       - name: "Certified Demand Driven Planner (CDDP)"
         issuer: "Demand Driven Institute"

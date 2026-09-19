@@ -29,8 +29,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -474,6 +476,43 @@ class CandidateProviderTest {
         List<String> available = faker.candidate().availableCertificationNames(industryKey);
         for (Certification cert : c.certifications()) {
             assertThat(cert.name()).isIn(available);
+        }
+    }
+
+    // ── certification data quality ───────────────────────────────────────
+
+    @Test
+    @DisplayName("A certification name always carries the same issuer")
+    void certificationNameMapsToOneIssuer() {
+        Map<String, String> issuerByName = new HashMap<>();
+
+        for (String industry : faker.candidate().availableIndustries()) {
+            for (int i = 0; i < 60; i++) {
+                for (Certification c : faker.candidate().buildForIndustry(industry)
+                                            .certifications()) {
+                    String existing = issuerByName.putIfAbsent(c.name(), c.issuingOrganization());
+                    assertThat(existing == null ? c.issuingOrganization() : existing)
+                            .as("issuer for %s", c.name())
+                            .isEqualTo(c.issuingOrganization());
+                }
+            }
+        }
+
+        assertThat(issuerByName).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("Every certification has a non-blank name and issuer")
+    void certificationsAreFullyPopulated() {
+        for (String industry : faker.candidate().availableIndustries()) {
+            for (int i = 0; i < 20; i++) {
+                for (Certification c : faker.candidate().buildForIndustry(industry)
+                                            .certifications()) {
+                    assertThat(c.name()).isNotBlank();
+                    assertThat(c.issuingOrganization()).isNotBlank();
+                    assertThat(c.issuedDate()).isNotNull();
+                }
+            }
         }
     }
 
