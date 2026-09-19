@@ -62,7 +62,7 @@ src/main/
         CertificationData.java     package-private record (YAML cert holder)
   resources/
     job-posting-mappings.yml       employment_type / currency rates / salary_unit periods / aliases + 20 industries
-    candidate-mappings.yml         colleges / courses / specializations / professionalSummaryTemplates / aliases + 20 industries
+    candidate-mappings.yml         colleges / fallback courses + specializations / professionalSummaryTemplates / aliases + 20 industries (each with own courses + specializations)
 
 src/test/
   java/in/sureshcoder/datafaker/
@@ -117,6 +117,8 @@ Candidate same = seeded.candidate().build(); // deterministic
 List<String> industries = faker.candidate().availableIndustries();
 List<String> certNames  = faker.candidate().availableCertificationNames("finance");
 List<String> templates  = faker.candidate().availableSummaryTemplates();
+Map<String, List<String>> courses = faker.candidate().availableCourses("construction");
+List<String> specs      = faker.candidate().availableSpecializations("construction");
 
 // Access generated fields
 c.firstName();                    // "Sarah"
@@ -251,6 +253,7 @@ The `withCertification` pool is used only when the candidate has at least one ce
 - **Professional summary** — generated last, from data already on the record (current designation, industry display name, top skills, highest degree, first certification, experience phrase). Template pool is chosen by whether certifications exist; the pick uses `faker.random()` so it is seed-safe. Generic `interpolate(template, Map)` does plain `String.replace` per token.
 - **Generation order in `buildForIndustry`** — name, email, mobile, address, education, jobs, skills, certifications, summary. Changing this order changes the RNG sequence and therefore seeded output.
 - **Certifications** — drawn from the industry's YAML list using Fisher-Yates shuffle; 0–3 per candidate. `availableCertificationNames(key)` exposes the full list per industry for test assertions.
+- **Industry-specific education** — each industry carries its own `courses` (by degree level) and `specializations`. `coursesFor(data, level)` prefers the industry's pool and falls back to the top-level one per level, so both blocks are optional and a new industry needs neither. Note `POST_DOCTORAL` is configured but unreachable: education count is 1–3, so the degree level index never exceeds `DOCTORATE`.
 - **Generic `pickUniqueN<T>`** — single generic Fisher-Yates helper handles String skills, String responsibilities, and `CertificationData` objects uniformly.
 - **Separate fakers** — `CandidateFaker` and `JobFaker` both extend `Faker` independently; they share no state. Use each standalone.
 

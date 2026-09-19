@@ -16,13 +16,21 @@
 package in.sureshcoder.datafaker.candidate.provider;
 
 import java.util.List;
+import java.util.Map;
 
-/** All static reference data for one industry, loaded from candidate-mappings.yml. */
+/**
+ * All static reference data for one industry, loaded from candidate-mappings.yml.
+ *
+ * <p>{@code courses} and {@code specializations} are optional per-industry overrides: an empty
+ * map or list means the industry falls back to the top-level pools.
+ */
 record CandidateIndustryData(
         String displayName,
         List<String> roles,
         List<String> designations,
         List<String> skills,
         List<String> responsibilities,
-        List<CertificationData> certifications
+        List<CertificationData> certifications,
+        Map<String, List<String>> courses,
+        List<String> specializations
 ) {}

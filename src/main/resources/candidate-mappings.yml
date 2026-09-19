@@ -110,6 +110,28 @@ aliases:
 industries:
   accommodation_services:
     displayName: "Accommodation Services"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Hospitality Management"
+        - "Bachelor of Arts in Hotel Administration"
+        - "Bachelor of Science in Culinary Arts"
+        - "Bachelor of Business Administration"
+        - "Bachelor of Science in Tourism Management"
+      POSTGRADUATE:
+        - "Master of Science in Hospitality Management"
+        - "Master of Business Administration"
+        - "Master of Science in Tourism and Hotel Management"
+        - "Master of Science in Food Service Management"
+      DOCTORATE:
+        - "Doctor of Philosophy in Hospitality Management"
+        - "Doctor of Philosophy in Tourism Studies"
+    specializations:
+      - "Hotel Operations"
+      - "Food and Beverage Management"
+      - "Revenue Management"
+      - "Event Management"
+      - "Culinary Arts"
+      - "Tourism Development"
     roles:
       - "Hotel Operations"
       - "Food and Beverage"
@@ -178,6 +200,28 @@ industries:
         issuer: "American Hotel & Lodging Educational Institute"
   administrative_and_support_services:
     displayName: "Administrative and Support Services"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Business Administration"
+        - "Bachelor of Arts in Human Resources Management"
+        - "Bachelor of Science in Business Management"
+        - "Bachelor of Arts in Organizational Communication"
+        - "Bachelor of Science in Office Administration"
+      POSTGRADUATE:
+        - "Master of Business Administration"
+        - "Master of Science in Human Resource Management"
+        - "Master of Science in Organizational Leadership"
+        - "Master of Arts in Industrial Psychology"
+      DOCTORATE:
+        - "Doctor of Philosophy in Human Resource Management"
+        - "Doctor of Philosophy in Organizational Behavior"
+    specializations:
+      - "Talent Acquisition"
+      - "Organizational Behavior"
+      - "Workforce Planning"
+      - "Facilities Management"
+      - "Business Operations"
+      - "Employee Relations"
     roles:
       - "Talent Acquisition"
       - "HR Business Partnering"
@@ -231,6 +275,28 @@ industries:
         issuer: "LinkedIn"
   construction:
     displayName: "Construction"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Civil Engineering"
+        - "Bachelor of Science in Construction Management"
+        - "Bachelor of Architecture"
+        - "Bachelor of Science in Structural Engineering"
+        - "Bachelor of Science in Building Science"
+      POSTGRADUATE:
+        - "Master of Science in Civil Engineering"
+        - "Master of Science in Construction Management"
+        - "Master of Engineering in Structural Engineering"
+        - "Master of Business Administration"
+      DOCTORATE:
+        - "Doctor of Philosophy in Civil Engineering"
+        - "Doctor of Philosophy in Construction Engineering"
+    specializations:
+      - "Structural Engineering"
+      - "Construction Management"
+      - "Geotechnical Engineering"
+      - "Project Controls"
+      - "Building Information Modelling"
+      - "Sustainable Construction"
     roles:
       - "Project Management"
       - "Site Operations"
@@ -299,6 +365,28 @@ industries:
         issuer: "Board of Certified Safety Professionals"
   consumer_services:
     displayName: "Consumer Services"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Business Administration"
+        - "Bachelor of Arts in Communication"
+        - "Bachelor of Science in Service Management"
+        - "Bachelor of Arts in Psychology"
+        - "Bachelor of Science in Marketing"
+      POSTGRADUATE:
+        - "Master of Business Administration"
+        - "Master of Science in Service Management"
+        - "Master of Arts in Communication"
+        - "Master of Science in Nonprofit Management"
+      DOCTORATE:
+        - "Doctor of Philosophy in Business Administration"
+        - "Doctor of Philosophy in Consumer Behavior"
+    specializations:
+      - "Customer Experience"
+      - "Service Operations"
+      - "Consumer Behavior"
+      - "Community Development"
+      - "Client Relationship Management"
+      - "Quality Management"
     roles:
       - "Customer Success"
       - "Field Service"
@@ -367,6 +455,29 @@ industries:
         issuer: "Council for Certification in Volunteer Administration"
   education:
     displayName: "Education"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Arts in Education"
+        - "Bachelor of Science in Elementary Education"
+        - "Bachelor of Arts in English"
+        - "Bachelor of Science in Educational Technology"
+        - "Bachelor of Arts in Curriculum Studies"
+      POSTGRADUATE:
+        - "Master of Education"
+        - "Master of Arts in Teaching"
+        - "Master of Science in Educational Leadership"
+        - "Master of Science in Instructional Design"
+      DOCTORATE:
+        - "Doctor of Education"
+        - "Doctor of Philosophy in Education"
+        - "Doctor of Philosophy in Curriculum and Instruction"
+    specializations:
+      - "Curriculum Design"
+      - "Educational Technology"
+      - "Instructional Design"
+      - "Special Education"
+      - "Educational Leadership"
+      - "Assessment and Evaluation"
     roles:
       - "Instruction"
       - "Curriculum Development"
@@ -419,6 +530,28 @@ industries:
         issuer: "Microsoft"
   entertainment_providers:
     displayName: "Entertainment Providers"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Fine Arts"
+        - "Bachelor of Arts in Film and Television"
+        - "Bachelor of Arts in Media Studies"
+        - "Bachelor of Arts in Graphic Design"
+        - "Bachelor of Arts in Performing Arts"
+      POSTGRADUATE:
+        - "Master of Fine Arts"
+        - "Master of Arts in Media Production"
+        - "Master of Arts in Digital Media"
+        - "Master of Business Administration"
+      DOCTORATE:
+        - "Doctor of Philosophy in Media Studies"
+        - "Doctor of Philosophy in Film Studies"
+    specializations:
+      - "Digital Media"
+      - "Film Production"
+      - "Visual Design"
+      - "Brand Communication"
+      - "Content Strategy"
+      - "Performing Arts"
     roles:
       - "Content Creation"
       - "Digital Marketing"
@@ -476,6 +609,29 @@ industries:
         issuer: "SEMrush Academy"
   farming_ranching_forestry:
     displayName: "Farming, Ranching, Forestry"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Agriculture"
+        - "Bachelor of Science in Agronomy"
+        - "Bachelor of Science in Animal Science"
+        - "Bachelor of Science in Forestry"
+        - "Bachelor of Science in Horticulture"
+      POSTGRADUATE:
+        - "Master of Science in Agronomy"
+        - "Master of Science in Agricultural Economics"
+        - "Master of Science in Forestry"
+        - "Master of Science in Animal Science"
+      DOCTORATE:
+        - "Doctor of Philosophy in Agronomy"
+        - "Doctor of Philosophy in Soil Science"
+        - "Doctor of Philosophy in Forestry"
+    specializations:
+      - "Crop Science"
+      - "Soil Science"
+      - "Animal Nutrition"
+      - "Silviculture"
+      - "Precision Agriculture"
+      - "Agricultural Economics"
     roles:
       - "Farm Operations"
       - "Agronomy"
@@ -544,6 +700,28 @@ industries:
         issuer: "Irrigation Association"
   financial_services:
     displayName: "Financial Services"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Finance"
+        - "Bachelor of Science in Accounting"
+        - "Bachelor of Science in Economics"
+        - "Bachelor of Business Administration"
+        - "Bachelor of Science in Actuarial Science"
+      POSTGRADUATE:
+        - "Master of Science in Finance"
+        - "Master of Business Administration"
+        - "Master of Science in Financial Engineering"
+        - "Master of Science in Economics"
+      DOCTORATE:
+        - "Doctor of Philosophy in Finance"
+        - "Doctor of Philosophy in Economics"
+    specializations:
+      - "Financial Engineering"
+      - "Investment Management"
+      - "Risk Management"
+      - "Quantitative Finance"
+      - "Financial Analysis"
+      - "Actuarial Science"
     roles:
       - "Financial Analysis"
       - "Investment Banking"
@@ -602,6 +780,29 @@ industries:
         issuer: "CAIA Association"
   government_administration:
     displayName: "Government Administration"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Arts in Political Science"
+        - "Bachelor of Science in Public Administration"
+        - "Bachelor of Arts in Public Policy"
+        - "Bachelor of Science in Urban Planning"
+        - "Bachelor of Arts in International Relations"
+      POSTGRADUATE:
+        - "Master of Public Administration"
+        - "Master of Public Policy"
+        - "Master of Urban Planning"
+        - "Master of Science in Public Health"
+      DOCTORATE:
+        - "Doctor of Philosophy in Public Administration"
+        - "Doctor of Philosophy in Public Policy"
+        - "Juris Doctor"
+    specializations:
+      - "Public Policy"
+      - "Urban Planning"
+      - "Public Finance"
+      - "Emergency Management"
+      - "Regulatory Affairs"
+      - "Program Evaluation"
     roles:
       - "Policy Analysis"
       - "Program Management"
@@ -670,6 +871,29 @@ industries:
         issuer: "Institute of Certified Records Managers"
   holding_companies:
     displayName: "Holding Companies"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Finance"
+        - "Bachelor of Science in Accounting"
+        - "Bachelor of Business Administration"
+        - "Bachelor of Science in Economics"
+        - "Bachelor of Laws"
+      POSTGRADUATE:
+        - "Master of Business Administration"
+        - "Master of Science in Finance"
+        - "Master of Science in Corporate Finance"
+        - "Master of Laws in Corporate Law"
+      DOCTORATE:
+        - "Doctor of Philosophy in Finance"
+        - "Doctor of Philosophy in Business Administration"
+        - "Juris Doctor"
+    specializations:
+      - "Corporate Finance"
+      - "Mergers and Acquisitions"
+      - "Corporate Governance"
+      - "Portfolio Strategy"
+      - "Financial Reporting"
+      - "Treasury Management"
     roles:
       - "Corporate Development"
       - "Group Finance"
@@ -738,6 +962,29 @@ industries:
         issuer: "Alliance of Merger and Acquisition Advisors"
   hospitals_and_health_care:
     displayName: "Hospitals and Health Care"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Nursing"
+        - "Bachelor of Science in Biology"
+        - "Bachelor of Science in Health Administration"
+        - "Bachelor of Science in Public Health"
+        - "Bachelor of Science in Biomedical Science"
+      POSTGRADUATE:
+        - "Master of Public Health"
+        - "Master of Science in Nursing"
+        - "Master of Health Administration"
+        - "Master of Science in Clinical Research"
+      DOCTORATE:
+        - "Doctor of Medicine"
+        - "Doctor of Philosophy in Public Health"
+        - "Doctor of Nursing Practice"
+    specializations:
+      - "Clinical Research"
+      - "Health Informatics"
+      - "Public Health"
+      - "Healthcare Management"
+      - "Epidemiology"
+      - "Patient Safety"
     roles:
       - "Clinical Care"
       - "Patient Services"
@@ -799,6 +1046,28 @@ industries:
         issuer: "Pharmacy Technician Certification Board"
   manufacturing:
     displayName: "Manufacturing"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Mechanical Engineering"
+        - "Bachelor of Science in Industrial Engineering"
+        - "Bachelor of Science in Manufacturing Engineering"
+        - "Bachelor of Science in Materials Science"
+        - "Bachelor of Engineering in Electronics"
+      POSTGRADUATE:
+        - "Master of Science in Mechanical Engineering"
+        - "Master of Science in Industrial Engineering"
+        - "Master of Science in Manufacturing Systems"
+        - "Master of Business Administration"
+      DOCTORATE:
+        - "Doctor of Philosophy in Mechanical Engineering"
+        - "Doctor of Philosophy in Materials Science"
+    specializations:
+      - "Lean Manufacturing"
+      - "Industrial Automation"
+      - "Quality Engineering"
+      - "Materials Science"
+      - "Process Engineering"
+      - "Supply Chain Management"
     roles:
       - "Process Engineering"
       - "Quality Assurance"
@@ -853,6 +1122,28 @@ industries:
         issuer: "ASQ"
   oil_gas_and_mining:
     displayName: "Oil, Gas, and Mining"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Petroleum Engineering"
+        - "Bachelor of Science in Geology"
+        - "Bachelor of Science in Mining Engineering"
+        - "Bachelor of Science in Chemical Engineering"
+        - "Bachelor of Science in Geophysics"
+      POSTGRADUATE:
+        - "Master of Science in Petroleum Engineering"
+        - "Master of Science in Geology"
+        - "Master of Science in Mining Engineering"
+        - "Master of Science in Reservoir Engineering"
+      DOCTORATE:
+        - "Doctor of Philosophy in Petroleum Engineering"
+        - "Doctor of Philosophy in Geosciences"
+    specializations:
+      - "Reservoir Engineering"
+      - "Petrophysics"
+      - "Mine Planning"
+      - "Geomechanics"
+      - "Drilling Engineering"
+      - "Process Safety"
     roles:
       - "Drilling Operations"
       - "Reservoir Engineering"
@@ -921,6 +1212,29 @@ industries:
         issuer: "American Petroleum Institute"
   professional_services:
     displayName: "Professional Services"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Business Administration"
+        - "Bachelor of Science in Economics"
+        - "Bachelor of Science in Management"
+        - "Bachelor of Laws"
+        - "Bachelor of Science in Industrial Engineering"
+      POSTGRADUATE:
+        - "Master of Business Administration"
+        - "Master of Science in Management"
+        - "Master of Science in Management Consulting"
+        - "Master of Laws"
+      DOCTORATE:
+        - "Doctor of Philosophy in Business Administration"
+        - "Doctor of Philosophy in Management"
+        - "Juris Doctor"
+    specializations:
+      - "Strategy Consulting"
+      - "Operations Research"
+      - "Organizational Design"
+      - "Change Management"
+      - "Business Analytics"
+      - "Corporate Law"
     roles:
       - "Strategy"
       - "Operations"
@@ -975,6 +1289,28 @@ industries:
         issuer: "Prosci"
   real_estate_and_equipment_rental_services:
     displayName: "Real Estate and Equipment Rental Services"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Real Estate"
+        - "Bachelor of Business Administration"
+        - "Bachelor of Science in Finance"
+        - "Bachelor of Science in Urban Planning"
+        - "Bachelor of Science in Property Management"
+      POSTGRADUATE:
+        - "Master of Science in Real Estate"
+        - "Master of Business Administration"
+        - "Master of Science in Real Estate Finance"
+        - "Master of Urban Planning"
+      DOCTORATE:
+        - "Doctor of Philosophy in Real Estate"
+        - "Doctor of Philosophy in Urban Economics"
+    specializations:
+      - "Real Estate Finance"
+      - "Asset Management"
+      - "Property Valuation"
+      - "Urban Economics"
+      - "Facilities Management"
+      - "Investment Analysis"
     roles:
       - "Property Management"
       - "Leasing"
@@ -1043,6 +1379,28 @@ industries:
         issuer: "US Green Building Council"
   retail:
     displayName: "Retail"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Business Administration"
+        - "Bachelor of Science in Marketing"
+        - "Bachelor of Science in Retail Management"
+        - "Bachelor of Science in Merchandising"
+        - "Bachelor of Arts in Fashion Merchandising"
+      POSTGRADUATE:
+        - "Master of Business Administration"
+        - "Master of Science in Marketing"
+        - "Master of Science in Retail Management"
+        - "Master of Science in Supply Chain Management"
+      DOCTORATE:
+        - "Doctor of Philosophy in Marketing"
+        - "Doctor of Philosophy in Business Administration"
+    specializations:
+      - "Merchandising"
+      - "Consumer Behavior"
+      - "Retail Analytics"
+      - "Category Management"
+      - "Omnichannel Strategy"
+      - "Brand Management"
     roles:
       - "Store Operations"
       - "Merchandising"
@@ -1093,6 +1451,30 @@ industries:
         issuer: "Salesforce"
   technology_information_and_media:
     displayName: "Technology, Information and Media"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Computer Science"
+        - "Bachelor of Science in Information Technology"
+        - "Bachelor of Science in Software Engineering"
+        - "Bachelor of Science in Data Science"
+        - "Bachelor of Engineering in Electronics"
+      POSTGRADUATE:
+        - "Master of Science in Computer Science"
+        - "Master of Science in Data Science"
+        - "Master of Science in Cybersecurity"
+        - "Master of Engineering in Software Engineering"
+        - "Master of Science in Information Systems"
+      DOCTORATE:
+        - "Doctor of Philosophy in Computer Science"
+        - "Doctor of Philosophy in Data Science"
+        - "Doctor of Philosophy in Information Systems"
+    specializations:
+      - "Artificial Intelligence"
+      - "Machine Learning"
+      - "Cloud Computing"
+      - "Cybersecurity"
+      - "Software Engineering"
+      - "Distributed Systems"
     roles:
       - "Software Development"
       - "Data Engineering"
@@ -1161,6 +1543,28 @@ industries:
         issuer: "Cloud Native Computing Foundation"
   transportation_logistics_supply_chain_and_storage:
     displayName: "Transportation, Logistics, Supply Chain and Storage"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Supply Chain Management"
+        - "Bachelor of Science in Logistics"
+        - "Bachelor of Business Administration"
+        - "Bachelor of Science in Industrial Engineering"
+        - "Bachelor of Science in Transportation Management"
+      POSTGRADUATE:
+        - "Master of Science in Supply Chain Management"
+        - "Master of Business Administration"
+        - "Master of Science in Logistics and Transportation"
+        - "Master of Science in Operations Research"
+      DOCTORATE:
+        - "Doctor of Philosophy in Supply Chain Management"
+        - "Doctor of Philosophy in Operations Research"
+    specializations:
+      - "Supply Chain Management"
+      - "Operations Research"
+      - "Transportation Planning"
+      - "Warehouse Optimization"
+      - "Fleet Management"
+      - "Logistics Analytics"
     roles:
       - "Transportation"
       - "Warehousing"
@@ -1212,6 +1616,28 @@ industries:
         issuer: "APICS"
   utilities:
     displayName: "Utilities"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Science in Electrical Engineering"
+        - "Bachelor of Science in Environmental Engineering"
+        - "Bachelor of Science in Mechanical Engineering"
+        - "Bachelor of Science in Energy Engineering"
+        - "Bachelor of Science in Civil Engineering"
+      POSTGRADUATE:
+        - "Master of Science in Electrical Engineering"
+        - "Master of Science in Energy Systems"
+        - "Master of Science in Environmental Engineering"
+        - "Master of Business Administration"
+      DOCTORATE:
+        - "Doctor of Philosophy in Electrical Engineering"
+        - "Doctor of Philosophy in Energy Systems"
+    specializations:
+      - "Power Systems"
+      - "Renewable Energy"
+      - "Water Resources"
+      - "Grid Modernisation"
+      - "Environmental Engineering"
+      - "Energy Policy"
     roles:
       - "Grid Operations"
       - "Power Engineering"
@@ -1280,6 +1706,28 @@ industries:
         issuer: "Occupational Safety and Health Administration"
   wholesale:
     displayName: "Wholesale"
+    courses:
+      UNDERGRADUATE:
+        - "Bachelor of Business Administration"
+        - "Bachelor of Science in Supply Chain Management"
+        - "Bachelor of Science in Marketing"
+        - "Bachelor of Science in Logistics"
+        - "Bachelor of Science in International Business"
+      POSTGRADUATE:
+        - "Master of Business Administration"
+        - "Master of Science in Supply Chain Management"
+        - "Master of Science in International Business"
+        - "Master of Science in Marketing"
+      DOCTORATE:
+        - "Doctor of Philosophy in Supply Chain Management"
+        - "Doctor of Philosophy in Marketing"
+    specializations:
+      - "Supply Chain Management"
+      - "Category Management"
+      - "International Trade"
+      - "Demand Planning"
+      - "Distribution Strategy"
+      - "Pricing Strategy"
     roles:
       - "Distribution Operations"
       - "Purchasing"

@@ -81,7 +81,7 @@ public class CandidateProvider extends AbstractProvider<Faker> {
         String mobileNumber = buildMobileNumber();
         Address address     = buildAddress();
 
-        List<EducationHistory> educationHistory = buildEducationHistory();
+        List<EducationHistory> educationHistory = buildEducationHistory(data);
         LocalDate careerFloor = educationHistory.get(educationHistory.size() - 1).endDate();
         List<JobHistory> jobHistory = buildJobHistory(data, careerFloor);
         List<String> skills = pickUniqueN(data.skills(), 4 + faker.random().nextInt(5));
@@ -112,6 +112,29 @@ public class CandidateProvider extends AbstractProvider<Faker> {
     public List<String> availableCertificationNames(String industryKey) {
         CandidateIndustryData data = resolveIndustry(industryKey);
         return data.certifications().stream().map(CertificationData::name).toList();
+    }
+
+    /**
+     * Returns the degree pools for an industry, keyed by degree level. Levels the industry does
+     * not configure fall back to the top-level pool, so the result is what generation will draw
+     * from. The key may be an alias.
+     */
+    public Map<String, List<String>> availableCourses(String industryKey) {
+        CandidateIndustryData data = resolveIndustry(industryKey);
+        Map<String, List<String>> result = new LinkedHashMap<>();
+        for (String level : DEGREE_LEVELS) {
+            result.put(level, coursesFor(data, level));
+        }
+        return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Returns the specializations an industry draws from, falling back to the top-level pool when
+     * the industry configures none. The key may be an alias.
+     */
+    public List<String> availableSpecializations(String industryKey) {
+        List<String> own = resolveIndustry(industryKey).specializations();
+        return own.isEmpty() ? SPECIALIZATIONS : own;
     }
 
     /** Returns every professional summary template (with and without certification) — useful in tests. */
@@ -158,7 +181,7 @@ public class CandidateProvider extends AbstractProvider<Faker> {
      * Generates 1–3 education entries in chronological order.
      * Works backwards from a most-recent end date so all entries are in the past.
      */
-    private List<EducationHistory> buildEducationHistory() {
+    private List<EducationHistory> buildEducationHistory(CandidateIndustryData data) {
         int count = 1 + faker.random().nextInt(3); // 1–3
 
         // Most recent degree ended 1–5 years ago
@@ -173,13 +196,25 @@ public class CandidateProvider extends AbstractProvider<Faker> {
             int durationYears  = degreeDurationYears(degreeLevel);
             LocalDate startDate = currentEndDate.minusYears(durationYears);
 
-            result.add(0, buildEducation(degreeLevel, startDate, currentEndDate));
+            result.add(0, buildEducation(data, degreeLevel, startDate, currentEndDate));
 
             // Gap between successive degrees: 3–12 months
             currentEndDate = startDate.minusMonths(3 + faker.random().nextInt(10));
         }
 
         return Collections.unmodifiableList(result);
+    }
+
+    /**
+     * Courses for a degree level, preferring the industry's own list and falling back to the
+     * top-level pool when the industry does not configure that level.
+     */
+    private static List<String> coursesFor(CandidateIndustryData data, String degreeLevel) {
+        List<String> industryCourses = data.courses().get(degreeLevel);
+        if (industryCourses != null && !industryCourses.isEmpty()) {
+            return industryCourses;
+        }
+        return COURSES_BY_DEGREE.getOrDefault(degreeLevel, List.of("Bachelor of Science"));
     }
 
     private int degreeDurationYears(String degreeLevel) {
@@ -191,8 +226,11 @@ public class CandidateProvider extends AbstractProvider<Faker> {
         };
     }
 
-    private EducationHistory buildEducation(String degreeLevel, LocalDate start, LocalDate end) {
-        List<String> courses = COURSES_BY_DEGREE.getOrDefault(degreeLevel, List.of("Bachelor of Science"));
+    private EducationHistory buildEducation(CandidateIndustryData data, String degreeLevel,
+                                            LocalDate start, LocalDate end) {
+        List<String> courses = coursesFor(data, degreeLevel);
+        List<String> specializations =
+                data.specializations().isEmpty() ? SPECIALIZATIONS : data.specializations();
         boolean isCgpa = faker.random().nextInt(2) == 0;
         double scoreValue = isCgpa
                 ? 6.0 + faker.random().nextInt(41) * 0.1  // 6.0 – 10.0
@@ -202,7 +240,7 @@ public class CandidateProvider extends AbstractProvider<Faker> {
                 pickRandom(COLLEGES),
                 degreeLevel,
                 pickRandom(courses),
-                pickRandom(SPECIALIZATIONS),
+                pickRandom(specializations),
                 start,
                 end,
                 isCgpa ? "CGPA" : "PERCENTAGE",
@@ -427,6 +465,25 @@ public class CandidateProvider extends AbstractProvider<Faker> {
         return Collections.unmodifiableMap(result);
     }
 
+    /** Parses an optional per-industry courses block; absent yields an empty map. */
+    @SuppressWarnings("unchecked")
+    private static Map<String, List<String>> parseCourses(Object raw) {
+        if (raw == null) {
+            return Map.of();
+        }
+        Map<String, List<String>> result = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> e : ((Map<String, Object>) raw).entrySet()) {
+            result.put(e.getKey(), Collections.unmodifiableList((List<String>) e.getValue()));
+        }
+        return Collections.unmodifiableMap(result);
+    }
+
+    /** Parses an optional per-industry string list; absent yields an empty list. */
+    @SuppressWarnings("unchecked")
+    private static List<String> parseOptionalList(Object raw) {
+        return raw == null ? List.of() : Collections.unmodifiableList((List<String>) raw);
+    }
+
     @SuppressWarnings("unchecked")
     private static Map<String, CandidateIndustryData> parseIndustries(Map<String, Object> root) {
         Map<String, Object> industries = (Map<String, Object>) root.get("industries");
@@ -444,7 +501,9 @@ public class CandidateProvider extends AbstractProvider<Faker> {
                     (List<String>) ind.get("designations"),
                     (List<String>) ind.get("skills"),
                     (List<String>) ind.get("responsibilities"),
-                    certs
+                    certs,
+                    parseCourses(ind.get("courses")),
+                    parseOptionalList(ind.get("specializations"))
             ));
         }
         return Collections.unmodifiableMap(result);
