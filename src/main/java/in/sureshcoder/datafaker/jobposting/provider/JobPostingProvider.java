@@ -29,11 +29,13 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class JobPostingProvider extends AbstractProvider<Faker> {
 
     private static final Map<String, IndustryData> INDUSTRY_MAP;
     private static final List<String> INDUSTRY_KEYS;
+    private static final Map<String, String> ALIAS_MAP;
     private static final List<String> EMPLOYMENT_TYPES;
     private static final List<String> CURRENCIES;
     private static final List<String> SALARY_UNITS;
@@ -42,6 +44,7 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
         Map<String, Object> root = loadYaml();
         INDUSTRY_MAP = parseIndustries(root);
         INDUSTRY_KEYS = List.copyOf(INDUSTRY_MAP.keySet());
+        ALIAS_MAP = parseAliases(root, INDUSTRY_MAP.keySet());
         EMPLOYMENT_TYPES = parseStringList(root, "employment_type");
         CURRENCIES       = parseStringList(root, "currency");
         SALARY_UNITS     = parseStringList(root, "salary_unit");
@@ -58,10 +61,7 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
 
     /** Builds a JobPosting for a specific industry key, e.g. "technology" or "healthcare". */
     public JobPosting buildForIndustry(String industryKey) {
-        IndustryData data = INDUSTRY_MAP.getOrDefault(
-                industryKey.toLowerCase(),
-                INDUSTRY_MAP.get(INDUSTRY_KEYS.get(0))
-        );
+        IndustryData data = resolveIndustry(industryKey);
 
         String title   = pickRandom(data.titles());
         int skillCount = 3 + faker.random().nextInt(3); // 3–5 skills
@@ -149,6 +149,41 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
             copy.set(j, tmp);
         }
         return Collections.unmodifiableList(copy.subList(0, Math.min(n, copy.size())));
+    }
+
+    /**
+     * Resolves an industry key to its data, following any alias configured in the
+     * YAML {@code aliases} block. Unknown keys fall back to the first configured
+     * industry.
+     */
+    private static IndustryData resolveIndustry(String industryKey) {
+        String key = industryKey.toLowerCase();
+        key = ALIAS_MAP.getOrDefault(key, key);
+        return INDUSTRY_MAP.getOrDefault(key, INDUSTRY_MAP.get(INDUSTRY_KEYS.get(0)));
+    }
+
+    /**
+     * Parses the optional top-level {@code aliases} block, mapping legacy industry
+     * keys onto canonical ones. An absent block yields an empty map. An alias whose
+     * target is not a configured industry is a configuration error and fails fast.
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, String> parseAliases(Map<String, Object> root, Set<String> industryKeys) {
+        Object raw = root.get("aliases");
+        if (raw == null) {
+            return Map.of();
+        }
+        Map<String, String> result = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> entry : ((Map<String, Object>) raw).entrySet()) {
+            String alias  = entry.getKey().toLowerCase();
+            String target = String.valueOf(entry.getValue()).toLowerCase();
+            if (!industryKeys.contains(target)) {
+                throw new IllegalStateException(
+                        "Industry alias '" + alias + "' points at unknown industry '" + target + "'");
+            }
+            result.put(alias, target);
+        }
+        return Collections.unmodifiableMap(result);
     }
 
     @SuppressWarnings("unchecked")

@@ -175,6 +175,24 @@ class JobPostingProviderTest {
                 );
     }
 
+    @Test
+    @DisplayName("Unknown industry key falls back to the first configured industry")
+    void unknownIndustryFallsBackToFirst() {
+        String firstKey = faker.jobPosting().availableIndustries().get(0);
+        String expected = faker.jobPosting().buildForIndustry(firstKey).industry();
+
+        assertThat(faker.jobPosting().buildForIndustry("no-such-industry").industry())
+                .isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"TECHNOLOGY", "Technology", "TeChNoLoGy"})
+    @DisplayName("Industry keys resolve case-insensitively")
+    void industryKeysAreCaseInsensitive(String industryKey) {
+        assertThat(faker.jobPosting().buildForIndustry(industryKey).industry())
+                .isEqualTo(faker.jobPosting().buildForIndustry("technology").industry());
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"manufacturing", "logistics", "education", "staffing", "consulting", "media"})
     @DisplayName("buildForIndustry works for all new industries")

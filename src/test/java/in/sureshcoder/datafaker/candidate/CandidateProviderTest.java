@@ -476,6 +476,23 @@ class CandidateProviderTest {
     // ── reference data ────────────────────────────────────────────────────
 
     @Test
+    @DisplayName("Unknown industry key falls back to the first configured industry")
+    void unknownIndustryFallsBackToFirst() {
+        String firstKey = faker.candidate().availableIndustries().get(0);
+
+        assertThat(faker.candidate().availableCertificationNames("no-such-industry"))
+                .isEqualTo(faker.candidate().availableCertificationNames(firstKey));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"TECHNOLOGY", "Technology", "TeChNoLoGy"})
+    @DisplayName("Industry keys resolve case-insensitively")
+    void industryKeysAreCaseInsensitive(String industryKey) {
+        assertThat(faker.candidate().availableCertificationNames(industryKey))
+                .isEqualTo(faker.candidate().availableCertificationNames("technology"));
+    }
+
+    @Test
     @DisplayName("availableIndustries returns all 10 industry keys")
     void availableIndustriesReturnsAll10() {
         assertThat(faker.candidate().availableIndustries())
