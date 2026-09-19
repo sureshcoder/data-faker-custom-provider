@@ -19,7 +19,7 @@ import java.time.LocalDate;
 
 /**
  * One completed academic qualification.
- * degreeLevel values: UNDERGRADUATE, POSTGRADUATE, DOCTORATE, POST_DOCTORAL.
+ * degreeLevel values: UNDERGRADUATE, POSTGRADUATE, DOCTORATE.
  * scoreType values: CGPA (0.0–10.0), PERCENTAGE (0.0–100.0).
  */
 public record EducationHistory(

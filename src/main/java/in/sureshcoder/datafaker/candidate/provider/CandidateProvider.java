@@ -47,7 +47,7 @@ public class CandidateProvider extends AbstractProvider<Faker> {
     private static final List<String> SUMMARY_TEMPLATES_WITH_CERT;
 
     private static final String[] DEGREE_LEVELS =
-            {"UNDERGRADUATE", "POSTGRADUATE", "DOCTORATE", "POST_DOCTORAL"};
+            {"UNDERGRADUATE", "POSTGRADUATE", "DOCTORATE"};
     private static final String[] EMAIL_DOMAINS = {"yopmail.com", "mailinator.com"};
 
     static {
@@ -222,7 +222,7 @@ public class CandidateProvider extends AbstractProvider<Faker> {
             case "UNDERGRADUATE" -> 3 + faker.random().nextInt(2);  // 3–4 yr
             case "POSTGRADUATE"  -> 1 + faker.random().nextInt(2);  // 1–2 yr
             case "DOCTORATE"     -> 3 + faker.random().nextInt(3);  // 3–5 yr
-            default              -> 1 + faker.random().nextInt(2);  // POST_DOCTORAL 1–2 yr
+            default              -> 1 + faker.random().nextInt(2);  // unreachable via DEGREE_LEVELS
         };
     }
 
