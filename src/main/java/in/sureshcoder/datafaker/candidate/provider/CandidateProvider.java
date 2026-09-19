@@ -33,11 +33,13 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CandidateProvider extends AbstractProvider<Faker> {
 
     private static final Map<String, CandidateIndustryData> INDUSTRY_MAP;
     private static final List<String> INDUSTRY_KEYS;
+    private static final Map<String, String> ALIAS_MAP;
     private static final Map<String, List<String>> COURSES_BY_DEGREE;
     private static final List<String> COLLEGES;
     private static final List<String> SPECIALIZATIONS;
@@ -55,6 +57,7 @@ public class CandidateProvider extends AbstractProvider<Faker> {
         COURSES_BY_DEGREE = parseCourseMap(root);
         INDUSTRY_MAP    = parseIndustries(root);
         INDUSTRY_KEYS   = List.copyOf(INDUSTRY_MAP.keySet());
+        ALIAS_MAP       = parseAliases(root, INDUSTRY_MAP.keySet());
         SUMMARY_TEMPLATES_PLAIN     = parseSummaryTemplates(root, "withoutCertification");
         SUMMARY_TEMPLATES_WITH_CERT = parseSummaryTemplates(root, "withCertification");
     }
@@ -70,10 +73,7 @@ public class CandidateProvider extends AbstractProvider<Faker> {
 
     /** Builds a Candidate whose job history and certifications match the given industry key. */
     public Candidate buildForIndustry(String industryKey) {
-        CandidateIndustryData data = INDUSTRY_MAP.getOrDefault(
-                industryKey.toLowerCase(),
-                INDUSTRY_MAP.get(INDUSTRY_KEYS.get(0))
-        );
+        CandidateIndustryData data = resolveIndustry(industryKey);
 
         String firstName    = faker.name().firstName();
         String lastName     = faker.name().lastName();
@@ -110,10 +110,7 @@ public class CandidateProvider extends AbstractProvider<Faker> {
 
     /** Returns the certification names available for a given industry key — useful in tests. */
     public List<String> availableCertificationNames(String industryKey) {
-        CandidateIndustryData data = INDUSTRY_MAP.getOrDefault(
-                industryKey.toLowerCase(),
-                INDUSTRY_MAP.get(INDUSTRY_KEYS.get(0))
-        );
+        CandidateIndustryData data = resolveIndustry(industryKey);
         return data.certifications().stream().map(CertificationData::name).toList();
     }
 
@@ -354,6 +351,41 @@ public class CandidateProvider extends AbstractProvider<Faker> {
     }
 
     // ── YAML loading ─────────────────────────────────────────────────────────
+
+    /**
+     * Resolves an industry key to its data, following any alias configured in the
+     * YAML {@code aliases} block. Unknown keys fall back to the first configured
+     * industry.
+     */
+    private static CandidateIndustryData resolveIndustry(String industryKey) {
+        String key = industryKey.toLowerCase();
+        key = ALIAS_MAP.getOrDefault(key, key);
+        return INDUSTRY_MAP.getOrDefault(key, INDUSTRY_MAP.get(INDUSTRY_KEYS.get(0)));
+    }
+
+    /**
+     * Parses the optional top-level {@code aliases} block, mapping legacy industry
+     * keys onto canonical ones. An absent block yields an empty map. An alias whose
+     * target is not a configured industry is a configuration error and fails fast.
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, String> parseAliases(Map<String, Object> root, Set<String> industryKeys) {
+        Object raw = root.get("aliases");
+        if (raw == null) {
+            return Map.of();
+        }
+        Map<String, String> result = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> entry : ((Map<String, Object>) raw).entrySet()) {
+            String alias  = entry.getKey().toLowerCase();
+            String target = String.valueOf(entry.getValue()).toLowerCase();
+            if (!industryKeys.contains(target)) {
+                throw new IllegalStateException(
+                        "Industry alias '" + alias + "' points at unknown industry '" + target + "'");
+            }
+            result.put(alias, target);
+        }
+        return Collections.unmodifiableMap(result);
+    }
 
     @SuppressWarnings("unchecked")
     private static Map<String, Object> loadYaml() {
