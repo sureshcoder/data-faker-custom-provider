@@ -211,12 +211,18 @@ Obtain the provider with `new JobFaker().jobPosting()`. `JobFaker` has the same 
 | `employmentType` | `String` | Random pick from the top-level `employment_type` list |
 | `hiringOrganization` | `String` | `faker.company().name()` |
 | `jobLocation` | `String` | 20 % `"Remote"`, otherwise `"City, ST"` |
-| `baseSalary.currency` | `String` | Random pick from the top-level `currency` list |
-| `baseSalary.minValue` | `int` | Random within the industry's `minLow`–`minHigh` bounds |
-| `baseSalary.maxValue` | `int` | Random within `maxLow`–`maxHigh`; forced to at least `minValue + 20 000` |
-| `baseSalary.unitText` | `String` | Random pick from the top-level `salary_unit` list |
+| `baseSalary.currency` | `String` | Random pick from the top-level `currency` map |
+| `baseSalary.minValue` | `int` | Random within the industry's `minLow`–`minHigh` bounds, converted into the drawn currency and pay period |
+| `baseSalary.maxValue` | `int` | Random within `maxLow`–`maxHigh`, converted the same way; always above `minValue` |
+| `baseSalary.unitText` | `String` | Random pick from the top-level `salary_unit` map |
 
 Currency, employment type and salary unit are picked independently of the industry, so a `"VOLUNTEER"` posting priced in `INR` per `WEEK` is possible. Constrain them in YAML if your use case needs tighter data.
+
+The salary bounds in YAML are expressed in **USD per year**. Whatever currency and pay period a
+posting draws, the figures are converted to match: the amount is multiplied by the currency's rate
+and divided by that period's occurrences per year, then rounded to a granularity that suits its
+magnitude. An `INR`/`HOUR` posting and a `USD`/`YEAR` posting for the same industry therefore
+describe the same underlying compensation.
 
 ### JobPosting example
 
@@ -271,7 +277,7 @@ Produced by `new JobFaker(new Random(42L)).jobPosting().build()` on 2026-09-12. 
   "employmentType": "VOLUNTEER",
   "hiringOrganization": "Hegmann, Watsica and Schaden",
   "jobLocation": "Remote",
-  "baseSalary": { "currency": "INR", "minValue": 92594, "maxValue": 147425, "unitText": "WEEK" }
+  "baseSalary": { "currency": "INR", "minValue": 192000, "maxValue": 287000, "unitText": "WEEK" }
 }
 ```
 
@@ -691,7 +697,7 @@ public class InteropExample {
 
 ## Industries reference
 
-Both YAML files use the same 20 keys, taken from the top level of the LinkedIn industry taxonomy. The **Legacy alias** column lists the pre-1.1.0 key that still resolves to each industry; aliases are accepted by `buildForIndustry` but are not returned by `availableIndustries()`. Salary ranges apply to the JobPosting provider and are per year in the sense of the `minLow`/`maxHigh` bounds; the `unitText` on a posting is picked separately.
+Both YAML files use the same 20 keys, taken from the top level of the LinkedIn industry taxonomy. The **Legacy alias** column lists the pre-1.1.0 key that still resolves to each industry; aliases are accepted by `buildForIndustry` but are not returned by `availableIndustries()`. Salary bounds apply to the JobPosting provider and are USD per year; a posting's figures are converted into whichever currency and pay period it draws.
 
 | YAML key | Display name | Legacy alias | JobPosting salary bounds (`minLow` – `maxHigh`) |
 |---|---|---|---|
@@ -717,6 +723,25 @@ Both YAML files use the same 20 keys, taken from the top level of the LinkedIn i
 | `wholesale` | Wholesale | — | 40 000 – 135 000 |
 
 Per industry, `job-posting-mappings.yml` holds titles, skills, description templates and salary bounds; `candidate-mappings.yml` holds roles, designations, skills, responsibilities and certifications.
+
+### Currency rates and pay periods
+
+`currency` maps each code to its rate against USD; `salary_unit` maps each period to how many
+times it occurs in a year:
+
+```yaml
+currency:
+  USD: 1.0
+  INR: 83.0
+
+salary_unit:
+  HOUR: 2080
+  YEAR: 1
+```
+
+Rates are indicative and will drift from live FX — this is synthetic data, not an FX source.
+Adjust them, or trim either map, to constrain what postings can draw. `availableCurrencies()`
+and `availableSalaryUnits()` return the keys of each map.
 
 ### Industry aliases
 
@@ -759,7 +784,7 @@ Both providers parse their YAML once, at class initialisation, from the classpat
 
 ### Adding an industry to JobPosting
 
-Edit `src/main/resources/job-posting-mappings.yml`. The top-level `employment_type`, `currency` and `salary_unit` lists apply to every industry.
+Edit `src/main/resources/job-posting-mappings.yml`. The top-level `employment_type` list and the `currency` and `salary_unit` maps apply to every industry.
 
 ```yaml
 industries:
