@@ -51,6 +51,7 @@
   .ind-card { border-radius: 8px; padding: 18px; border: 1px solid var(--border); }
   .ind-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: 10px; }
   .ind-card .stat { font-size: .8rem; color: var(--slate-md); margin: 3px 0; }
+  .ind-card .stat code { overflow-wrap: anywhere; word-break: break-word; }
   .tech  { background: #eff6ff; border-color: #93c5fd; }
   .hcare { background: #f0fdf4; border-color: #6ee7b7; }
   .fin   { background: #fffbeb; border-color: #fcd34d; }
@@ -83,9 +84,9 @@
     <div class="header-text">
       <h1>DataFaker Candidate Provider</h1>
       <p>Custom DataFaker 2.x provider generating fully-synthetic, industry-aware job candidates<br/>
-         <strong style="color:#e9d5ff">10 industries</strong> &nbsp;·&nbsp;
-         <strong style="color:#e9d5ff">9 candidate fields</strong> &nbsp;·&nbsp;
-         <strong style="color:#e9d5ff">35 tests</strong> &nbsp;·&nbsp;
+         <strong style="color:#e9d5ff">20 industries</strong> &nbsp;·&nbsp;
+         <strong style="color:#e9d5ff">10 candidate fields</strong> &nbsp;·&nbsp;
+         <strong style="color:#e9d5ff">109 tests</strong> &nbsp;·&nbsp;
          <strong style="color:#e9d5ff">Seeded &amp; reproducible</strong></p>
       <div class="badges">
         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSIyNiI+PHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjI2IiByeD0iNSIgZmlsbD0iIzUzODJhMSIvPjx0ZXh0IHg9IjQwIiB5PSIxNy41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj5KYXZhIDIxPC90ZXh0Pjwvc3ZnPg==" alt="Java 21"/>
@@ -155,10 +156,10 @@
         <text x="65" y="218" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">YAML</text>
         <text x="65" y="232" text-anchor="middle" font-size="8" fill="#78350f">candidate-</text>
         <text x="65" y="244" text-anchor="middle" font-size="8" fill="#78350f">mappings.yml</text>
-        <text x="65" y="259" text-anchor="middle" font-size="8" fill="#b45309">10 industries</text>
+        <text x="65" y="259" text-anchor="middle" font-size="8" fill="#b45309">20 industries</text>
         <text x="65" y="272" text-anchor="middle" font-size="8" fill="#b45309">20 colleges</text>
-        <text x="65" y="285" text-anchor="middle" font-size="8" fill="#b45309">4 degree levels</text>
-        <text x="65" y="298" text-anchor="middle" font-size="8" fill="#b45309">15 specializations</text>
+        <text x="65" y="285" text-anchor="middle" font-size="8" fill="#b45309">3 degree levels</text>
+        <text x="65" y="298" text-anchor="middle" font-size="8" fill="#b45309">6 specs / industry</text>
         <text x="65" y="314" text-anchor="middle" font-size="8" fill="#b45309">~7 certs / industry</text>
 
         <!-- Faker built-ins box -->
@@ -278,7 +279,7 @@
         <text x="233" y="278" font-size="9.5" fill="#065f46">institutionName : String</text>
         <text x="233" y="294" font-size="9.5" fill="#065f46">degreeLevel : String</text>
         <text x="233" y="308" font-size="8.5" fill="#64748b">  UNDERGRADUATE / POSTGRADUATE</text>
-        <text x="233" y="320" font-size="8.5" fill="#64748b">  DOCTORATE / POST_DOCTORAL</text>
+        <text x="233" y="320" font-size="8.5" fill="#64748b">  DOCTORATE</text>
         <text x="233" y="336" font-size="9.5" fill="#065f46">courseName : String</text>
         <text x="233" y="352" font-size="9.5" fill="#065f46">specialization : String</text>
         <text x="233" y="368" font-size="9.5" fill="#065f46">startDate : LocalDate</text>
@@ -353,12 +354,12 @@
 
         <!-- Title / legend row -->
         <text x="20" y="22" font-size="11" font-weight="600" fill="#475569">Timeline (left = oldest, right = most recent)</text>
-        <rect x="560" y="10" width="12" height="12" rx="2" fill="#2563eb" opacity=".8"/>
-        <text x="576" y="21" font-size="9" fill="#475569">UNDERGRADUATE</text>
-        <rect x="672" y="10" width="12" height="12" rx="2" fill="#059669" opacity=".8"/>
-        <text x="688" y="21" font-size="9" fill="#475569">POSTGRADUATE</text>
-        <rect x="762" y="10" width="12" height="12" rx="2" fill="#7c3aed" opacity=".8"/>
-        <text x="778" y="21" font-size="9" fill="#475569">DOCTORATE</text>
+        <rect x="500" y="10" width="12" height="12" rx="2" fill="#2563eb" opacity=".8"/>
+        <text x="516" y="21" font-size="9" fill="#475569">UNDERGRADUATE</text>
+        <rect x="612" y="10" width="12" height="12" rx="2" fill="#059669" opacity=".8"/>
+        <text x="628" y="21" font-size="9" fill="#475569">POSTGRADUATE</text>
+        <rect x="712" y="10" width="12" height="12" rx="2" fill="#7c3aed" opacity=".8"/>
+        <text x="728" y="21" font-size="9" fill="#475569">DOCTORATE</text>
 
         <!-- Time axis -->
         <line x1="30" y1="130" x2="790" y2="130" stroke="#e2e8f0" stroke-width="1.5"/>
@@ -638,135 +639,331 @@
   </div>
   <div class="card-body">
     <div class="industry-grid">
-      <div class="ind-card tech">
-        <h3 style="color:#1d4ed8">💻 Technology</h3>
-        <div class="stat">YAML key: <code>technology</code></div>
-        <div class="stat">7 functional roles</div>
-        <div class="stat">12 designations · 18 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">8 certifications (AWS, GCP, CKA…)</div>
+      <div class="ind-card" style="background:#fff7ed;border-color:#fed7aa">
+        <h3 style="color:#9a3412">🏨 Accommodation Services</h3>
+        <div class="stat">YAML key: <code>accommodation_services</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#9a3412">8 certifications</div>
       </div>
-      <div class="ind-card hcare">
-        <h3 style="color:#065f46">🏥 Healthcare</h3>
-        <div class="stat">YAML key: <code>healthcare</code></div>
-        <div class="stat">6 functional roles</div>
-        <div class="stat">10 designations · 14 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">8 certifications (BLS, ACLS, EPIC…)</div>
+      <div class="ind-card" style="background:#fdf2f8;border-color:#fbcfe8">
+        <h3 style="color:#9d174d">🤝 Administrative and Support Services</h3>
+        <div class="stat">YAML key: <code>administrative_and_support_services</code></div>
+        <div class="stat">alias: <code>staffing</code></div>
+        <div class="stat">5 roles · 10 designations</div>
+        <div class="stat">11 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#9d174d">6 certifications</div>
       </div>
-      <div class="ind-card fin">
-        <h3 style="color:#92400e">📈 Finance</h3>
-        <div class="stat">YAML key: <code>finance</code></div>
-        <div class="stat">6 functional roles</div>
-        <div class="stat">10 designations · 13 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">7 certifications (CFA, CPA, FRM…)</div>
+      <div class="ind-card" style="background:#fffbeb;border-color:#fde68a">
+        <h3 style="color:#78350f">🏗️ Construction</h3>
+        <div class="stat">YAML key: <code>construction</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#78350f">8 certifications</div>
       </div>
-      <div class="ind-card ret">
-        <h3 style="color:#991b1b">🛍️ Retail</h3>
-        <div class="stat">YAML key: <code>retail</code></div>
-        <div class="stat">6 functional roles</div>
-        <div class="stat">10 designations · 11 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">4 certifications (NRF, Shopify…)</div>
+      <div class="ind-card" style="background:#eef2ff;border-color:#c7d2fe">
+        <h3 style="color:#3730a3">🛎️ Consumer Services</h3>
+        <div class="stat">YAML key: <code>consumer_services</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#3730a3">8 certifications</div>
       </div>
-      <div class="ind-card mfg">
-        <h3 style="color:#334155">🏭 Manufacturing</h3>
-        <div class="stat">YAML key: <code>manufacturing</code></div>
-        <div class="stat">5 functional roles</div>
-        <div class="stat">10 designations · 12 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">6 certifications (Six Sigma, ISO…)</div>
-      </div>
-      <div class="ind-card log">
-        <h3 style="color:#0e7490">🚚 Logistics</h3>
-        <div class="stat">YAML key: <code>logistics</code></div>
-        <div class="stat">5 functional roles</div>
-        <div class="stat">10 designations · 11 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">5 certifications (CPIM, CSCP…)</div>
-      </div>
-      <div class="ind-card edu">
+      <div class="ind-card" style="background:#f5f3ff;border-color:#ddd6fe">
         <h3 style="color:#4c1d95">🎓 Education</h3>
         <div class="stat">YAML key: <code>education</code></div>
-        <div class="stat">5 functional roles</div>
-        <div class="stat">10 designations · 12 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">5 certifications (Google CE, ATD…)</div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">5 roles · 10 designations</div>
+        <div class="stat">12 skills · 8 responsibilities</div>
+        <div class="stat">12 degrees (5/4/3) · 6 specializations</div>
+        <div class="salary" style="color:#4c1d95">5 certifications</div>
       </div>
-      <div class="ind-card sta">
-        <h3 style="color:#9d174d">🤝 Staffing &amp; Recruiting</h3>
-        <div class="stat">YAML key: <code>staffing</code></div>
-        <div class="stat">5 functional roles</div>
-        <div class="stat">10 designations · 11 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">6 certifications (SHRM, PHR…)</div>
+      <div class="ind-card" style="background:#fff7ed;border-color:#fed7aa">
+        <h3 style="color:#9a3412">🎬 Entertainment Providers</h3>
+        <div class="stat">YAML key: <code>entertainment_providers</code></div>
+        <div class="stat">alias: <code>media</code></div>
+        <div class="stat">5 roles · 10 designations</div>
+        <div class="stat">13 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#9a3412">7 certifications</div>
       </div>
-      <div class="ind-card con">
-        <h3 style="color:#1e3a8a">🧩 Consulting</h3>
-        <div class="stat">YAML key: <code>consulting</code></div>
-        <div class="stat">5 functional roles</div>
-        <div class="stat">10 designations · 12 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">6 certifications (PMP, CMC, ACP…)</div>
+      <div class="ind-card" style="background:#f7fee7;border-color:#d9f99d">
+        <h3 style="color:#3f6212">🌾 Farming, Ranching, Forestry</h3>
+        <div class="stat">YAML key: <code>farming_ranching_forestry</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">12 degrees (5/4/3) · 6 specializations</div>
+        <div class="salary" style="color:#3f6212">8 certifications</div>
       </div>
-      <div class="ind-card med">
-        <h3 style="color:#9a3412">🎬 Media &amp; Entertainment</h3>
-        <div class="stat">YAML key: <code>media</code></div>
-        <div class="stat">5 functional roles</div>
-        <div class="stat">10 designations · 13 skills</div>
-        <div class="stat">8 responsibility bullets</div>
-        <div class="stat">7 certifications (GA4, HubSpot…)</div>
+      <div class="ind-card" style="background:#fffbeb;border-color:#fde68a">
+        <h3 style="color:#92400e">📈 Financial Services</h3>
+        <div class="stat">YAML key: <code>financial_services</code></div>
+        <div class="stat">alias: <code>finance</code></div>
+        <div class="stat">6 roles · 10 designations</div>
+        <div class="stat">13 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#92400e">7 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#eff6ff;border-color:#bfdbfe">
+        <h3 style="color:#1e3a8a">🏛️ Government Administration</h3>
+        <div class="stat">YAML key: <code>government_administration</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">12 degrees (5/4/3) · 6 specializations</div>
+        <div class="salary" style="color:#1e3a8a">8 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#f8fafc;border-color:#cbd5e1">
+        <h3 style="color:#334155">🏢 Holding Companies</h3>
+        <div class="stat">YAML key: <code>holding_companies</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">12 degrees (5/4/3) · 6 specializations</div>
+        <div class="salary" style="color:#334155">8 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#ecfdf5;border-color:#6ee7b7">
+        <h3 style="color:#065f46">🏥 Hospitals and Health Care</h3>
+        <div class="stat">YAML key: <code>hospitals_and_health_care</code></div>
+        <div class="stat">alias: <code>healthcare</code></div>
+        <div class="stat">6 roles · 10 designations</div>
+        <div class="stat">14 skills · 8 responsibilities</div>
+        <div class="stat">12 degrees (5/4/3) · 6 specializations</div>
+        <div class="salary" style="color:#065f46">8 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#f8fafc;border-color:#cbd5e1">
+        <h3 style="color:#334155">🏭 Manufacturing</h3>
+        <div class="stat">YAML key: <code>manufacturing</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">5 roles · 10 designations</div>
+        <div class="stat">12 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#334155">6 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#fff7ed;border-color:#fed7aa">
+        <h3 style="color:#7c2d12">⛏️ Oil, Gas, and Mining</h3>
+        <div class="stat">YAML key: <code>oil_gas_and_mining</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#7c2d12">8 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#eff6ff;border-color:#bfdbfe">
+        <h3 style="color:#1e3a8a">🧩 Professional Services</h3>
+        <div class="stat">YAML key: <code>professional_services</code></div>
+        <div class="stat">alias: <code>consulting</code></div>
+        <div class="stat">5 roles · 10 designations</div>
+        <div class="stat">12 skills · 8 responsibilities</div>
+        <div class="stat">12 degrees (5/4/3) · 6 specializations</div>
+        <div class="salary" style="color:#1e3a8a">6 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#ecfeff;border-color:#a5f3fc">
+        <h3 style="color:#155e75">🏘️ Real Estate and Equipment Rental Services</h3>
+        <div class="stat">YAML key: <code>real_estate_and_equipment_rental_services</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#155e75">8 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#fef2f2;border-color:#fecaca">
+        <h3 style="color:#991b1b">🛍️ Retail</h3>
+        <div class="stat">YAML key: <code>retail</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">6 roles · 10 designations</div>
+        <div class="stat">11 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#991b1b">4 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#eff6ff;border-color:#bfdbfe">
+        <h3 style="color:#1d4ed8">💻 Technology, Information and Media</h3>
+        <div class="stat">YAML key: <code>technology_information_and_media</code></div>
+        <div class="stat">alias: <code>technology</code></div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">13 degrees (5/5/3) · 6 specializations</div>
+        <div class="salary" style="color:#1d4ed8">8 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#ecfeff;border-color:#a5f3fc">
+        <h3 style="color:#0e7490">🚚 Transportation, Logistics, Supply Chain and Storage</h3>
+        <div class="stat">YAML key: <code>transportation_logistics_supply_chain_and_storage</code></div>
+        <div class="stat">alias: <code>logistics</code></div>
+        <div class="stat">5 roles · 10 designations</div>
+        <div class="stat">11 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#0e7490">5 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#fefce8;border-color:#fef08a">
+        <h3 style="color:#854d0e">⚡ Utilities</h3>
+        <div class="stat">YAML key: <code>utilities</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#854d0e">8 certifications</div>
+      </div>
+      <div class="ind-card" style="background:#faf5ff;border-color:#e9d5ff">
+        <h3 style="color:#6b21a8">📦 Wholesale</h3>
+        <div class="stat">YAML key: <code>wholesale</code></div>
+        <div class="stat" style="opacity:.45">no legacy alias</div>
+        <div class="stat">7 roles · 12 designations</div>
+        <div class="stat">18 skills · 8 responsibilities</div>
+        <div class="stat">11 degrees (5/4/2) · 6 specializations</div>
+        <div class="salary" style="color:#6b21a8">8 certifications</div>
       </div>
     </div>
 
     <!-- Certifications visual per industry -->
     <div style="margin-top:28px">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 220" width="820" style="max-width:100%">
-        <text x="20" y="20" font-size="11" font-weight="600" fill="#475569">Certifications available per industry (maximum pool size)</text>
-        <!-- axis -->
-        <line x1="140" y1="32" x2="795" y2="32" stroke="#e2e8f0" stroke-width="1"/>
-        <line x1="140" y1="32" x2="140" y2="192" stroke="#e2e8f0" stroke-width="1"/>
-        <!-- grid at 2,4,6,8 → scale: 1 cert = 79px, x_start=140 -->
-        <line x1="298" y1="32" x2="298" y2="192" stroke="#f1f5f9" stroke-width="1"/><text x="298" y="206" text-anchor="middle" font-size="8.5" fill="#94a3b8">2</text>
-        <line x1="456" y1="32" x2="456" y2="192" stroke="#f1f5f9" stroke-width="1"/><text x="456" y="206" text-anchor="middle" font-size="8.5" fill="#94a3b8">4</text>
-        <line x1="614" y1="32" x2="614" y2="192" stroke="#f1f5f9" stroke-width="1"/><text x="614" y="206" text-anchor="middle" font-size="8.5" fill="#94a3b8">6</text>
-        <line x1="772" y1="32" x2="772" y2="192" stroke="#f1f5f9" stroke-width="1"/><text x="772" y="206" text-anchor="middle" font-size="8.5" fill="#94a3b8">8</text>
-        <!-- bars (row height 16px, bar height 10px) -->
-        <!-- Technology: 8 -->
-        <text x="134" y="50" text-anchor="end" font-size="9" fill="#1d4ed8" font-weight="600">Technology</text>
-        <rect x="140" y="40" width="632" height="14" rx="3" fill="#2563eb" opacity=".85"/>
-        <text x="780" y="51" font-size="8.5" fill="#475569">8</text>
-        <!-- Healthcare: 8 -->
-        <text x="134" y="70" text-anchor="end" font-size="9" fill="#065f46" font-weight="600">Healthcare</text>
-        <rect x="140" y="60" width="632" height="14" rx="3" fill="#059669" opacity=".85"/>
-        <text x="780" y="71" font-size="8.5" fill="#475569">8</text>
-        <!-- Finance: 7 -->
-        <text x="134" y="90" text-anchor="end" font-size="9" fill="#92400e" font-weight="600">Finance</text>
-        <rect x="140" y="80" width="553" height="14" rx="3" fill="#d97706" opacity=".85"/>
-        <text x="702" y="91" font-size="8.5" fill="#475569">7</text>
-        <!-- Retail: 4 -->
-        <text x="134" y="110" text-anchor="end" font-size="9" fill="#991b1b" font-weight="600">Retail</text>
-        <rect x="140" y="100" width="316" height="14" rx="3" fill="#dc2626" opacity=".85"/>
-        <text x="464" y="111" font-size="8.5" fill="#475569">4</text>
-        <!-- Manufacturing: 6 -->
-        <text x="134" y="130" text-anchor="end" font-size="9" fill="#334155" font-weight="600">Manufacturing</text>
-        <rect x="140" y="120" width="474" height="14" rx="3" fill="#64748b" opacity=".85"/>
-        <text x="622" y="131" font-size="8.5" fill="#475569">6</text>
-        <!-- Logistics: 5 -->
-        <text x="134" y="150" text-anchor="end" font-size="9" fill="#0e7490" font-weight="600">Logistics</text>
-        <rect x="140" y="140" width="395" height="14" rx="3" fill="#0891b2" opacity=".85"/>
-        <text x="543" y="151" font-size="8.5" fill="#475569">5</text>
-        <!-- Education: 5 -->
-        <text x="134" y="170" text-anchor="end" font-size="9" fill="#4c1d95" font-weight="600">Education</text>
-        <rect x="140" y="160" width="395" height="14" rx="3" fill="#7c3aed" opacity=".85"/>
-        <text x="543" y="171" font-size="8.5" fill="#475569">5</text>
-        <!-- Staffing: 6 (shown in separate run below) -->
-        <text x="134" y="190" text-anchor="end" font-size="9" fill="#9d174d" font-weight="600">Staffing / Consulting / Media</text>
-        <rect x="140" y="180" width="474" height="14" rx="3" fill="#db2777" opacity=".85"/>
-        <text x="622" y="191" font-size="8.5" fill="#475569">6–7</text>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 492" width="820" style="max-width:100%">
+        <text x="20" y="20" font-size="11" font-weight="600" fill="#475569">Certification pool size per industry</text>
+        <line x1="190.0" y1="32" x2="795" y2="32" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="190.0" y1="32" x2="190.0" y2="460" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="340" y1="32" x2="340" y2="460" stroke="#f1f5f9" stroke-width="1"/><text x="340" y="474" text-anchor="middle" font-size="8.5" fill="#94a3b8">2</text>
+        <line x1="490" y1="32" x2="490" y2="460" stroke="#f1f5f9" stroke-width="1"/><text x="490" y="474" text-anchor="middle" font-size="8.5" fill="#94a3b8">4</text>
+        <line x1="640" y1="32" x2="640" y2="460" stroke="#f1f5f9" stroke-width="1"/><text x="640" y="474" text-anchor="middle" font-size="8.5" fill="#94a3b8">6</text>
+        <line x1="790" y1="32" x2="790" y2="460" stroke="#f1f5f9" stroke-width="1"/><text x="790" y="474" text-anchor="middle" font-size="8.5" fill="#94a3b8">8</text>
+        <text x="184" y="53" text-anchor="end" font-size="8.5" fill="#9a3412" font-weight="600">Accommodation</text>
+        <rect x="190" y="42" width="600" height="14" rx="3" fill="#ea580c" opacity=".85"/>
+        <text x="796" y="53" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="74" text-anchor="end" font-size="8.5" fill="#9d174d" font-weight="600">Admin &amp; Support</text>
+        <rect x="190" y="63" width="450" height="14" rx="3" fill="#db2777" opacity=".85"/>
+        <text x="646" y="74" font-size="8.5" fill="#64748b">6</text>
+        <text x="184" y="95" text-anchor="end" font-size="8.5" fill="#78350f" font-weight="600">Construction</text>
+        <rect x="190" y="84" width="600" height="14" rx="3" fill="#d97706" opacity=".85"/>
+        <text x="796" y="95" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="116" text-anchor="end" font-size="8.5" fill="#3730a3" font-weight="600">Consumer Svcs</text>
+        <rect x="190" y="105" width="600" height="14" rx="3" fill="#4f46e5" opacity=".85"/>
+        <text x="796" y="116" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="137" text-anchor="end" font-size="8.5" fill="#4c1d95" font-weight="600">Education</text>
+        <rect x="190" y="126" width="375" height="14" rx="3" fill="#7c3aed" opacity=".85"/>
+        <text x="571" y="137" font-size="8.5" fill="#64748b">5</text>
+        <text x="184" y="158" text-anchor="end" font-size="8.5" fill="#9a3412" font-weight="600">Entertainment</text>
+        <rect x="190" y="147" width="525" height="14" rx="3" fill="#f97316" opacity=".85"/>
+        <text x="721" y="158" font-size="8.5" fill="#64748b">7</text>
+        <text x="184" y="179" text-anchor="end" font-size="8.5" fill="#3f6212" font-weight="600">Farming</text>
+        <rect x="190" y="168" width="600" height="14" rx="3" fill="#65a30d" opacity=".85"/>
+        <text x="796" y="179" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="200" text-anchor="end" font-size="8.5" fill="#92400e" font-weight="600">Financial Svcs</text>
+        <rect x="190" y="189" width="525" height="14" rx="3" fill="#b45309" opacity=".85"/>
+        <text x="721" y="200" font-size="8.5" fill="#64748b">7</text>
+        <text x="184" y="221" text-anchor="end" font-size="8.5" fill="#1e3a8a" font-weight="600">Government</text>
+        <rect x="190" y="210" width="600" height="14" rx="3" fill="#1d4ed8" opacity=".85"/>
+        <text x="796" y="221" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="242" text-anchor="end" font-size="8.5" fill="#334155" font-weight="600">Holding Cos</text>
+        <rect x="190" y="231" width="600" height="14" rx="3" fill="#475569" opacity=".85"/>
+        <text x="796" y="242" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="263" text-anchor="end" font-size="8.5" fill="#065f46" font-weight="600">Health Care</text>
+        <rect x="190" y="252" width="600" height="14" rx="3" fill="#059669" opacity=".85"/>
+        <text x="796" y="263" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="284" text-anchor="end" font-size="8.5" fill="#334155" font-weight="600">Manufacturing</text>
+        <rect x="190" y="273" width="450" height="14" rx="3" fill="#64748b" opacity=".85"/>
+        <text x="646" y="284" font-size="8.5" fill="#64748b">6</text>
+        <text x="184" y="305" text-anchor="end" font-size="8.5" fill="#7c2d12" font-weight="600">Oil, Gas, Mining</text>
+        <rect x="190" y="294" width="600" height="14" rx="3" fill="#c2410c" opacity=".85"/>
+        <text x="796" y="305" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="326" text-anchor="end" font-size="8.5" fill="#1e3a8a" font-weight="600">Professional</text>
+        <rect x="190" y="315" width="450" height="14" rx="3" fill="#2563eb" opacity=".85"/>
+        <text x="646" y="326" font-size="8.5" fill="#64748b">6</text>
+        <text x="184" y="347" text-anchor="end" font-size="8.5" fill="#155e75" font-weight="600">Real Estate</text>
+        <rect x="190" y="336" width="600" height="14" rx="3" fill="#0891b2" opacity=".85"/>
+        <text x="796" y="347" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="368" text-anchor="end" font-size="8.5" fill="#991b1b" font-weight="600">Retail</text>
+        <rect x="190" y="357" width="300" height="14" rx="3" fill="#dc2626" opacity=".85"/>
+        <text x="496" y="368" font-size="8.5" fill="#64748b">4</text>
+        <text x="184" y="389" text-anchor="end" font-size="8.5" fill="#1d4ed8" font-weight="600">Technology</text>
+        <rect x="190" y="378" width="600" height="14" rx="3" fill="#2563eb" opacity=".85"/>
+        <text x="796" y="389" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="410" text-anchor="end" font-size="8.5" fill="#0e7490" font-weight="600">Transportation</text>
+        <rect x="190" y="399" width="375" height="14" rx="3" fill="#0891b2" opacity=".85"/>
+        <text x="571" y="410" font-size="8.5" fill="#64748b">5</text>
+        <text x="184" y="431" text-anchor="end" font-size="8.5" fill="#854d0e" font-weight="600">Utilities</text>
+        <rect x="190" y="420" width="600" height="14" rx="3" fill="#ca8a04" opacity=".85"/>
+        <text x="796" y="431" font-size="8.5" fill="#64748b">8</text>
+        <text x="184" y="452" text-anchor="end" font-size="8.5" fill="#6b21a8" font-weight="600">Wholesale</text>
+        <rect x="190" y="441" width="600" height="14" rx="3" fill="#9333ea" opacity=".85"/>
+        <text x="796" y="452" font-size="8.5" fill="#64748b">8</text>
       </svg>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 5b. EDUCATION POOLS & ALIASES ═══════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>Industry Education Pools &amp; Aliases</h2>
+  </div>
+  <div class="card-body">
+    <p style="font-size:.88rem;color:#475569;margin-bottom:18px">
+      Degrees and specializations used to come from global pools, so a Construction candidate could
+      hold a degree in Data Science. Each industry now carries its own <code>courses</code>, keyed by
+      degree level, and its own <code>specializations</code>.
+    </p>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 235" width="820" style="max-width:100%">
+      <text x="20" y="18" font-size="11" font-weight="600" fill="#475569">coursesFor(industry, degreeLevel) — resolution with per-level fallback</text>
+
+      <rect x="16" y="34" width="215" height="66" rx="7" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+      <text x="123" y="56" text-anchor="middle" font-size="10" font-weight="700" fill="#3730a3">industry.courses[level]</text>
+      <text x="123" y="74" text-anchor="middle" font-size="8.5" fill="#64748b">construction / POSTGRADUATE</text>
+      <text x="123" y="88" text-anchor="middle" font-size="8.5" fill="#64748b">present and non-empty?</text>
+
+      <rect x="300" y="32" width="235" height="46" rx="7" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+      <text x="417" y="51" text-anchor="middle" font-size="9.5" font-weight="700" fill="#065f46">yes → industry pool</text>
+      <text x="417" y="67" text-anchor="middle" font-size="8.5" fill="#64748b">"MSc in Construction Management"</text>
+
+      <rect x="300" y="88" width="235" height="46" rx="7" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="417" y="107" text-anchor="middle" font-size="9.5" font-weight="700" fill="#92400e">no → top-level pool</text>
+      <text x="417" y="123" text-anchor="middle" font-size="8.5" fill="#64748b">shared fallback, per level</text>
+
+      <path d="M231 56 L296 54" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#ar2)"/>
+      <path d="M231 78 L296 108" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#ar2)"/>
+      <defs><marker id="ar2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker></defs>
+
+      <text x="575" y="48" font-size="9" fill="#475569">Both blocks are optional, so a new</text>
+      <text x="575" y="63" font-size="9" fill="#475569">industry needs no education content</text>
+      <text x="575" y="78" font-size="9" fill="#475569">and can be given some later.</text>
+      <text x="575" y="103" font-size="9" fill="#475569">availableCourses(key) returns what</text>
+      <text x="575" y="118" font-size="9" fill="#475569">generation actually draws from.</text>
+
+      <text x="20" y="152" font-size="10" font-weight="600" fill="#475569">Effect on generated candidates</text>
+      <rect x="16" y="162" width="386" height="56" rx="6" fill="#fef2f2" stroke="#fecaca"/>
+      <text x="28" y="182" font-size="9" fill="#991b1b" font-weight="600">before</text>
+      <text x="28" y="199" font-size="9" font-family="ui-monospace,monospace" fill="#991b1b">Construction Project Manager</text>
+      <text x="28" y="212" font-size="9" font-family="ui-monospace,monospace" fill="#991b1b">BSc in Data Science · Machine Learning</text>
+
+      <rect x="418" y="162" width="386" height="56" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+      <text x="430" y="182" font-size="9" fill="#065f46" font-weight="600">after</text>
+      <text x="430" y="199" font-size="9" font-family="ui-monospace,monospace" fill="#065f46">Construction Project Manager</text>
+      <text x="430" y="212" font-size="9" font-family="ui-monospace,monospace" fill="#065f46">PhD in Construction Eng · Structural Eng</text>
+    </svg>
+
+    <h3 style="font-size:.95rem;margin:26px 0 10px;color:#334155">Degree levels</h3>
+    <p style="font-size:.88rem;color:#475569">
+      A candidate holds 1–3 entries, assigned <code>UNDERGRADUATE</code>, <code>POSTGRADUATE</code>
+      then <code>DOCTORATE</code>. A fourth level, <code>POST_DOCTORAL</code>, was configured in
+      earlier versions but could never be reached, since the count never exceeded three. It was
+      removed in 1.2.1.
+    </p>
+
+    <h3 style="font-size:.95rem;margin:26px 0 10px;color:#334155">Industry aliases</h3>
+    <p style="font-size:.88rem;color:#475569">
+      The Candidate provider resolves the same seven legacy keys as the JobPosting provider —
+      <code>technology</code>, <code>healthcare</code>, <code>finance</code>, <code>logistics</code>,
+      <code>staffing</code>, <code>consulting</code> and <code>media</code> — through a top-level
+      <code>aliases:</code> block applied before industry lookup. An alias reaches the same course,
+      specialization and certification pools as its canonical key, and is not returned by
+      <code>availableIndustries()</code>.
+    </p>
   </div>
 </div>
 
@@ -881,6 +1078,9 @@
 <span class="ty">Candidate</span> c = faker.candidate().build();
 
 <span class="cm">// Industry-targeted — job history, skills and certifications match</span>
+<span class="ty">Candidate</span> siteEngineer = faker.candidate().buildForIndustry(<span class="st">"construction"</span>);
+
+<span class="cm">// Legacy keys still resolve — "technology" is an alias</span>
 <span class="ty">Candidate</span> techCandidate = faker.candidate().buildForIndustry(<span class="st">"technology"</span>);
 
 <span class="cm">// Seeded — fully deterministic across runs</span>
@@ -888,19 +1088,24 @@
 <span class="ty">Candidate</span> same = seeded.candidate().build(); <span class="cm">// always identical</span>
 
 <span class="cm">// Query available industries</span>
-faker.candidate().availableIndustries();               <span class="cm">// ["technology","healthcare",…]</span>
+faker.candidate().availableIndustries();               <span class="cm">// 20 canonical keys (aliases not listed)</span>
 
 <span class="cm">// Query certifications for a given industry (useful in tests)</span>
 faker.candidate().availableCertificationNames(<span class="st">"finance"</span>); <span class="cm">// ["CFA Level I","CPA","FRM",…]</span>
-faker.candidate().availableSummaryTemplates();         <span class="cm">// all 14 summary templates</span>
+faker.candidate().availableSummaryTemplates();         <span class="cm">// all summary templates</span>
+
+<span class="cm">// Query the education pools an industry draws from (fallback applied)</span>
+faker.candidate().availableCourses(<span class="st">"construction"</span>);       <span class="cm">// {UNDERGRADUATE=[…], POSTGRADUATE=[…], DOCTORATE=[…]}</span>
+faker.candidate().availableSpecializations(<span class="st">"construction"</span>); <span class="cm">// ["Structural Engineering",…]</span>
 
 <span class="cm">// Access fields</span>
 System.out.println(c.firstName());                    <span class="cm">// "Sarah"</span>
 System.out.println(c.email());                        <span class="cm">// "sarahjohnson47@yopmail.com"</span>
 System.out.println(c.mobileNumber());                 <span class="cm">// "+1-415-782-3091"</span>
 System.out.println(c.professionalSummary());
-<span class="cm">// "Senior Software Engineer with 3 years of experience in the Technology industry.</span>
-<span class="cm">//  Skilled in Java, Kubernetes and AWS, ... Holds a Master of Science in Computer Science."</span>
+<span class="cm">// "Senior Software Engineer with 3 years of experience in the Technology, Information</span>
+<span class="cm">//  and Media industry. Skilled in Java, Kubernetes and AWS, ... Holds a Master of</span>
+<span class="cm">//  Science in Computer Science."</span>
 System.out.println(c.address().country());            <span class="cm">// "US"</span>
 System.out.println(c.address().addressLine2());       <span class="cm">// "Apt 204" or ""</span>
 
