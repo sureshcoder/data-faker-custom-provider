@@ -188,7 +188,7 @@ class CandidateProviderTest {
         for (int i = 0; i < 50; i++) {
             for (EducationHistory edu : faker.candidate().build().educationHistory()) {
                 assertThat(edu.degreeLevel())
-                        .isIn("UNDERGRADUATE", "POSTGRADUATE", "DOCTORATE", "POST_DOCTORAL");
+                        .isIn("UNDERGRADUATE", "POSTGRADUATE", "DOCTORATE");
             }
         }
     }

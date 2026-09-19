@@ -327,7 +327,7 @@ Obtain the provider with `new CandidateFaker().candidate()`. `CandidateFaker` ha
 | Field | How it is generated |
 |---|---|
 | `institutionName` | One of 20 US universities |
-| `degreeLevel` | `UNDERGRADUATE`, `POSTGRADUATE`, `DOCTORATE` or `POST_DOCTORAL`; entry *i* of *n* gets level *i* |
+| `degreeLevel` | `UNDERGRADUATE`, `POSTGRADUATE` or `DOCTORATE`; entry *i* of *n* gets level *i* |
 | `courseName` | From the industry's own `courses` pool for that degree level, e.g. `"Master of Science in Construction Management"` for Construction |
 | `specialization` | From the industry's own `specializations` pool, e.g. `"Structural Engineering"` for Construction |
 | `startDate`, `endDate` | Duration 3–4 years (UG), 1–2 (PG), 3–5 (doctorate), 1–2 (post-doc) |

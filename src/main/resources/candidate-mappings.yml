@@ -51,12 +51,6 @@ courses:
     - "Doctor of Philosophy in Data Science"
     - "Doctor of Philosophy in Information Systems"
     - "Juris Doctor"
-  POST_DOCTORAL:
-    - "Post-Doctoral Research in Artificial Intelligence"
-    - "Post-Doctoral Research in Bioinformatics"
-    - "Post-Doctoral Research in Computational Science"
-    - "Post-Doctoral Research in Machine Learning"
-    - "Post-Doctoral Research in Quantum Computing"
 
 specializations:
   - "Artificial Intelligence"
