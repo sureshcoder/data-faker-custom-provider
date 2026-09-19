@@ -28,9 +28,9 @@ JAVA_HOME=… mvn compile
 JAVA_HOME=… mvn test
 ```
 
-**76 tests total**, running in ~500 ms:
-- `JobPostingProviderTest` — 26 tests
-- `CandidateProviderTest` — 50 tests
+**136 tests total**, running in ~500 ms:
+- `JobPostingProviderTest` — 52 tests
+- `CandidateProviderTest` — 84 tests
 
 ## Project structure
 
@@ -134,18 +134,30 @@ c.certifications();               // 0–3 industry-specific Certification recor
 
 ## Supported industries (shared by both providers)
 
-| YAML key      | Display name          | Salary range (USD/yr) |
-|---------------|-----------------------|----------------------|
-| `technology`  | Technology            | $80k – $220k |
-| `healthcare`  | Healthcare            | $50k – $180k |
-| `finance`     | Finance               | $70k – $250k |
-| `retail`      | Retail                | $35k – $120k |
-| `manufacturing` | Manufacturing       | $45k – $130k |
-| `logistics`   | Logistics             | $40k – $120k |
-| `education`   | Education             | $38k – $110k |
-| `staffing`    | Staffing & Recruiting | $45k – $140k |
-| `consulting`  | Consulting            | $70k – $220k |
-| `media`       | Media & Entertainment | $40k – $150k |
+The 20 top-level categories of the LinkedIn industry taxonomy. Pre-1.1.0 keys still resolve via the top-level `aliases:` block in both YAML files; they are not listed by `availableIndustries()`.
+
+| YAML key | Display name | Legacy alias | Salary range (USD/yr) |
+|---|---|---|---|
+| `accommodation_services` | Accommodation Services | — | $30k – $95k |
+| `administrative_and_support_services` | Administrative and Support Services | `staffing` | $45k – $140k |
+| `construction` | Construction | — | $45k – $160k |
+| `consumer_services` | Consumer Services | — | $32k – $105k |
+| `education` | Education | — | $38k – $110k |
+| `entertainment_providers` | Entertainment Providers | `media` | $40k – $150k |
+| `farming_ranching_forestry` | Farming, Ranching, Forestry | — | $35k – $115k |
+| `financial_services` | Financial Services | `finance` | $70k – $250k |
+| `government_administration` | Government Administration | — | $42k – $130k |
+| `holding_companies` | Holding Companies | — | $70k – $210k |
+| `hospitals_and_health_care` | Hospitals and Health Care | `healthcare` | $50k – $180k |
+| `manufacturing` | Manufacturing | — | $45k – $130k |
+| `oil_gas_and_mining` | Oil, Gas, and Mining | — | $60k – $200k |
+| `professional_services` | Professional Services | `consulting` | $70k – $220k |
+| `real_estate_and_equipment_rental_services` | Real Estate and Equipment Rental Services | — | $40k – $165k |
+| `retail` | Retail | — | $35k – $120k |
+| `technology_information_and_media` | Technology, Information and Media | `technology` | $80k – $220k |
+| `transportation_logistics_supply_chain_and_storage` | Transportation, Logistics, Supply Chain and Storage | `logistics` | $40k – $120k |
+| `utilities` | Utilities | — | $48k – $150k |
+| `wholesale` | Wholesale | — | $40k – $135k |
 
 ## Adding a new industry
 
@@ -220,6 +232,7 @@ The `withCertification` pool is used only when the candidate has at least one ce
 ## Key implementation notes — JobPosting provider
 
 - **YAML loading** — `JobPostingProvider` loads `job-posting-mappings.yml` at class-init via SnakeYAML (transitive DataFaker dep). The map is `static final`; one parse per JVM lifetime.
+- **Industry aliases** — both providers resolve a key through the top-level `aliases:` block before industry lookup, in a shared `resolveIndustry` helper. `availableIndustries()` returns canonical keys only. An alias pointing at an unknown industry throws at class-init, so YAML typos fail fast rather than resolving to the fallback industry.
 - **Seeded randomness** — all random picks use `faker.random()` (DataFaker's `RandomService`), not `new Random()`. This means `new JobFaker(new Random(seed))` produces fully deterministic output.
 - **DataFaker 2.x API** — `AbstractProvider<T>` exposes the faker as a `protected final T faker` field. `getProvider` takes `Function<PR, AP>`, so `JobPostingProvider::new` is the correct constructor reference.
 - **Skill deduplication** — Fisher-Yates shuffle over `faker.random()` guarantees unique skills per posting while preserving seed reproducibility.
