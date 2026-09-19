@@ -3,7 +3,7 @@
 [![Java 21](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)](https://www.azul.com/downloads/?version=java-21-lts)
 [![DataFaker 2.5.4](https://img.shields.io/badge/DataFaker-2.5.4-blue)](https://www.datafaker.net/)
 [![Tests](https://img.shields.io/badge/tests-76%20passing-brightgreen)](#building--testing)
-[![JitPack](https://img.shields.io/badge/JitPack-main--SNAPSHOT-lightgrey)](https://jitpack.io/#sureshcoder/data-faker-custom-provider)
+[![JitPack](https://img.shields.io/badge/JitPack-v1.0.0-blue)](https://jitpack.io/#sureshcoder/data-faker-custom-provider)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-yellow.svg)](LICENSE)
 
 Two independent, YAML-driven custom providers for [DataFaker](https://www.datafaker.net/) that generate realistic, fully synthetic **job postings** and **job candidates** for ten industries. Everything is seed-reproducible, returned as immutable Java 21 records, and extensible by editing YAML rather than Java.
@@ -90,7 +90,7 @@ Maven:
 <dependency>
     <groupId>in.sureshcoder</groupId>
     <artifactId>data-faker-custom-provider</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -98,7 +98,7 @@ Gradle (Kotlin DSL):
 
 ```kotlin
 dependencies {
-    implementation("in.sureshcoder:data-faker-custom-provider:1.0-SNAPSHOT")
+    implementation("in.sureshcoder:data-faker-custom-provider:1.0.0")
 }
 ```
 
@@ -106,13 +106,13 @@ Gradle (Groovy DSL):
 
 ```groovy
 dependencies {
-    implementation 'in.sureshcoder:data-faker-custom-provider:1.0-SNAPSHOT'
+    implementation 'in.sureshcoder:data-faker-custom-provider:1.0.0'
 }
 ```
 
 ### Option B: JitPack
 
-[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. The `main-SNAPSHOT` version tracks the tip of `main` and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
+[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.0.0` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
 
 Maven:
 
@@ -128,7 +128,7 @@ Maven:
     <dependency>
         <groupId>com.github.sureshcoder</groupId>
         <artifactId>data-faker-custom-provider</artifactId>
-        <version>main-SNAPSHOT</version>
+        <version>v1.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -142,7 +142,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.sureshcoder:data-faker-custom-provider:main-SNAPSHOT")
+    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.0.0")
 }
 ```
 
@@ -155,7 +155,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.sureshcoder:data-faker-custom-provider:main-SNAPSHOT'
+    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.0.0'
 }
 ```
 
@@ -818,7 +818,7 @@ jdk:
   - openjdk21
 ```
 
-If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/main-SNAPSHOT/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
+If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.0.0/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
 
 ### I asked for an industry and got Technology instead
 
