@@ -296,12 +296,24 @@ The `withCertification` pool is used only when the candidate has at least one ce
 Both are self-contained HTML files with inline SVG diagrams — open directly in a browser, no server needed.
 
 **Preview links are pinned to the release tag**, so a reader on an old tag sees that version's
-document rather than whatever `main` later became. `design/generate.py` rewrites the tag in every
-link from the `<version>` in `pom.xml`, so the release step is: bump `pom.xml`, then run the
-script. `--check` fails when a link disagrees with the pom, which is the same guard it already
-applies to the generated industry sections.
+document rather than whatever `main` later became.
 
 `rawcdn.githack.com` caches a tag permanently; use `raw.githack.com` if a link must track a branch.
+
+## Cutting a release
+
+1. Bump `<version>` in `pom.xml`.
+2. Run `python3 design/generate.py`.
+3. Commit, tag `v<version>`, push the tag, create the GitHub release.
+
+Step 2 rewrites all fourteen version references — preview links, Maven and Gradle install
+coordinates in both flavours, the JitPack build-log URL and the tag hint — from the pom. Nothing
+is edited by hand. A bare version in prose is left alone on purpose, so the upgrade notes keep
+describing old releases as history.
+
+`--check` fails when any of them disagrees with the pom, and a rule that matches nothing is an
+error, so a reworded snippet is reported rather than silently left behind. See `design/README.md`
+for the rule table.
 
 ## License
 

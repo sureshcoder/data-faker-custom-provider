@@ -955,10 +955,11 @@ Each document is a single self-contained HTML file with inline SVG diagrams. Ope
 | Candidate | [design/candidate.html](design/candidate.html) | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/candidate.html) |
 
 The preview links are pinned to the current release tag, so the README you are reading and the
-document it links to always describe the same version. `design/generate.py` rewrites the tag from
-the `<version>` in `pom.xml`, so they cannot drift out of step with a release. For the tip of
-`main` instead, swap the tag for `main` — note that `rawcdn.githack.com` caches permanently and
-suits a fixed tag, whereas `raw.githack.com` revalidates and suits a moving branch.
+document it links to always describe the same version. `design/generate.py` rewrites them — along
+with the install coordinates above — from the `<version>` in `pom.xml`, so they cannot drift out
+of step with a release. For the tip of `main` instead, swap the tag for `main` — note that
+`rawcdn.githack.com` caches permanently and suits a fixed tag, whereas `raw.githack.com`
+revalidates and suits a moving branch.
 
 ## FAQ / troubleshooting
 
