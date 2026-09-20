@@ -10,11 +10,14 @@ here instead. Only the regions between the GENERATED markers are rewritten — e
 else in the documents, architecture diagrams and algorithm walkthroughs and prose and
 usage examples, is hand-written and left untouched.
 
-The rendered-preview links are pinned to a release tag so that a reader on an old tag
-sees that version's document rather than whatever main later became. Pinning means they
-go stale on every release, so the tag is rewritten here too, from the <version> in
+The version appears all over the documentation — preview links pinned to a release tag,
+install coordinates for Maven and Gradle in both flavours, the JitPack build-log URL. All
+of it goes stale on every release, so it is all rewritten here from the <version> in
 pom.xml. That makes the release step "bump the pom, run this script" rather than "find
-and edit six URLs by hand".
+and edit fourteen strings by hand".
+
+A bare version in prose is left alone: the upgrade notes discuss old releases as history
+and must keep saying so.
 
     python3 design/generate.py            rewrite both in place
     python3 design/generate.py --check    exit 1 if anything is out of date
@@ -44,15 +47,52 @@ JOB_DOC = ROOT / "design/index.html"
 CAND_DOC = ROOT / "design/candidate.html"
 POM = ROOT / "pom.xml"
 
-# Files carrying rendered-preview links. Each must contain at least one, so that a link
-# moved or renamed out of one of them is reported rather than silently left unpinned.
-LINK_DOCS = (ROOT / "README.md", ROOT / "design/README.md", ROOT / "CLAUDE.md")
+# Files carrying the project version: preview links, install coordinates, JitPack URLs.
+VERSIONED_DOCS = (ROOT / "README.md", ROOT / "design/README.md", ROOT / "CLAUDE.md")
 
-# The tag segment of a githack preview URL: either a version tag or an unpinned branch.
-PREVIEW_LINK = re.compile(
-    r"(rawcdn\.githack\.com/sureshcoder/data-faker-custom-provider/)"
-    r"(v[0-9][^/\s)]*|main)"
-    r"(/design/[\w.-]+\.html)"
+# Every place the version appears, as (name, pattern, replacement). The replacement may use
+# \g<v> to carry a "v" tag prefix through from whatever was matched, because the local build
+# uses a bare Maven version (1.3.0) while JitPack uses the tag (v1.3.0) for the same release.
+#
+# Each rule must match somewhere across VERSIONED_DOCS — a rule that matches nothing is an
+# error, so a snippet that gets reworded is reported rather than silently left on an old
+# version. That is the whole point: these are exactly the strings nobody remembers to bump.
+#
+# Deliberately NOT matched: a bare version in prose. The upgrade notes discuss 1.2.1 and
+# 1.3.0 as history and must keep saying so, which is why every rule below anchors on an
+# adjacent coordinate, host or phrase rather than on the version alone.
+VERSION_RULES = (
+    (
+        "preview links",
+        re.compile(r"(?P<pre>rawcdn\.githack\.com/sureshcoder/data-faker-custom-provider/)"
+                   r"(?:v[0-9][^/\s)]*|main)"
+                   r"(?P<post>/design/[\w.-]+\.html)"),
+        r"\g<pre>v{version}\g<post>",
+    ),
+    (
+        "Maven coordinates",
+        re.compile(r"(?P<pre><artifactId>data-faker-custom-provider</artifactId>\s*\n\s*<version>)"
+                   r"(?P<v>v?)[0-9][^<]*"
+                   r"(?P<post></version>)"),
+        r"\g<pre>\g<v>{version}\g<post>",
+    ),
+    (
+        "Gradle coordinates",
+        re.compile(r"(?P<pre>(?:in\.sureshcoder|com\.github\.sureshcoder):data-faker-custom-provider:)"
+                   r"(?P<v>v?)[0-9][^\"'\s)]*"),
+        r"\g<pre>\g<v>{version}",
+    ),
+    (
+        "JitPack build log URL",
+        re.compile(r"(?P<pre>jitpack\.io/com/github/sureshcoder/data-faker-custom-provider/)"
+                   r"v?[0-9][^/\s`]*"),
+        r"\g<pre>v{version}",
+    ),
+    (
+        "JitPack tag hint",
+        re.compile(r"(?P<pre>Pin a tag such as `)v?[0-9][^`]*"),
+        r"\g<pre>v{version}",
+    ),
 )
 
 # Per-industry presentation: emoji, short label for chart axes, text colour, bar fill,
@@ -222,12 +262,12 @@ def project_version():
     return version.text.strip()
 
 
-def repin(text, version, where):
-    """Rewrites the tag in every preview link to v{version}."""
-    replacement, count = PREVIEW_LINK.subn(rf"\g<1>v{version}\g<3>", text)
-    if not count:
-        sys.exit(f"{where} has no preview links — they were moved, renamed, or dropped")
-    return replacement
+def reversion(text, version, hits):
+    """Rewrites every versioned reference, tallying matches per rule into hits."""
+    for name, pattern, replacement in VERSION_RULES:
+        text, count = pattern.subn(replacement.format(version=version), text)
+        hits[name] += count
+    return text
 
 
 def splice(text, marker, replacement):
@@ -257,15 +297,17 @@ def main():
             return text
         return apply, f"{len(keys)} industries"
 
-    def relink(text, where):
-        return repin(text, version, where)
+    hits = {name: 0 for name, _, _ in VERSION_RULES}
+
+    def reversioned(text, where):
+        return reversion(text, version, hits)
 
     targets = [
         (JOB_DOC, *regenerate(("job-industry-cards", job_cards(job, keys, aliases)),
                               ("job-salary-chart", salary_chart(job, keys)))),
         (CAND_DOC, *regenerate(("candidate-industry-cards", candidate_cards(cand, keys, aliases)),
                                ("candidate-cert-chart", cert_chart(cand, keys)))),
-        *[(path, relink, f"preview links -> v{version}") for path in LINK_DOCS],
+        *[(path, reversioned, f"version refs -> {version}") for path in VERSIONED_DOCS],
     ]
 
     stale = []
@@ -282,6 +324,12 @@ def main():
         else:
             path.write_text(updated, encoding="utf-8")
             print(f"{where}: rewritten ({summary})")
+
+    missed = [name for name, count in hits.items() if not count]
+    if missed:
+        sys.exit("no occurrence found for: " + ", ".join(missed)
+                 + "\nThe wording moved. Fix the rule in VERSION_RULES, or these references "
+                   "will silently stay on an old version.")
 
     if args.check and stale:
         sys.stdout.flush()  # keep the hint below the report when the two streams are piped
