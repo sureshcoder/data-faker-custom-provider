@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
-"""Regenerate the data-driven sections of the design documents from the YAML mappings.
+"""Regenerate the derived parts of the design documents and the links that point at them.
+
+Two kinds of drift, one script.
 
 The design documents describe every configured industry: a card per industry, a salary
 range chart, and a certification pool chart. Those sections were hand-written once and
 then drifted from the YAML as industries were added and renamed, so they are generated
-here instead.
+here instead. Only the regions between the GENERATED markers are rewritten — everything
+else in the documents, architecture diagrams and algorithm walkthroughs and prose and
+usage examples, is hand-written and left untouched.
 
-Only the regions between the GENERATED markers are rewritten. Everything else in the
-documents — architecture diagrams, algorithm walkthroughs, prose, usage examples — is
-hand-written and left untouched.
+The rendered-preview links are pinned to a release tag so that a reader on an old tag
+sees that version's document rather than whatever main later became. Pinning means they
+go stale on every release, so the tag is rewritten here too, from the <version> in
+pom.xml. That makes the release step "bump the pom, run this script" rather than "find
+and edit six URLs by hand".
 
-    python3 design/generate.py            rewrite the generated regions in place
-    python3 design/generate.py --check    exit 1 if a document is out of date
+    python3 design/generate.py            rewrite both in place
+    python3 design/generate.py --check    exit 1 if anything is out of date
 
---check is the useful one in CI: it fails when the YAML has moved on but the design
+--check is the useful one in CI: it fails when the YAML or the pom has moved on but the
 documents have not, which is exactly how they drifted the first time.
 
 Requires PyYAML (pip install pyyaml). Run from the repository root.
@@ -24,6 +30,7 @@ import html
 import pathlib
 import re
 import sys
+from xml.etree import ElementTree
 
 try:
     import yaml
@@ -35,6 +42,18 @@ JOB_YAML = ROOT / "src/main/resources/job-posting-mappings.yml"
 CAND_YAML = ROOT / "src/main/resources/candidate-mappings.yml"
 JOB_DOC = ROOT / "design/index.html"
 CAND_DOC = ROOT / "design/candidate.html"
+POM = ROOT / "pom.xml"
+
+# Files carrying rendered-preview links. Each must contain at least one, so that a link
+# moved or renamed out of one of them is reported rather than silently left unpinned.
+LINK_DOCS = (ROOT / "README.md", ROOT / "design/README.md", ROOT / "CLAUDE.md")
+
+# The tag segment of a githack preview URL: either a version tag or an unpinned branch.
+PREVIEW_LINK = re.compile(
+    r"(rawcdn\.githack\.com/sureshcoder/data-faker-custom-provider/)"
+    r"(v[0-9][^/\s)]*|main)"
+    r"(/design/[\w.-]+\.html)"
+)
 
 # Per-industry presentation: emoji, short label for chart axes, text colour, bar fill,
 # card background, card border. Keys must match the YAML industry keys exactly; the
@@ -193,6 +212,24 @@ def cert_chart(cand, keys):
                   lambda t: str(int(t)), indent=6)
 
 
+def project_version():
+    """The <version> of the project itself — the first one directly under <project>."""
+    ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+    root = ElementTree.parse(POM).getroot()
+    version = root.find("m:version", ns)
+    if version is None or not (version.text or "").strip():
+        sys.exit(f"{POM.relative_to(ROOT)} has no project <version>")
+    return version.text.strip()
+
+
+def repin(text, version, where):
+    """Rewrites the tag in every preview link to v{version}."""
+    replacement, count = PREVIEW_LINK.subn(rf"\g<1>v{version}\g<3>", text)
+    if not count:
+        sys.exit(f"{where} has no preview links — they were moved, renamed, or dropped")
+    return replacement
+
+
 def splice(text, marker, replacement):
     pattern = re.compile(
         rf"([ \t]*<!-- GENERATED:{re.escape(marker)} START[^>]*-->\n).*?([ \t]*<!-- GENERATED:{re.escape(marker)} END -->\n)",
@@ -211,31 +248,43 @@ def main():
 
     job, cand, keys = load()
     aliases = {canonical: alias for alias, canonical in job["aliases"].items()}
+    version = project_version()
 
-    updates = {
-        JOB_DOC: [("job-industry-cards", job_cards(job, keys, aliases)),
-                  ("job-salary-chart", salary_chart(job, keys))],
-        CAND_DOC: [("candidate-industry-cards", candidate_cards(cand, keys, aliases)),
-                   ("candidate-cert-chart", cert_chart(cand, keys))],
-    }
+    def regenerate(*sections):
+        def apply(text, where):
+            for marker, replacement in sections:
+                text = splice(text, marker, replacement)
+            return text
+        return apply, f"{len(keys)} industries"
+
+    def relink(text, where):
+        return repin(text, version, where)
+
+    targets = [
+        (JOB_DOC, *regenerate(("job-industry-cards", job_cards(job, keys, aliases)),
+                              ("job-salary-chart", salary_chart(job, keys)))),
+        (CAND_DOC, *regenerate(("candidate-industry-cards", candidate_cards(cand, keys, aliases)),
+                               ("candidate-cert-chart", cert_chart(cand, keys)))),
+        *[(path, relink, f"preview links -> v{version}") for path in LINK_DOCS],
+    ]
 
     stale = []
-    for path, sections in updates.items():
+    for path, transform, summary in targets:
+        where = path.relative_to(ROOT)
         original = path.read_text(encoding="utf-8")
-        updated = original
-        for marker, replacement in sections:
-            updated = splice(updated, marker, replacement)
+        updated = transform(original, where)
         if updated == original:
-            print(f"{path.relative_to(ROOT)}: up to date")
+            print(f"{where}: up to date")
             continue
         stale.append(path)
         if args.check:
-            print(f"{path.relative_to(ROOT)}: OUT OF DATE")
+            print(f"{where}: OUT OF DATE ({summary})")
         else:
             path.write_text(updated, encoding="utf-8")
-            print(f"{path.relative_to(ROOT)}: regenerated ({len(keys)} industries)")
+            print(f"{where}: rewritten ({summary})")
 
     if args.check and stale:
+        sys.stdout.flush()  # keep the hint below the report when the two streams are piped
         print("\nRun: python3 design/generate.py", file=sys.stderr)
         return 1
     return 0
