@@ -4,8 +4,8 @@ Self-contained HTML with inline SVG — open either file directly in a browser, 
 
 | Document | Provider | Rendered |
 |---|---|---|
-| [`index.html`](index.html) | JobPosting | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/index.html) |
-| [`candidate.html`](candidate.html) | Candidate | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/candidate.html) |
+| [`index.html`](index.html) | JobPosting | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.1/design/index.html) |
+| [`candidate.html`](candidate.html) | Candidate | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.1/design/candidate.html) |
 
 The preview links are pinned to the current release tag, so a reader on an old tag sees that
 version's document rather than whatever `main` later became. `generate.py` rewrites the tag from

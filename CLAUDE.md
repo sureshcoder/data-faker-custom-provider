@@ -290,8 +290,8 @@ The `withCertification` pool is used only when the candidate has at least one ce
 
 | Provider | Document | Rendered |
 |---|---|---|
-| JobPosting | `design/index.html` | https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/index.html |
-| Candidate | `design/candidate.html` | https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/candidate.html |
+| JobPosting | `design/index.html` | https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.1/design/index.html |
+| Candidate | `design/candidate.html` | https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.1/design/candidate.html |
 
 Both are self-contained HTML files with inline SVG diagrams — open directly in a browser, no server needed.
 
