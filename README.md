@@ -94,7 +94,7 @@ Maven:
 <dependency>
     <groupId>in.sureshcoder</groupId>
     <artifactId>data-faker-custom-provider</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
 </dependency>
 ```
 
@@ -102,7 +102,7 @@ Gradle (Kotlin DSL):
 
 ```kotlin
 dependencies {
-    implementation("in.sureshcoder:data-faker-custom-provider:1.3.0")
+    implementation("in.sureshcoder:data-faker-custom-provider:1.3.1")
 }
 ```
 
@@ -110,13 +110,13 @@ Gradle (Groovy DSL):
 
 ```groovy
 dependencies {
-    implementation 'in.sureshcoder:data-faker-custom-provider:1.3.0'
+    implementation 'in.sureshcoder:data-faker-custom-provider:1.3.1'
 }
 ```
 
 ### Option B: JitPack
 
-[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.3.0` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
+[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.3.1` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
 
 Maven:
 
@@ -132,7 +132,7 @@ Maven:
     <dependency>
         <groupId>com.github.sureshcoder</groupId>
         <artifactId>data-faker-custom-provider</artifactId>
-        <version>v1.3.0</version>
+        <version>v1.3.1</version>
     </dependency>
 </dependencies>
 ```
@@ -146,7 +146,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.3.0")
+    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.3.1")
 }
 ```
 
@@ -159,7 +159,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.3.0'
+    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.3.1'
 }
 ```
 
@@ -951,8 +951,8 @@ Each document is a single self-contained HTML file with inline SVG diagrams. Ope
 
 | Provider | In repo | Rendered |
 |---|---|---|
-| JobPosting | [design/index.html](design/index.html) | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/index.html) |
-| Candidate | [design/candidate.html](design/candidate.html) | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/candidate.html) |
+| JobPosting | [design/index.html](design/index.html) | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.1/design/index.html) |
+| Candidate | [design/candidate.html](design/candidate.html) | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.1/design/candidate.html) |
 
 The preview links are pinned to the current release tag, so the README you are reading and the
 document it links to always describe the same version. `design/generate.py` rewrites them — along
@@ -976,7 +976,7 @@ jdk:
   - openjdk21
 ```
 
-If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.3.0/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
+If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.3.1/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
 
 ### I asked for an industry and got Technology instead
 
