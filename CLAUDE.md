@@ -288,12 +288,17 @@ The `withCertification` pool is used only when the candidate has at least one ce
 
 ## Design documents
 
-| Provider | Document |
-|---|---|
-| JobPosting | `design/index.html` |
-| Candidate | `design/candidate.html` |
+| Provider | Document | Rendered |
+|---|---|---|
+| JobPosting | `design/index.html` | rawcdn.githack.com/sureshcoder/data-faker-custom-provider/**v1.3.0**/design/index.html |
+| Candidate | `design/candidate.html` | rawcdn.githack.com/sureshcoder/data-faker-custom-provider/**v1.3.0**/design/candidate.html |
 
 Both are self-contained HTML files with inline SVG diagrams — open directly in a browser, no server needed.
+
+**On release:** the preview links in `README.md` and `design/README.md` are pinned to the release
+tag, so a reader on an old tag sees that version's document rather than whatever `main` later
+became. Bump all four links when cutting a release — nothing enforces this, so it is easy to miss.
+`rawcdn.githack.com` caches a tag permanently; use `raw.githack.com` if a link must track a branch.
 
 ## License
 

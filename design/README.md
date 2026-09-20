@@ -2,10 +2,12 @@
 
 Self-contained HTML with inline SVG — open either file directly in a browser, no server needed.
 
-| Document | Provider |
-|---|---|
-| [`index.html`](index.html) | JobPosting |
-| [`candidate.html`](candidate.html) | Candidate |
+| Document | Provider | Rendered |
+|---|---|---|
+| [`index.html`](index.html) | JobPosting | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/index.html) |
+| [`candidate.html`](candidate.html) | Candidate | [preview](https://rawcdn.githack.com/sureshcoder/data-faker-custom-provider/v1.3.0/design/candidate.html) |
+
+The preview links are pinned to the current release tag. Bump both when cutting a release.
 
 ## Regenerating the data sections
 
