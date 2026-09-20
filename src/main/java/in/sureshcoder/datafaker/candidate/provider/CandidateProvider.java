@@ -20,6 +20,8 @@ import in.sureshcoder.datafaker.candidate.model.Candidate;
 import in.sureshcoder.datafaker.candidate.model.Certification;
 import in.sureshcoder.datafaker.candidate.model.EducationHistory;
 import in.sureshcoder.datafaker.candidate.model.JobHistory;
+import in.sureshcoder.datafaker.location.UsLocation;
+import in.sureshcoder.datafaker.location.UsLocations;
 import net.datafaker.Faker;
 import net.datafaker.providers.base.AbstractProvider;
 import org.yaml.snakeyaml.Yaml;
@@ -108,6 +110,11 @@ public class CandidateProvider extends AbstractProvider<Faker> {
         return INDUSTRY_KEYS;
     }
 
+    /** Returns every real US location the provider draws city / state / ZIP from. */
+    public List<UsLocation> availableLocations() {
+        return UsLocations.all();
+    }
+
     /** Returns the certification names available for a given industry key — useful in tests. */
     public List<String> availableCertificationNames(String industryKey) {
         CandidateIndustryData data = resolveIndustry(industryKey);
@@ -167,13 +174,16 @@ public class CandidateProvider extends AbstractProvider<Faker> {
         String line2 = faker.random().nextInt(5) < 2
                 ? faker.address().secondaryAddress()
                 : "";
+        // City, state and ZIP come from one real location, so the triple is coherent. The street
+        // stays synthetic on purpose — a real street in a real city could hit a real mailbox.
+        UsLocation location = UsLocations.pick(faker.random());
         return new Address(
                 faker.address().streetAddress(),
                 line2,
-                faker.address().city(),
-                faker.address().stateAbbr(),
+                location.city(),
+                location.state(),
                 "US",
-                faker.address().zipCode()
+                UsLocations.pickZip(location, faker.random())
         );
     }
 

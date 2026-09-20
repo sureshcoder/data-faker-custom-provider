@@ -17,6 +17,8 @@ package in.sureshcoder.datafaker.jobposting.provider;
 
 import in.sureshcoder.datafaker.jobposting.model.BaseSalary;
 import in.sureshcoder.datafaker.jobposting.model.JobPosting;
+import in.sureshcoder.datafaker.location.UsLocation;
+import in.sureshcoder.datafaker.location.UsLocations;
 import net.datafaker.Faker;
 import net.datafaker.providers.base.AbstractProvider;
 import org.yaml.snakeyaml.Yaml;
@@ -111,6 +113,11 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
         return SALARY_UNITS;
     }
 
+    /** Returns every real US location the provider draws city / state / ZIP from. */
+    public List<UsLocation> availableLocations() {
+        return UsLocations.all();
+    }
+
     private String randomIndustryKey() {
         return INDUSTRY_KEYS.get(faker.random().nextInt(INDUSTRY_KEYS.size()));
     }
@@ -120,7 +127,7 @@ public class JobPostingProvider extends AbstractProvider<Faker> {
         if (faker.random().nextInt(5) == 0) {
             return "Remote";
         }
-        return faker.address().city() + ", " + faker.address().stateAbbr();
+        return UsLocations.pick(faker.random()).cityState();
     }
 
     private BaseSalary buildSalary(SalaryRange r) {

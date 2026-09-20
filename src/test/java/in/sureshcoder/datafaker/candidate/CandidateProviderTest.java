@@ -20,6 +20,8 @@ import in.sureshcoder.datafaker.candidate.model.Candidate;
 import in.sureshcoder.datafaker.candidate.model.Certification;
 import in.sureshcoder.datafaker.candidate.model.EducationHistory;
 import in.sureshcoder.datafaker.candidate.model.JobHistory;
+import in.sureshcoder.datafaker.location.UsLocation;
+import in.sureshcoder.datafaker.location.UsLocations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -115,6 +117,47 @@ class CandidateProviderTest {
             assertThat(addr.country()).isEqualTo("US");
             assertThat(addr.zipCode()).isNotBlank();
         }
+    }
+
+    @Test
+    @DisplayName("city, state and ZIP always form a real US location")
+    void addressGeographyIsGenuine() {
+        Set<String> realTriples = UsLocations.all().stream()
+                .flatMap(loc -> loc.zips().stream().map(z -> loc.city() + "|" + loc.state() + "|" + z))
+                .collect(java.util.stream.Collectors.toSet());
+
+        for (int i = 0; i < 2000; i++) {
+            var addr = faker.candidate().build().address();
+            assertThat(realTriples)
+                    .as("address %s, %s %s", addr.city(), addr.state(), addr.zipCode())
+                    .contains(addr.city() + "|" + addr.state() + "|" + addr.zipCode());
+        }
+    }
+
+    @Test
+    @DisplayName("generated addresses cover many different states")
+    void addressesCoverManyStates() {
+        Set<String> states = new HashSet<>();
+        for (int i = 0; i < 2000; i++) {
+            states.add(faker.candidate().build().address().state());
+        }
+        assertThat(states).hasSizeGreaterThan(40);
+        assertThat(UsLocations.validStates()).containsAll(states);
+    }
+
+    @Test
+    @DisplayName("ZIP code is always five digits")
+    void zipCodeIsFiveDigits() {
+        for (int i = 0; i < 100; i++) {
+            assertThat(faker.candidate().build().address().zipCode()).matches("\\d{5}");
+        }
+    }
+
+    @Test
+    @DisplayName("availableLocations() exposes the shared location table")
+    void availableLocationsExposesTable() {
+        List<UsLocation> locations = faker.candidate().availableLocations();
+        assertThat(locations).isNotEmpty().isEqualTo(UsLocations.all());
     }
 
     @Test
@@ -679,6 +722,7 @@ class CandidateProviderTest {
         assertThat(c1.lastName()).isEqualTo(c2.lastName());
         assertThat(c1.email()).isEqualTo(c2.email());
         assertThat(c1.mobileNumber()).isEqualTo(c2.mobileNumber());
+        assertThat(c1.address()).isEqualTo(c2.address());
         assertThat(c1.professionalSummary()).isEqualTo(c2.professionalSummary());
         assertThat(c1.skills()).isEqualTo(c2.skills());
         assertThat(c1.educationHistory()).isEqualTo(c2.educationHistory());

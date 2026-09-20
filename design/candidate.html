@@ -269,7 +269,8 @@
         <text x="30" y="342" font-size="9.5" fill="#1e40af">state : String  (abbr.)</text>
         <text x="30" y="358" font-size="9.5" fill="#1e40af">country : String  ("US")</text>
         <text x="30" y="374" font-size="9.5" fill="#1e40af">zipCode : String</text>
-        <text x="105" y="396" text-anchor="middle" font-size="8" fill="#94a3b8">40 % chance of addressLine2</text>
+        <text x="105" y="390" text-anchor="middle" font-size="8" fill="#94a3b8">city · state · zip from one real</text>
+        <text x="105" y="400" text-anchor="middle" font-size="8" fill="#94a3b8">US location · 40 % addressLine2</text>
 
         <!-- EducationHistory record -->
         <rect x="218" y="218" width="192" height="220" rx="8" fill="#f0fdf4" stroke="#059669" stroke-width="1.5" filter="url(#sh2)"/>
@@ -1071,6 +1072,15 @@
         <text x="707" y="333" text-anchor="middle" font-size="8" fill="#b45309" font-family="monospace">job-posting-mappings.yml</text>
       </svg>
     </div>
+    <p style="margin:18px 0 0;font-size:.86rem;line-height:1.6;color:#475569">
+      A third package, <code>in.sureshcoder.datafaker.location</code>, sits beside these two and is the
+      only thing they share: <code>UsLocation</code> (a <code>city&nbsp;/&nbsp;state&nbsp;/&nbsp;zips</code>
+      record) and <code>UsLocations</code>, which loads <code>resources/us-locations.yml</code> once at
+      class-init. It holds 240 real US cities across all 50 states plus DC. Both providers draw a city and
+      then one of that city&rsquo;s own ZIPs, so every generated address and job location is a genuine
+      <code>City, ST ZIP</code> triple rather than DataFaker&rsquo;s three unrelated picks. The table is
+      immutable reference data &mdash; the providers still share no mutable state.
+    </p>
   </div>
 </div>
 
@@ -1114,6 +1124,9 @@ System.out.println(c.professionalSummary());
 <span class="cm">// "Senior Software Engineer with 3 years of experience in the Technology, Information</span>
 <span class="cm">//  and Media industry. Skilled in Java, Kubernetes and AWS, ... Holds a Master of</span>
 <span class="cm">//  Science in Computer Science."</span>
+System.out.println(c.address().city());               <span class="cm">// "Austin"  — a real city</span>
+System.out.println(c.address().state());              <span class="cm">// "TX"      — its real state</span>
+System.out.println(c.address().zipCode());            <span class="cm">// "78704"   — a real Austin ZIP</span>
 System.out.println(c.address().country());            <span class="cm">// "US"</span>
 System.out.println(c.address().addressLine2());       <span class="cm">// "Apt 204" or ""</span>
 

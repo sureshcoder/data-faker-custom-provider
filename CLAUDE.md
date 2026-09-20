@@ -28,9 +28,10 @@ JAVA_HOME=… mvn compile
 JAVA_HOME=… mvn test
 ```
 
-**165 tests total**, running in ~500 ms:
-- `JobPostingProviderTest` — 56 tests
-- `CandidateProviderTest` — 109 tests
+**181 tests total**, running in ~600 ms:
+- `JobPostingProviderTest` — 60 tests
+- `CandidateProviderTest` — 113 tests
+- `UsLocationsTest` — 8 tests
 
 ## Project structure
 
@@ -60,16 +61,22 @@ src/main/
         CandidateProvider.java     core generation logic
         CandidateIndustryData.java package-private record (YAML data holder)
         CertificationData.java     package-private record (YAML cert holder)
+    location/
+      UsLocation.java              record (city, state, zips) + cityState()
+      UsLocations.java             shared real US city/state/ZIP table; loads us-locations.yml
   resources/
+    us-locations.yml               240 real US cities, all 50 states + DC, with their own ZIPs
     job-posting-mappings.yml       employment_type / currency rates / salary_unit periods / aliases + 20 industries
     candidate-mappings.yml         colleges / fallback courses + specializations / professionalSummaryTemplates / aliases + 20 industries (each with own courses + specializations)
 
 src/test/
   java/in/sureshcoder/datafaker/
     jobposting/
-      JobPostingProviderTest.java  26 JUnit 5 tests
+      JobPostingProviderTest.java  30 JUnit 5 tests
     candidate/
-      CandidateProviderTest.java   50 JUnit 5 tests
+      CandidateProviderTest.java   53 JUnit 5 tests
+    location/
+      UsLocationsTest.java         8 JUnit 5 tests (reference data integrity)
 
 design/
   index.html                       JobPosting provider — architecture & design document
@@ -97,6 +104,7 @@ List<String> industries    = faker.jobPosting().availableIndustries();
 List<String> empTypes      = faker.jobPosting().availableEmploymentTypes();
 List<String> currencies    = faker.jobPosting().availableCurrencies();
 List<String> salaryUnits   = faker.jobPosting().availableSalaryUnits();
+List<UsLocation> locations = faker.jobPosting().availableLocations();
 ```
 
 ## Usage — Candidate provider
@@ -125,6 +133,9 @@ c.firstName();                    // "Sarah"
 c.email();                        // "sarahjohnson47@yopmail.com"
 c.mobileNumber();                 // "+1-415-782-3091"
 c.professionalSummary();          // "Senior Software Engineer with 3 years of experience in the Technology industry. ..."
+c.address().city();               // "Austin"   — real city
+c.address().state();              // "TX"       — its real state
+c.address().zipCode();            // "78704"    — a ZIP actually assigned to Austin
 c.address().country();            // "US"
 c.educationHistory();             // 1–3 EducationHistory records, chronological
 c.jobHistory();                   // 1–4 JobHistory records, oldest first; last one is current
@@ -208,6 +219,23 @@ industries:
         issuer: "ACEDS"
 ```
 
+## Adding a US city
+
+Edit `src/main/resources/us-locations.yml` — no Java changes needed. The table is shared by both
+providers, so a new city shows up in Candidate addresses and JobPosting locations at once:
+
+```yaml
+locations:
+  - city: "Austin"
+    state: "TX"
+    zips: ["78701", "78704", "78723", "78745", "78759"]
+```
+
+`UsLocations` validates at class-init: `state` must be one of the 50 states plus DC, every ZIP
+must be five digits, `zips` must be non-empty and `city + state` must be unique. Use ZIPs actually
+assigned to that city — `UsLocationsTest` checks structure, not real-world accuracy, so a wrong
+ZIP would pass the suite while silently defeating the point of the table.
+
 ## Editing professional summary templates
 
 Templates live at the top level of `candidate-mappings.yml` under `professionalSummaryTemplates`, split into two pools. Each template is one complete 2–3 sentence paragraph ending with a period:
@@ -240,7 +268,7 @@ The `withCertification` pool is used only when the candidate has at least one ce
 - **Skill deduplication** — Fisher-Yates shuffle over `faker.random()` guarantees unique skills per posting while preserving seed reproducibility.
 - **Currency / employment type / salary unit** — picked at random from the top-level YAML blocks (not per-industry), exposed via `availableCurrencies()`, `availableEmploymentTypes()`, and `availableSalaryUnits()`.
 - **Salary conversion** — `salaryRange` bounds are USD per year. `buildSalary` multiplies by the drawn currency's rate from the `currency` map and divides by that unit's periods-per-year from `salary_unit`, then rounds by magnitude (1000 above 10k, 100 above 1k, 10 above 100). The currency and unit picks happen before conversion, so the RNG sequence is unaffected by the arithmetic.
-- **Location** — 20 % chance of "Remote"; otherwise `faker.address().city() + ", " + stateAbbr()`.
+- **Location** — 20 % chance of "Remote"; otherwise `UsLocations.pick(faker.random()).cityState()`, a real `"City, ST"` pair.
 
 ## Key implementation notes — Candidate provider
 
@@ -249,6 +277,7 @@ The `withCertification` pool is used only when the candidate has at least one ce
 - **Email domains** — restricted to `@yopmail.com` and `@mailinator.com`. Local part is `(firstName + lastName).toLowerCase().replaceAll("[^a-z0-9]","") + nextInt(999)`.
 - **Phone format** — US format `+1-XXX-XXX-XXXX` using three separate `faker.random().nextInt()` calls, never `faker.numerify()`, ensuring seed safety.
 - **Address line 2** — 40 % probability (when `faker.random().nextInt(5) < 2`); blank string otherwise.
+- **Address geography** — city, state and ZIP come from one `UsLocation` drawn from the shared table, never from `faker.address()`. DataFaker's `en` locale builds city names from `"#{city_prefix} #{Name.first_name}#{city_suffix}"` (invented composites), picks `stateAbbr()` independently, and emits `zipCode()` as five random digits — so the old output was geographically incoherent. `addressLine1` deliberately stays on `faker.address().streetAddress()`: a real street in a real city could resolve to a real mailbox.
 - **Job history backward algorithm** — the career floor is the most recent education `endDate`. The current job (always last, `endDate == null`, `isCurrent() == true`) starts 1–36 months ago, bounded by the floor. Earlier jobs are placed backwards with 6–36 month durations and 0–6 month gaps, clamped to the floor. Because the latest degree ended only 1–5 years ago, total experience is capped at ~5 years, and fewer than the drawn 1–4 jobs may fit in a short window.
 - **Professional summary** — generated last, from data already on the record (current designation, industry display name, top skills, highest degree, first certification, experience phrase). Template pool is chosen by whether certifications exist; the pick uses `faker.random()` so it is seed-safe. Generic `interpolate(template, Map)` does plain `String.replace` per token.
 - **Generation order in `buildForIndustry`** — name, email, mobile, address, education, jobs, skills, certifications, summary. Changing this order changes the RNG sequence and therefore seeded output.

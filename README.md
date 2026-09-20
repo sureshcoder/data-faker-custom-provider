@@ -40,6 +40,8 @@ Two independent, YAML-driven custom providers for [DataFaker](https://www.datafa
   - [CSV export with streams](#csv-export-with-streams)
   - [Locale and DataFaker interop](#locale-and-datafaker-interop)
 - [Industries reference](#industries-reference)
+- [US locations reference](#us-locations-reference)
+- [Upgrading from 1.2.1](#upgrading-from-121)
 - [Extending via YAML](#extending-via-yaml)
   - [Adding an industry to JobPosting](#adding-an-industry-to-jobposting)
   - [Adding an industry to Candidate](#adding-an-industry-to-candidate)
@@ -53,6 +55,7 @@ Two independent, YAML-driven custom providers for [DataFaker](https://www.datafa
 
 ## Features
 
+- **Real US geography.** City, state and ZIP are drawn together from 240 real US cities covering all 50 states plus DC, so an address or job location is never a fictional city paired with an unrelated state and a random ZIP.
 - **Two providers, one dependency.** `JobFaker` and `CandidateFaker` both extend DataFaker's `Faker`, so every built-in provider (`name()`, `company()`, `address()`, …) is available on the same instance.
 - **schema.org-modelled job postings** with per-industry title, skill and description pools and per-industry salary bounds.
 - **Fully synthetic candidates** with chronologically consistent education history, dated job history (the last job is always current), 4–8 unique skills, 0–3 industry-specific certifications and a 2–3 sentence professional summary that is coherent with the rest of the record.
@@ -91,7 +94,7 @@ Maven:
 <dependency>
     <groupId>in.sureshcoder</groupId>
     <artifactId>data-faker-custom-provider</artifactId>
-    <version>1.2.1</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
@@ -99,7 +102,7 @@ Gradle (Kotlin DSL):
 
 ```kotlin
 dependencies {
-    implementation("in.sureshcoder:data-faker-custom-provider:1.2.1")
+    implementation("in.sureshcoder:data-faker-custom-provider:1.3.0")
 }
 ```
 
@@ -107,13 +110,13 @@ Gradle (Groovy DSL):
 
 ```groovy
 dependencies {
-    implementation 'in.sureshcoder:data-faker-custom-provider:1.2.1'
+    implementation 'in.sureshcoder:data-faker-custom-provider:1.3.0'
 }
 ```
 
 ### Option B: JitPack
 
-[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.2.1` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
+[JitPack](https://jitpack.io/#sureshcoder/data-faker-custom-provider) builds the library straight from GitHub. Pin a tag such as `v1.3.0` for a stable, reproducible build. The `main-SNAPSHOT` version tracks the tip of `main` instead and is **not** a stable pin; JitPack caches snapshots, so pass `-U` to Maven (or `--refresh-dependencies` to Gradle) to pick up new commits.
 
 Maven:
 
@@ -129,7 +132,7 @@ Maven:
     <dependency>
         <groupId>com.github.sureshcoder</groupId>
         <artifactId>data-faker-custom-provider</artifactId>
-        <version>v1.2.1</version>
+        <version>v1.3.0</version>
     </dependency>
 </dependencies>
 ```
@@ -143,7 +146,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.2.1")
+    implementation("com.github.sureshcoder:data-faker-custom-provider:v1.3.0")
 }
 ```
 
@@ -156,7 +159,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.2.1'
+    implementation 'com.github.sureshcoder:data-faker-custom-provider:v1.3.0'
 }
 ```
 
@@ -210,7 +213,7 @@ Obtain the provider with `new JobFaker().jobPosting()`. `JobFaker` has the same 
 | `validThrough` | `LocalDate` | `datePosted` plus 30–90 days |
 | `employmentType` | `String` | Random pick from the top-level `employment_type` list |
 | `hiringOrganization` | `String` | `faker.company().name()` |
-| `jobLocation` | `String` | 20 % `"Remote"`, otherwise `"City, ST"` |
+| `jobLocation` | `String` | 20 % `"Remote"`, otherwise a real `"City, ST"` pair from `us-locations.yml` |
 | `baseSalary.currency` | `String` | Random pick from the top-level `currency` map |
 | `baseSalary.minValue` | `int` | Random within the industry's `minLow`–`minHigh` bounds, converted into the drawn currency and pay period |
 | `baseSalary.maxValue` | `int` | Random within `maxLow`–`maxHigh`, converted the same way; always above `minValue` |
@@ -319,7 +322,7 @@ Obtain the provider with `new CandidateFaker().candidate()`. `CandidateFaker` ha
 |---|---|
 | `addressLine1` | `faker.address().streetAddress()` |
 | `addressLine2` | 40 % chance of `faker.address().secondaryAddress()`, otherwise `""` |
-| `city`, `state`, `zipCode` | DataFaker city, two-letter state abbreviation and ZIP |
+| `city`, `state`, `zipCode` | One real US location drawn from `us-locations.yml` — the city, its state abbreviation and one of that city's own ZIP codes, so the triple is always geographically coherent |
 | `country` | Always `"US"` |
 
 `EducationHistory` (8 fields). Entries are generated backwards: the most recent degree ends 1–5 years before today, and each earlier degree ends 3–12 months before the next one starts, so the list is chronological and non-overlapping.
@@ -428,7 +431,7 @@ Produced by `new CandidateFaker(new Random(42L)).candidate().build()` on 2026-09
   "professionalSummary": "Detail-oriented Data Scientist with 2 years of experience delivering measurable impact in Technology. Expertise spans React, Kafka and Docker. Certifications include HashiCorp Certified: Terraform Associate; completed a Doctor of Philosophy in Data Science.",
   "address": {
     "addressLine1": "205 Elvina Cliff", "addressLine2": "",
-    "city": "Lake Graig", "state": "AL", "country": "US", "zipCode": "36872"
+    "city": "Huntsville", "state": "AL", "country": "US", "zipCode": "35805"
   },
   "educationHistory": [
     {
@@ -671,7 +674,7 @@ public class CsvExportExample {
 
 ### Locale and DataFaker interop
 
-Both fakers extend `net.datafaker.Faker`, so built-in providers are available on the same seeded instance. The locale affects DataFaker's own providers (names, companies, street addresses); the custom YAML data, the `+1` phone format and the `"US"` country are locale-independent.
+Both fakers extend `net.datafaker.Faker`, so built-in providers are available on the same seeded instance. The locale affects DataFaker's own providers (names, companies, street addresses); the custom YAML data, the `+1` phone format, the US city / state / ZIP table and the `"US"` country are locale-independent.
 
 ```java
 import in.sureshcoder.datafaker.candidate.faker.CandidateFaker;
@@ -784,6 +787,57 @@ Aliases are deliberately absent from `availableIndustries()`, which lists only t
 keys. An alias whose target is not a configured industry throws at class initialisation rather
 than silently falling back, so a typo surfaces on the first use of the provider.
 
+## US locations reference
+
+Both providers draw geography from a single shared table, `src/main/resources/us-locations.yml`:
+240 real US cities across all 50 states plus DC, each with the ZIP codes actually assigned to it.
+
+```yaml
+locations:
+  - city: "Austin"
+    state: "TX"
+    zips: ["78701", "78704", "78723", "78745", "78759"]
+```
+
+A draw picks one entry, then one of that entry's own ZIPs, so the city / state / ZIP triple is
+always coherent — `Austin, TX 78704`, never `Port Damarisberg, WY 38104`. Street addresses stay
+synthetic (`faker.address().streetAddress()`) on purpose: a real street in a real city could
+resolve to a real mailbox, which defeats the point of fake data.
+
+The table is exposed for assertions:
+
+```java
+List<UsLocation> locations = new CandidateFaker().candidate().availableLocations();
+Set<String> states = UsLocations.validStates();   // the 50 states plus DC
+
+UsLocation austin = locations.stream()
+        .filter(l -> l.cityState().equals("Austin, TX"))
+        .findFirst().orElseThrow();
+```
+
+`UsLocations` validates the file at class initialisation — unknown state abbreviation, malformed
+ZIP, empty ZIP list or duplicate city/state all throw, so a typo surfaces immediately rather than
+as a plausible-looking but wrong address.
+
+To add a city, append an entry. No Java changes are needed.
+
+## Upgrading from 1.2.1
+
+1.3.0 replaces DataFaker's `address()` draws with the real-location table described above.
+
+**Addresses and locations are now genuine.** Previously `city`, `state` and `zipCode` were three
+independent DataFaker picks: the `en` locale builds city names from
+`"#{city_prefix} #{Name.first_name}#{city_suffix}"`, so they were invented composites, the state
+was unrelated to the city, and the ZIP was five random digits unrelated to either. All three now
+come from one real city.
+
+**Seeded output differs from 1.2.1.** `buildAddress` and `buildLocation` draw a different number
+of random values than before, which shifts the RNG sequence for everything after them. Seeds
+remain fully reproducible within 1.3.0. Refresh any recorded fixtures on upgrade.
+
+**No API removed.** `Address` and `JobPosting` are unchanged; `availableLocations()` is added to
+both providers.
+
 ## Upgrading from 1.0.0
 
 1.1.0 replaces the ten ad-hoc industries with the 20 top-level LinkedIn categories. Three
@@ -881,14 +935,15 @@ JAVA_HOME=/path/to/jdk-21 mvn test      # run the suite
 JAVA_HOME=/path/to/jdk-21 mvn install   # install into ~/.m2 for local consumers
 ```
 
-The suite has 76 tests and runs in well under a second:
+The suite has 91 test methods — 181 executions once parameterised cases expand — and runs in well under a second:
 
 | Class | Tests |
 |---|---|
-| `JobPostingProviderTest` | 26 |
-| `CandidateProviderTest` | 50 |
+| `JobPostingProviderTest` | 30 |
+| `CandidateProviderTest` | 53 |
+| `UsLocationsTest` | 8 |
 
-Tests use JUnit 5 and AssertJ. Several assert statistical properties over 100–500 builds (for example that both email domains appear and that `addressLine2` shows up roughly 40 % of the time), so an unseeded faker is used deliberately there.
+Tests use JUnit 5 and AssertJ. Several assert statistical properties over 100–2000 builds (for example that both email domains appear, that `addressLine2` shows up roughly 40 % of the time, and that every generated city / state / ZIP triple exists in `us-locations.yml`), so an unseeded faker is used deliberately there.
 
 ## Design documents
 
@@ -914,7 +969,7 @@ jdk:
   - openjdk21
 ```
 
-If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.2.1/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
+If the file is absent on the commit you request, the build log at `https://jitpack.io/com/github/sureshcoder/data-faker-custom-provider/v1.3.0/build.log` shows the compiler error. The first request for any version also triggers a build, so expect a short delay.
 
 ### I asked for an industry and got Technology instead
 

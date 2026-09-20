@@ -1,0 +1,841 @@
+# Real US city / state / ZIP reference data, shared by the Candidate and JobPosting providers.
+#
+# Every entry is a genuine US Postal Service city name, its state abbreviation, and ZIP codes
+# actually assigned to that city. Providers draw one entry and then one of its ZIPs, so the
+# generated city / state / ZIP triple is always geographically coherent.
+#
+# Street addresses are deliberately NOT drawn from here — they stay synthetic, so a generated
+# address can never resolve to a real mailbox.
+#
+# Coverage: all 50 states plus DC, at least two cities each.
+#
+# Every ZIP below was verified against a public postal lookup: all resolve to an assigned ZIP in
+# the stated state. A handful carry a different USPS *default* city name than the municipality
+# (Overland Park KS ZIPs default to "Shawnee Mission"; Winston-Salem is spelled without the
+# hyphen) — these are naming conventions, not mismatches.
+#
+# To add a city: append an entry below. No Java changes are needed. The loader validates at
+# class-init that state is a real USPS abbreviation and every ZIP is five digits.
+
+locations:
+  # Alabama
+  - city: "Birmingham"
+    state: "AL"
+    zips: ["35203", "35209", "35211", "35216"]
+  - city: "Montgomery"
+    state: "AL"
+    zips: ["36104", "36106", "36109", "36117"]
+  - city: "Huntsville"
+    state: "AL"
+    zips: ["35801", "35805", "35816"]
+  - city: "Mobile"
+    state: "AL"
+    zips: ["36602", "36606", "36609"]
+
+  # Alaska
+  - city: "Anchorage"
+    state: "AK"
+    zips: ["99501", "99503", "99507", "99515"]
+  - city: "Fairbanks"
+    state: "AK"
+    zips: ["99701", "99709"]
+  - city: "Juneau"
+    state: "AK"
+    zips: ["99801", "99803"]
+
+  # Arizona
+  - city: "Phoenix"
+    state: "AZ"
+    zips: ["85003", "85004", "85016", "85021", "85032"]
+  - city: "Tucson"
+    state: "AZ"
+    zips: ["85701", "85705", "85712", "85719"]
+  - city: "Mesa"
+    state: "AZ"
+    zips: ["85201", "85204", "85210"]
+  - city: "Scottsdale"
+    state: "AZ"
+    zips: ["85251", "85254", "85257"]
+  - city: "Chandler"
+    state: "AZ"
+    zips: ["85224", "85225", "85226"]
+
+  # Arkansas
+  - city: "Little Rock"
+    state: "AR"
+    zips: ["72201", "72204", "72207", "72211"]
+  - city: "Fayetteville"
+    state: "AR"
+    zips: ["72701", "72703", "72704"]
+  - city: "Fort Smith"
+    state: "AR"
+    zips: ["72901", "72903", "72904"]
+
+  # California
+  - city: "Los Angeles"
+    state: "CA"
+    zips: ["90012", "90026", "90045", "90064", "90066"]
+  - city: "San Diego"
+    state: "CA"
+    zips: ["92101", "92103", "92109", "92126"]
+  - city: "San Jose"
+    state: "CA"
+    zips: ["95110", "95112", "95125", "95136"]
+  - city: "San Francisco"
+    state: "CA"
+    zips: ["94102", "94110", "94114", "94122"]
+  - city: "Sacramento"
+    state: "CA"
+    zips: ["95814", "95818", "95825", "95833"]
+  - city: "Fresno"
+    state: "CA"
+    zips: ["93701", "93704", "93711", "93720"]
+  - city: "Long Beach"
+    state: "CA"
+    zips: ["90802", "90803", "90805", "90815"]
+  - city: "Oakland"
+    state: "CA"
+    zips: ["94601", "94607", "94609", "94612"]
+  - city: "Bakersfield"
+    state: "CA"
+    zips: ["93301", "93304", "93309", "93311"]
+  - city: "Anaheim"
+    state: "CA"
+    zips: ["92801", "92804", "92805", "92806"]
+  - city: "Irvine"
+    state: "CA"
+    zips: ["92602", "92604", "92612", "92618"]
+  - city: "Riverside"
+    state: "CA"
+    zips: ["92501", "92503", "92506", "92507"]
+  - city: "Pasadena"
+    state: "CA"
+    zips: ["91101", "91103", "91106"]
+
+  # Colorado
+  - city: "Denver"
+    state: "CO"
+    zips: ["80202", "80205", "80218", "80220", "80231"]
+  - city: "Colorado Springs"
+    state: "CO"
+    zips: ["80903", "80904", "80909", "80918"]
+  - city: "Aurora"
+    state: "CO"
+    zips: ["80010", "80012", "80014", "80016"]
+  - city: "Boulder"
+    state: "CO"
+    zips: ["80301", "80302", "80303", "80304"]
+  - city: "Fort Collins"
+    state: "CO"
+    zips: ["80521", "80524", "80525", "80526"]
+
+  # Connecticut
+  - city: "Hartford"
+    state: "CT"
+    zips: ["06103", "06105", "06106", "06112"]
+  - city: "New Haven"
+    state: "CT"
+    zips: ["06510", "06511", "06513", "06515"]
+  - city: "Stamford"
+    state: "CT"
+    zips: ["06901", "06902", "06905", "06906"]
+  - city: "Bridgeport"
+    state: "CT"
+    zips: ["06604", "06605", "06606", "06610"]
+
+  # Delaware
+  - city: "Wilmington"
+    state: "DE"
+    zips: ["19801", "19802", "19805", "19806"]
+  - city: "Dover"
+    state: "DE"
+    zips: ["19901", "19904"]
+  - city: "Newark"
+    state: "DE"
+    zips: ["19702", "19711", "19713"]
+
+  # District of Columbia
+  - city: "Washington"
+    state: "DC"
+    zips: ["20001", "20002", "20009", "20016", "20037"]
+
+  # Florida
+  - city: "Miami"
+    state: "FL"
+    zips: ["33125", "33127", "33130", "33133", "33135"]
+  - city: "Orlando"
+    state: "FL"
+    zips: ["32801", "32803", "32806", "32814"]
+  - city: "Tampa"
+    state: "FL"
+    zips: ["33602", "33606", "33609", "33611"]
+  - city: "Jacksonville"
+    state: "FL"
+    zips: ["32202", "32205", "32207", "32210"]
+  - city: "Saint Petersburg"
+    state: "FL"
+    zips: ["33701", "33703", "33705", "33710"]
+  - city: "Fort Lauderdale"
+    state: "FL"
+    zips: ["33301", "33304", "33308", "33312"]
+  - city: "Tallahassee"
+    state: "FL"
+    zips: ["32301", "32303", "32304", "32308"]
+
+  # Georgia
+  - city: "Atlanta"
+    state: "GA"
+    zips: ["30303", "30305", "30306", "30309", "30318"]
+  - city: "Savannah"
+    state: "GA"
+    zips: ["31401", "31404", "31405", "31406"]
+  - city: "Augusta"
+    state: "GA"
+    zips: ["30901", "30904", "30906", "30909"]
+  - city: "Columbus"
+    state: "GA"
+    zips: ["31901", "31904", "31906", "31907"]
+  - city: "Athens"
+    state: "GA"
+    zips: ["30601", "30605", "30606"]
+
+  # Hawaii
+  - city: "Honolulu"
+    state: "HI"
+    zips: ["96813", "96814", "96815", "96816", "96817"]
+  - city: "Hilo"
+    state: "HI"
+    zips: ["96720"]
+  - city: "Kailua"
+    state: "HI"
+    zips: ["96734"]
+  - city: "Pearl City"
+    state: "HI"
+    zips: ["96782"]
+
+  # Idaho
+  - city: "Boise"
+    state: "ID"
+    zips: ["83702", "83703", "83704", "83705", "83706"]
+  - city: "Idaho Falls"
+    state: "ID"
+    zips: ["83401", "83402", "83404"]
+  - city: "Nampa"
+    state: "ID"
+    zips: ["83651", "83686", "83687"]
+
+  # Illinois
+  - city: "Chicago"
+    state: "IL"
+    zips: ["60601", "60607", "60614", "60618", "60647"]
+  - city: "Springfield"
+    state: "IL"
+    zips: ["62701", "62702", "62704"]
+  - city: "Naperville"
+    state: "IL"
+    zips: ["60540", "60563", "60565"]
+  - city: "Peoria"
+    state: "IL"
+    zips: ["61602", "61604", "61606", "61614"]
+  - city: "Rockford"
+    state: "IL"
+    zips: ["61101", "61103", "61107", "61108"]
+  - city: "Aurora"
+    state: "IL"
+    zips: ["60502", "60504", "60505", "60506"]
+
+  # Indiana
+  - city: "Indianapolis"
+    state: "IN"
+    zips: ["46202", "46204", "46208", "46220", "46227"]
+  - city: "Fort Wayne"
+    state: "IN"
+    zips: ["46802", "46805", "46807", "46815"]
+  - city: "Evansville"
+    state: "IN"
+    zips: ["47708", "47711", "47714", "47715"]
+  - city: "Bloomington"
+    state: "IN"
+    zips: ["47401", "47403", "47404", "47408"]
+  - city: "South Bend"
+    state: "IN"
+    zips: ["46601", "46613", "46614", "46617"]
+
+  # Iowa
+  - city: "Des Moines"
+    state: "IA"
+    zips: ["50309", "50311", "50312", "50315"]
+  - city: "Cedar Rapids"
+    state: "IA"
+    zips: ["52401", "52402", "52403", "52404"]
+  - city: "Iowa City"
+    state: "IA"
+    zips: ["52240", "52245", "52246"]
+  - city: "Davenport"
+    state: "IA"
+    zips: ["52801", "52803", "52804", "52806"]
+
+  # Kansas
+  - city: "Wichita"
+    state: "KS"
+    zips: ["67202", "67203", "67206", "67211", "67212"]
+  - city: "Overland Park"
+    state: "KS"
+    zips: ["66204", "66210", "66212", "66214"]
+  - city: "Topeka"
+    state: "KS"
+    zips: ["66603", "66604", "66606", "66611"]
+  - city: "Lawrence"
+    state: "KS"
+    zips: ["66044", "66046", "66047"]
+
+  # Kentucky
+  - city: "Louisville"
+    state: "KY"
+    zips: ["40202", "40204", "40205", "40206", "40218"]
+  - city: "Lexington"
+    state: "KY"
+    zips: ["40502", "40503", "40504", "40508", "40511"]
+  - city: "Bowling Green"
+    state: "KY"
+    zips: ["42101", "42103", "42104"]
+  - city: "Covington"
+    state: "KY"
+    zips: ["41011", "41014", "41016"]
+
+  # Louisiana
+  - city: "New Orleans"
+    state: "LA"
+    zips: ["70112", "70115", "70118", "70119", "70130"]
+  - city: "Baton Rouge"
+    state: "LA"
+    zips: ["70802", "70806", "70808", "70810"]
+  - city: "Shreveport"
+    state: "LA"
+    zips: ["71101", "71104", "71105", "71106"]
+  - city: "Lafayette"
+    state: "LA"
+    zips: ["70501", "70503", "70506", "70508"]
+
+  # Maine
+  - city: "Portland"
+    state: "ME"
+    zips: ["04101", "04102", "04103"]
+  - city: "Bangor"
+    state: "ME"
+    zips: ["04401"]
+  - city: "Augusta"
+    state: "ME"
+    zips: ["04330"]
+  - city: "Lewiston"
+    state: "ME"
+    zips: ["04240"]
+
+  # Maryland
+  - city: "Baltimore"
+    state: "MD"
+    zips: ["21201", "21202", "21211", "21218", "21230"]
+  - city: "Annapolis"
+    state: "MD"
+    zips: ["21401", "21403"]
+  - city: "Rockville"
+    state: "MD"
+    zips: ["20850", "20851", "20852", "20853"]
+  - city: "Silver Spring"
+    state: "MD"
+    zips: ["20901", "20902", "20910"]
+  - city: "Frederick"
+    state: "MD"
+    zips: ["21701", "21702", "21703"]
+
+  # Massachusetts
+  - city: "Boston"
+    state: "MA"
+    zips: ["02108", "02115", "02116", "02118", "02127"]
+  - city: "Cambridge"
+    state: "MA"
+    zips: ["02138", "02139", "02140", "02141", "02142"]
+  - city: "Worcester"
+    state: "MA"
+    zips: ["01602", "01604", "01605", "01609"]
+  - city: "Springfield"
+    state: "MA"
+    zips: ["01103", "01104", "01105", "01108"]
+  - city: "Somerville"
+    state: "MA"
+    zips: ["02143", "02144", "02145"]
+  - city: "Lowell"
+    state: "MA"
+    zips: ["01850", "01851", "01852", "01854"]
+
+  # Michigan
+  - city: "Detroit"
+    state: "MI"
+    zips: ["48201", "48202", "48207", "48214", "48226"]
+  - city: "Grand Rapids"
+    state: "MI"
+    zips: ["49503", "49504", "49505", "49506", "49507"]
+  - city: "Ann Arbor"
+    state: "MI"
+    zips: ["48103", "48104", "48105", "48108"]
+  - city: "Lansing"
+    state: "MI"
+    zips: ["48906", "48910", "48912", "48915"]
+  - city: "Sterling Heights"
+    state: "MI"
+    zips: ["48310", "48312", "48313", "48314"]
+
+  # Minnesota
+  - city: "Minneapolis"
+    state: "MN"
+    zips: ["55401", "55404", "55406", "55408", "55411"]
+  - city: "Saint Paul"
+    state: "MN"
+    zips: ["55102", "55104", "55105", "55106", "55116"]
+  - city: "Rochester"
+    state: "MN"
+    zips: ["55901", "55902", "55904", "55906"]
+  - city: "Duluth"
+    state: "MN"
+    zips: ["55802", "55805", "55806", "55811"]
+  - city: "Saint Cloud"
+    state: "MN"
+    zips: ["56301", "56303", "56304"]
+
+  # Mississippi
+  - city: "Jackson"
+    state: "MS"
+    zips: ["39201", "39202", "39204", "39206", "39211"]
+  - city: "Gulfport"
+    state: "MS"
+    zips: ["39501", "39503", "39507"]
+  - city: "Hattiesburg"
+    state: "MS"
+    zips: ["39401", "39402", "39406"]
+  - city: "Biloxi"
+    state: "MS"
+    zips: ["39530", "39531", "39532"]
+
+  # Missouri
+  - city: "Kansas City"
+    state: "MO"
+    zips: ["64108", "64110", "64111", "64112", "64114"]
+  - city: "Saint Louis"
+    state: "MO"
+    zips: ["63101", "63103", "63108", "63109", "63118"]
+  - city: "Springfield"
+    state: "MO"
+    zips: ["65802", "65804", "65806", "65807"]
+  - city: "Columbia"
+    state: "MO"
+    zips: ["65201", "65202", "65203"]
+  - city: "Independence"
+    state: "MO"
+    zips: ["64050", "64052", "64055", "64057"]
+
+  # Montana
+  - city: "Billings"
+    state: "MT"
+    zips: ["59101", "59102", "59105", "59106"]
+  - city: "Missoula"
+    state: "MT"
+    zips: ["59801", "59802", "59803", "59808"]
+  - city: "Bozeman"
+    state: "MT"
+    zips: ["59715", "59718"]
+  - city: "Great Falls"
+    state: "MT"
+    zips: ["59401", "59404", "59405"]
+
+  # Nebraska
+  - city: "Omaha"
+    state: "NE"
+    zips: ["68102", "68104", "68105", "68114", "68131"]
+  - city: "Lincoln"
+    state: "NE"
+    zips: ["68502", "68503", "68506", "68508", "68510"]
+  - city: "Bellevue"
+    state: "NE"
+    zips: ["68005", "68123"]
+  - city: "Grand Island"
+    state: "NE"
+    zips: ["68801", "68803"]
+
+  # Nevada
+  - city: "Las Vegas"
+    state: "NV"
+    zips: ["89101", "89102", "89109", "89117", "89123"]
+  - city: "Reno"
+    state: "NV"
+    zips: ["89501", "89502", "89503", "89509", "89512"]
+  - city: "Henderson"
+    state: "NV"
+    zips: ["89002", "89012", "89014", "89052"]
+  - city: "Carson City"
+    state: "NV"
+    zips: ["89701", "89703", "89706"]
+
+  # New Hampshire
+  - city: "Manchester"
+    state: "NH"
+    zips: ["03101", "03102", "03103", "03104"]
+  - city: "Nashua"
+    state: "NH"
+    zips: ["03060", "03062", "03063", "03064"]
+  - city: "Concord"
+    state: "NH"
+    zips: ["03301", "03303"]
+  - city: "Portsmouth"
+    state: "NH"
+    zips: ["03801"]
+
+  # New Jersey
+  - city: "Newark"
+    state: "NJ"
+    zips: ["07102", "07103", "07104", "07106", "07108"]
+  - city: "Jersey City"
+    state: "NJ"
+    zips: ["07302", "07304", "07305", "07306", "07307"]
+  - city: "Princeton"
+    state: "NJ"
+    zips: ["08540", "08542"]
+  - city: "Trenton"
+    state: "NJ"
+    zips: ["08608", "08609", "08611", "08618"]
+  - city: "Hoboken"
+    state: "NJ"
+    zips: ["07030"]
+  - city: "Paterson"
+    state: "NJ"
+    zips: ["07501", "07502", "07503", "07504", "07505"]
+
+  # New Mexico
+  - city: "Albuquerque"
+    state: "NM"
+    zips: ["87102", "87104", "87106", "87110", "87111"]
+  - city: "Santa Fe"
+    state: "NM"
+    zips: ["87501", "87505", "87507"]
+  - city: "Las Cruces"
+    state: "NM"
+    zips: ["88001", "88005", "88011"]
+  - city: "Rio Rancho"
+    state: "NM"
+    zips: ["87124", "87144"]
+
+  # New York
+  - city: "New York"
+    state: "NY"
+    zips: ["10001", "10011", "10016", "10019", "10023", "10036"]
+  - city: "Brooklyn"
+    state: "NY"
+    zips: ["11201", "11205", "11215", "11217", "11222"]
+  - city: "Buffalo"
+    state: "NY"
+    zips: ["14201", "14202", "14209", "14213", "14214"]
+  - city: "Rochester"
+    state: "NY"
+    zips: ["14604", "14607", "14610", "14618", "14620"]
+  - city: "Syracuse"
+    state: "NY"
+    zips: ["13202", "13203", "13204", "13210"]
+  - city: "Albany"
+    state: "NY"
+    zips: ["12203", "12206", "12208", "12210"]
+  - city: "Yonkers"
+    state: "NY"
+    zips: ["10701", "10703", "10704", "10705"]
+
+  # North Carolina
+  - city: "Charlotte"
+    state: "NC"
+    zips: ["28202", "28203", "28205", "28207", "28209"]
+  - city: "Raleigh"
+    state: "NC"
+    zips: ["27601", "27603", "27605", "27607", "27609"]
+  - city: "Durham"
+    state: "NC"
+    zips: ["27701", "27703", "27705", "27707"]
+  - city: "Greensboro"
+    state: "NC"
+    zips: ["27401", "27403", "27405", "27408"]
+  - city: "Winston-Salem"
+    state: "NC"
+    zips: ["27101", "27103", "27104", "27106"]
+  - city: "Asheville"
+    state: "NC"
+    zips: ["28801", "28803", "28804", "28806"]
+
+  # North Dakota
+  - city: "Fargo"
+    state: "ND"
+    zips: ["58102", "58103", "58104", "58105"]
+  - city: "Bismarck"
+    state: "ND"
+    zips: ["58501", "58503", "58504"]
+  - city: "Grand Forks"
+    state: "ND"
+    zips: ["58201", "58203"]
+
+  # Ohio
+  - city: "Columbus"
+    state: "OH"
+    zips: ["43201", "43202", "43206", "43212", "43215"]
+  - city: "Cleveland"
+    state: "OH"
+    zips: ["44102", "44106", "44113", "44114", "44115"]
+  - city: "Cincinnati"
+    state: "OH"
+    zips: ["45202", "45206", "45208", "45219", "45220"]
+  - city: "Toledo"
+    state: "OH"
+    zips: ["43604", "43606", "43607", "43614"]
+  - city: "Akron"
+    state: "OH"
+    zips: ["44302", "44303", "44304", "44313"]
+  - city: "Dayton"
+    state: "OH"
+    zips: ["45402", "45405", "45409", "45410"]
+
+  # Oklahoma
+  - city: "Oklahoma City"
+    state: "OK"
+    zips: ["73102", "73103", "73106", "73112", "73118"]
+  - city: "Tulsa"
+    state: "OK"
+    zips: ["74103", "74104", "74105", "74112", "74114"]
+  - city: "Norman"
+    state: "OK"
+    zips: ["73069", "73071", "73072"]
+  - city: "Edmond"
+    state: "OK"
+    zips: ["73003", "73013", "73034"]
+
+  # Oregon
+  - city: "Portland"
+    state: "OR"
+    zips: ["97201", "97202", "97209", "97212", "97214"]
+  - city: "Eugene"
+    state: "OR"
+    zips: ["97401", "97402", "97403", "97405"]
+  - city: "Salem"
+    state: "OR"
+    zips: ["97301", "97302", "97304", "97306"]
+  - city: "Bend"
+    state: "OR"
+    zips: ["97701", "97702"]
+  - city: "Beaverton"
+    state: "OR"
+    zips: ["97005", "97006", "97007", "97008"]
+
+  # Pennsylvania
+  - city: "Philadelphia"
+    state: "PA"
+    zips: ["19102", "19103", "19106", "19123", "19147"]
+  - city: "Pittsburgh"
+    state: "PA"
+    zips: ["15203", "15206", "15213", "15219", "15222"]
+  - city: "Allentown"
+    state: "PA"
+    zips: ["18101", "18102", "18103", "18104"]
+  - city: "Harrisburg"
+    state: "PA"
+    zips: ["17101", "17102", "17104", "17110"]
+  - city: "Erie"
+    state: "PA"
+    zips: ["16501", "16502", "16503", "16506"]
+  - city: "Scranton"
+    state: "PA"
+    zips: ["18503", "18504", "18505", "18510"]
+
+  # Rhode Island
+  - city: "Providence"
+    state: "RI"
+    zips: ["02903", "02904", "02906", "02907", "02909"]
+  - city: "Warwick"
+    state: "RI"
+    zips: ["02886", "02888", "02889"]
+  - city: "Newport"
+    state: "RI"
+    zips: ["02840"]
+  - city: "Cranston"
+    state: "RI"
+    zips: ["02910", "02920", "02921"]
+
+  # South Carolina
+  - city: "Charleston"
+    state: "SC"
+    zips: ["29401", "29403", "29407", "29412", "29414"]
+  - city: "Columbia"
+    state: "SC"
+    zips: ["29201", "29203", "29205", "29209", "29210"]
+  - city: "Greenville"
+    state: "SC"
+    zips: ["29601", "29605", "29607", "29609"]
+  - city: "Myrtle Beach"
+    state: "SC"
+    zips: ["29577", "29579", "29588"]
+
+  # South Dakota
+  - city: "Sioux Falls"
+    state: "SD"
+    zips: ["57103", "57104", "57105", "57106", "57108"]
+  - city: "Rapid City"
+    state: "SD"
+    zips: ["57701", "57702", "57703"]
+  - city: "Aberdeen"
+    state: "SD"
+    zips: ["57401"]
+
+  # Tennessee
+  - city: "Nashville"
+    state: "TN"
+    zips: ["37201", "37203", "37206", "37212", "37215"]
+  - city: "Memphis"
+    state: "TN"
+    zips: ["38103", "38104", "38111", "38117", "38119"]
+  - city: "Knoxville"
+    state: "TN"
+    zips: ["37902", "37916", "37917", "37919"]
+  - city: "Chattanooga"
+    state: "TN"
+    zips: ["37402", "37405", "37408", "37411"]
+  - city: "Franklin"
+    state: "TN"
+    zips: ["37064", "37067", "37069"]
+
+  # Texas
+  - city: "Houston"
+    state: "TX"
+    zips: ["77002", "77006", "77019", "77024", "77056", "77077"]
+  - city: "Dallas"
+    state: "TX"
+    zips: ["75201", "75204", "75206", "75214", "75219"]
+  - city: "Austin"
+    state: "TX"
+    zips: ["78701", "78704", "78723", "78745", "78759"]
+  - city: "San Antonio"
+    state: "TX"
+    zips: ["78205", "78209", "78212", "78216", "78230"]
+  - city: "Fort Worth"
+    state: "TX"
+    zips: ["76102", "76104", "76107", "76109", "76116"]
+  - city: "El Paso"
+    state: "TX"
+    zips: ["79901", "79902", "79912", "79924"]
+  - city: "Plano"
+    state: "TX"
+    zips: ["75023", "75024", "75025", "75074", "75093"]
+  - city: "Arlington"
+    state: "TX"
+    zips: ["76010", "76012", "76013", "76015", "76017"]
+  - city: "Corpus Christi"
+    state: "TX"
+    zips: ["78401", "78404", "78411", "78412"]
+
+  # Utah
+  - city: "Salt Lake City"
+    state: "UT"
+    zips: ["84101", "84102", "84103", "84105", "84111"]
+  - city: "Provo"
+    state: "UT"
+    zips: ["84601", "84604", "84606"]
+  - city: "Ogden"
+    state: "UT"
+    zips: ["84401", "84403", "84404", "84405"]
+  - city: "Sandy"
+    state: "UT"
+    zips: ["84070", "84092", "84094"]
+
+  # Vermont
+  - city: "Burlington"
+    state: "VT"
+    zips: ["05401", "05408"]
+  - city: "Montpelier"
+    state: "VT"
+    zips: ["05602"]
+  - city: "Rutland"
+    state: "VT"
+    zips: ["05701"]
+
+  # Virginia
+  - city: "Virginia Beach"
+    state: "VA"
+    zips: ["23451", "23452", "23454", "23456", "23462"]
+  - city: "Richmond"
+    state: "VA"
+    zips: ["23219", "23220", "23221", "23223", "23230"]
+  - city: "Arlington"
+    state: "VA"
+    zips: ["22201", "22202", "22203", "22206", "22209"]
+  - city: "Alexandria"
+    state: "VA"
+    zips: ["22301", "22302", "22304", "22314"]
+  - city: "Norfolk"
+    state: "VA"
+    zips: ["23504", "23507", "23508", "23510"]
+  - city: "Charlottesville"
+    state: "VA"
+    zips: ["22901", "22902", "22903"]
+
+  # Washington
+  - city: "Seattle"
+    state: "WA"
+    zips: ["98101", "98103", "98105", "98109", "98115", "98122"]
+  - city: "Spokane"
+    state: "WA"
+    zips: ["99201", "99202", "99203", "99205", "99207"]
+  - city: "Tacoma"
+    state: "WA"
+    zips: ["98402", "98404", "98405", "98406", "98408"]
+  - city: "Bellevue"
+    state: "WA"
+    zips: ["98004", "98005", "98006", "98007", "98008"]
+  - city: "Vancouver"
+    state: "WA"
+    zips: ["98660", "98661", "98662", "98663"]
+  - city: "Olympia"
+    state: "WA"
+    zips: ["98501", "98502", "98506", "98512"]
+
+  # West Virginia
+  - city: "Charleston"
+    state: "WV"
+    zips: ["25301", "25302", "25304", "25311"]
+  - city: "Huntington"
+    state: "WV"
+    zips: ["25701", "25702", "25703", "25705"]
+  - city: "Morgantown"
+    state: "WV"
+    zips: ["26501", "26505", "26508"]
+
+  # Wisconsin
+  - city: "Milwaukee"
+    state: "WI"
+    zips: ["53202", "53203", "53204", "53211", "53212"]
+  - city: "Madison"
+    state: "WI"
+    zips: ["53703", "53704", "53705", "53711", "53715"]
+  - city: "Green Bay"
+    state: "WI"
+    zips: ["54301", "54302", "54303", "54304"]
+  - city: "Appleton"
+    state: "WI"
+    zips: ["54911", "54913", "54915"]
+  - city: "Kenosha"
+    state: "WI"
+    zips: ["53140", "53142", "53143", "53144"]
+
+  # Wyoming
+  - city: "Cheyenne"
+    state: "WY"
+    zips: ["82001", "82007", "82009"]
+  - city: "Casper"
+    state: "WY"
+    zips: ["82601", "82604", "82609"]
+  - city: "Laramie"
+    state: "WY"
+    zips: ["82070", "82072"]
+  - city: "Gillette"
+    state: "WY"
+    zips: ["82716", "82718"]

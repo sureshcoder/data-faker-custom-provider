@@ -18,6 +18,8 @@ package in.sureshcoder.datafaker.jobposting;
 import in.sureshcoder.datafaker.jobposting.faker.JobFaker;
 import in.sureshcoder.datafaker.jobposting.model.BaseSalary;
 import in.sureshcoder.datafaker.jobposting.model.JobPosting;
+import in.sureshcoder.datafaker.location.UsLocation;
+import in.sureshcoder.datafaker.location.UsLocations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -139,6 +141,58 @@ class JobPostingProviderTest {
         }
     }
 
+    // ── job location ──────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("location is either Remote or a real 'City, ST' pair")
+    void locationIsRemoteOrRealCityState() {
+        Set<String> realCityStates = UsLocations.all().stream()
+                .map(UsLocation::cityState)
+                .collect(java.util.stream.Collectors.toSet());
+
+        for (int i = 0; i < 2000; i++) {
+            String location = faker.jobPosting().build().jobLocation();
+            if (!"Remote".equals(location)) {
+                assertThat(realCityStates).as("location %s", location).contains(location);
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("both the Remote and on-site branches occur")
+    void bothLocationBranchesOccur() {
+        long remote = 0;
+        for (int i = 0; i < 500; i++) {
+            if ("Remote".equals(faker.jobPosting().build().jobLocation())) {
+                remote++;
+            }
+        }
+        // Expect roughly 20% (allow generous bounds for variance)
+        assertThat(remote).isBetween(50L, 160L);
+    }
+
+    @Test
+    @DisplayName("on-site locations span many different states")
+    void onSiteLocationsSpanManyStates() {
+        Set<String> states = new HashSet<>();
+        for (int i = 0; i < 2000; i++) {
+            String location = faker.jobPosting().build().jobLocation();
+            if (!"Remote".equals(location)) {
+                states.add(location.substring(location.length() - 2));
+            }
+        }
+        assertThat(states).hasSizeGreaterThan(40);
+        assertThat(UsLocations.validStates()).containsAll(states);
+    }
+
+    @Test
+    @DisplayName("availableLocations() exposes the shared location table")
+    void availableLocationsExposesTable() {
+        assertThat(faker.jobPosting().availableLocations())
+                .isNotEmpty()
+                .isEqualTo(UsLocations.all());
+    }
+
     @Test
     @DisplayName("Seeded faker produces reproducible results")
     void seededFakerIsReproducible() {
@@ -151,6 +205,7 @@ class JobPostingProviderTest {
         assertThat(job1.title()).isEqualTo(job2.title());
         assertThat(job1.skills()).isEqualTo(job2.skills());
         assertThat(job1.employmentType()).isEqualTo(job2.employmentType());
+        assertThat(job1.jobLocation()).isEqualTo(job2.jobLocation());
         assertThat(job1.baseSalary()).isEqualTo(job2.baseSalary());
     }
 
