@@ -176,6 +176,7 @@
         <text x="755" y="248" text-anchor="middle" font-size="9" fill="#065f46">Built-ins</text>
         <text x="755" y="264" text-anchor="middle" font-size="8.5" fill="#047857">company()</text>
         <text x="755" y="277" text-anchor="middle" font-size="8.5" fill="#047857">address()</text>
+        <text x="755" y="289" text-anchor="middle" font-size="7.5" fill="#94a3b8">street only</text>
 
         <!-- Arrow down -->
         <line x1="410" y1="285" x2="410" y2="340" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
@@ -318,7 +319,7 @@
         <!-- 8 -->
         <rect x="600" y="192" width="200" height="46" rx="7" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
         <text x="700" y="211" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">⑧ buildLocation()</text>
-        <text x="700" y="227" text-anchor="middle" font-size="9.5" fill="#059669">city+state or "Remote"</text>
+        <text x="700" y="227" text-anchor="middle" font-size="9.5" fill="#059669">real "City, ST" or "Remote"</text>
 
         <!-- 9 -->
         <rect x="600" y="278" width="200" height="46" rx="7" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
@@ -750,6 +751,16 @@
         <text x="685" y="214" text-anchor="middle" font-size="8" fill="#94a3b8">drawn per posting; divides the annual amount</text>
       </svg>
     </div>
+    <p style="margin:18px 0 0;font-size:.86rem;line-height:1.6;color:#475569">
+      <strong style="color:#1e293b">us-locations.yml</strong> &mdash; a fourth shared table, used by
+      <em>both</em> providers. 240 real US cities covering all 50 states plus DC, each carrying the ZIP
+      codes actually assigned to it. A draw picks one city, then one of that city&rsquo;s own ZIPs, so the
+      city&nbsp;/&nbsp;state&nbsp;/&nbsp;ZIP triple is always coherent &mdash; <code>Austin, TX 78704</code>,
+      never a DataFaker composite like <code>Port Damarisberg, WY 38104</code>. Street lines stay synthetic
+      on purpose: a real street in a real city could resolve to a real mailbox.
+      <code>UsLocations</code> validates the file at class-init, so an unknown state abbreviation or a
+      malformed ZIP fails fast rather than surfacing as a plausible-looking wrong address.
+    </p>
   </div>
 </div>
 
